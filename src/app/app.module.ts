@@ -12,6 +12,8 @@ import { LoginBackgroundSliderPageModule } from '../pages/login-background-slide
 import { LoginPageModule } from '../pages/login/login.module';
 import { LandingPageModule } from '../pages/landing/landing.module';
 
+import { Facebook } from "@ionic-native/facebook";
+
 @NgModule({
   declarations: [
     MyApp
@@ -31,6 +33,7 @@ import { LandingPageModule } from '../pages/landing/landing.module';
   providers: [
     StatusBar,
     SplashScreen,
+    Facebook,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
