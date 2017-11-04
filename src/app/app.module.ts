@@ -1,25 +1,32 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+
+import { HomePageModule } from '../pages/home/home.module';
+import { LoginBackgroundSliderPageModule } from '../pages/login-background-slider/login-background-slider.module';
+import { LoginPageModule } from '../pages/login/login.module';
+import { LandingPageModule } from '../pages/landing/landing.module';
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   imports: [
     BrowserModule,
+    HomePageModule,
+    LoginBackgroundSliderPageModule,
+    LandingPageModule,
+    LoginPageModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   providers: [
     StatusBar,
