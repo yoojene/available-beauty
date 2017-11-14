@@ -85,4 +85,5 @@
         <variable name="APP_ID" value="125684678101312" />
         <variable name="APP_NAME" value="Available Beauty" />
     </plugin>
+    <engine name="android" spec="~6.1.2" />
 </widget>

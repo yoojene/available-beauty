@@ -12,7 +12,14 @@ import { LoginBackgroundSliderPageModule } from '../pages/login-background-slide
 import { LoginPageModule } from '../pages/login/login.module';
 import { LandingPageModule } from '../pages/landing/landing.module';
 
-import { Facebook } from "@ionic-native/facebook";
+import { APP_REDUCER } from '../model/app.reducer';
+
+import { Facebook } from '@ionic-native/facebook';
+
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from '../model/auth/auth.effects';
 
 @NgModule({
   declarations: [
@@ -20,11 +27,18 @@ import { Facebook } from "@ionic-native/facebook";
   ],
   imports: [
     BrowserModule,
+    IonicModule.forRoot(MyApp),
     HomePageModule,
     LoginBackgroundSliderPageModule,
     LandingPageModule,
     LoginPageModule,
-    IonicModule.forRoot(MyApp)
+    StoreModule.forRoot(APP_REDUCER),
+    // Note that you must instrument after importing StoreModule
+    StoreDevtoolsModule.instrument({
+      maxAge: 25
+    }),
+
+    EffectsModule.forRoot([AuthEffects])
   ],
   bootstrap: [IonicApp],
   entryComponents: [

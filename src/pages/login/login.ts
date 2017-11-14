@@ -3,6 +3,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { Store } from '@ngrx/store';
+import { AppState } from '../../model/app.state';
+
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import { LoginAction, UserNotValidatedAction, LoginSuccessAction } from '../../model/auth/auth.actions';
+
+
 /**
  * Generated class for the LoginPage page.
  *
@@ -10,43 +17,65 @@ import { FormBuilder, Validators } from '@angular/forms';
  * Ionic pages and navigation.
  */
 
-@IonicPage({defaultHistory: ["LandingPage"]})
+@IonicPage({defaultHistory: ['LandingPage']})
 @Component({
-  selector: "page-login",
-  templateUrl: "login.html"
+  selector: 'page-login',
+  templateUrl: 'login.html'
 })
 export class LoginPage {
   public loginForm: any;
 
-  constructor(public formBuilder: FormBuilder, public navCtrl: NavController) {
+  constructor(public store: Store<AppState>,
+              public formBuilder: FormBuilder,
+              public navCtrl: NavController) {
+
+
     this.loginForm = formBuilder.group({
-      email: ["", Validators.required],
+      email: ['', Validators.required],
       password: [
-        "",
+        '',
         Validators.compose([Validators.minLength(6), Validators.required])
       ]
     });
+
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad LoginPage");
+    console.log('ionViewDidLoad LoginPage');
   }
 
   openResetPassword() {
-    console.log("Reset password clicked");
+    console.log('Reset password clicked');
   }
 
   doLogin() {
     if (!this.loginForm.valid) {
-      this.navCtrl.push('HomePage');
+       this.store.dispatch(new UserNotValidatedAction({
+         error: `Invalid or empty data`,
+         }));
 
-      console.log("Invalid or empty data");
     } else {
+
       const userEmail = this.loginForm.value.email;
       const userPassword = this.loginForm.value.password;
 
-      console.log("user data", userEmail, userPassword);
-      this.navCtrl.push('HomePage');
+      this.store.dispatch(new LoginAction({
+        email: userEmail,
+        password: userPassword,
+        isNativeLogin: true
+      }));
+
     }
+  }
+
+  doFacebookLogin() {
+
+      this.store.dispatch(new LoginAction({
+          isNativeLogin: false
+        }));
+
+    // Dispatch login action (FB only?)
+
+
   }
 }
