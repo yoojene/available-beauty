@@ -8,18 +8,19 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { LoginBackgroundSliderPage } from '../pages/login-background-slider/login-background-slider';
 import { LandingPage } from '../pages/landing/landing';
 
+
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: "app.html"
 })
 export class MyApp {
-
-  rootPage:string = 'TabsPage';  // This needs to be updated once logged in / registered to be TabsPage
+  rootPage: string = "TabsPage"; // This needs to be updated once logged in / registered to be TabsPage
   // rootPage:string = 'LandingPage';  // This needs to be updated once logged in / registered to be TabsPage
-
+  lat: number;
+  long: number;
   constructor(
     platform: Platform,
     statusBar: StatusBar,
-    splashScreen: SplashScreen
+    splashScreen: SplashScreen,
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -28,5 +29,6 @@ export class MyApp {
       splashScreen.hide();
     });
   }
+
 }
 

@@ -7,8 +7,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
-import { TabsPage } from '../pages/tabs/tabs';
-
 import { HomePageModule } from '../pages/home/home.module';
 import { LoginBackgroundSliderPageModule } from '../pages/login-background-slider/login-background-slider.module';
 import { LoginPageModule } from '../pages/login/login.module';
@@ -17,12 +15,15 @@ import { LandingPageModule } from '../pages/landing/landing.module';
 import { APP_REDUCER } from '../model/app.reducer';
 
 import { Facebook } from '@ionic-native/facebook';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../model/auth/auth.effects';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
+import { ComponentsModule } from '../components/components.module';
+import { GoogleMaps } from '@ionic-native/google-maps';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { TabsPageModule } from '../pages/tabs/tabs.module';
     LandingPageModule,
     LoginPageModule,
     TabsPageModule,
+    ComponentsModule,
     StoreModule.forRoot(APP_REDUCER),
     // Note that you must instrument after importing StoreModule
     StoreDevtoolsModule.instrument({
@@ -54,6 +56,8 @@ import { TabsPageModule } from '../pages/tabs/tabs.module';
     StatusBar,
     SplashScreen,
     Facebook,
+    Geolocation,
+    GoogleMaps,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

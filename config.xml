@@ -93,4 +93,5 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyBeHaO48HWN6-rIcWPsNHHiLGHcQx2pie0" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyASVlONnA0udF3a0bWntj076WRe8ku6P6w" />
     </plugin>
+    <allow-navigation href="http://192.168.0.10:8101" />
 </widget>

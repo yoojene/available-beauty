@@ -11,5 +11,33 @@
     <ion-label stacked> Look for beauty </ion-label>
     <ion-input placeholder="Search" clearInput></ion-input>
   </ion-item>
+<ion-item-divider>
+
+</ion-item-divider>
+
+    {{lat}}
+    {{long}}
+
+
+    <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
+      <!--Custom HTML marker-->
+      <!-- lat="lat" lng="long" -->
+      <!-- <ion-marker lat="40.717317" lng="-73.995284" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
+
+      <!--Custom icon marker-->
+      <!-- <ion-marker lat="40.718217" lng="-73.991434" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
+
+      <!--Normal marker-->
+      <!-- <ion-marker lat="40.718417" lng="-73.996734" label="Y" title="Normal Marker"></ion-marker> -->
+    </ion-maps>
+
+    <ion-fab right bottom>
+      <button ion-fab [disabled]="!mapButton" (click)="toggleMap()">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+    </ion-fab>
+
+  <!-- </ion-item> -->
+
 
 </ion-content>
