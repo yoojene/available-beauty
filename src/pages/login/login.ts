@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -27,7 +27,8 @@ export class LoginPage {
 
   constructor(public store: Store<AppState>,
               public formBuilder: FormBuilder,
-              public navCtrl: NavController) {
+              public navCtrl: NavController,
+              public plt: Platform) {
 
 
     this.loginForm = formBuilder.group({
@@ -42,6 +43,7 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+    console.log(this.plt.platforms())
   }
 
   openResetPassword() {

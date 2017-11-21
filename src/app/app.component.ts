@@ -4,15 +4,17 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
+import { TabsPage } from '../pages/tabs/tabs';
 import { LoginBackgroundSliderPage } from '../pages/login-background-slider/login-background-slider';
 import { LandingPage } from '../pages/landing/landing';
 
 @Component({
-  templateUrl: "app.html"
+  templateUrl: 'app.html'
 })
 export class MyApp {
 
-  rootPage:string = 'LandingPage';
+  rootPage:string = 'TabsPage';  // This needs to be updated once logged in / registered to be TabsPage
+  // rootPage:string = 'LandingPage';  // This needs to be updated once logged in / registered to be TabsPage
 
   constructor(
     platform: Platform,

@@ -7,6 +7,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 
+import { TabsPage } from '../pages/tabs/tabs';
+
 import { HomePageModule } from '../pages/home/home.module';
 import { LoginBackgroundSliderPageModule } from '../pages/login-background-slider/login-background-slider.module';
 import { LoginPageModule } from '../pages/login/login.module';
@@ -20,10 +22,12 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../model/auth/auth.effects';
+import { TabsPageModule } from '../pages/tabs/tabs.module';
 
 @NgModule({
   declarations: [
     MyApp
+    // TabsPage
   ],
   imports: [
     BrowserModule,
@@ -32,6 +36,7 @@ import { AuthEffects } from '../model/auth/auth.effects';
     LoginBackgroundSliderPageModule,
     LandingPageModule,
     LoginPageModule,
+    TabsPageModule,
     StoreModule.forRoot(APP_REDUCER),
     // Note that you must instrument after importing StoreModule
     StoreDevtoolsModule.instrument({
@@ -43,6 +48,7 @@ import { AuthEffects } from '../model/auth/auth.effects';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp
+
   ],
   providers: [
     StatusBar,

@@ -8,13 +8,13 @@ export class AuthService {
               private fb: Facebook) {}
 
   public doLogin(event) {
-    console.log("native login success", event);
+    console.log('native login success', event);
 
     // Call /login API
     // Return success / failure
     // Update store with success / failure
 
-    this.app.getActiveNav().push("HomePage");
+    this.app.getActiveNav().push('TabsPage');
 
     //  this.navCtrl.push('HomePage');
 
@@ -22,15 +22,15 @@ export class AuthService {
   }
 
   public doSocialLogin(event) {
-    console.log("Facebook Login Success", event);
+    console.log('Facebook Login Success', event);
 
     this.fb
-      .login(["email"])
+      .login(['email'])
       .then((res: FacebookLoginResponse) => {
-        console.log("Logged into facebook ", res)
-        this.app.getActiveNav().push("HomePage");
+        console.log('Logged into facebook ', res)
+        this.app.getActiveNav().push('TabsPage');
       })
-      .catch(e => console.error("Error! ", e));
+      .catch(e => console.error('Error! ', e));
 
     // Call facebook API
     // Return success / failure
