@@ -71,7 +71,8 @@ export class RegisterPage {
 
       this.user.addUser(user).subscribe(
         res => {
-          console.log(res)
+          console.log(res);
+          // success - move to HomePage
         },
         (err: HttpErrorResponse) => {
            console.error(err)
