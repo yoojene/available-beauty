@@ -7,7 +7,7 @@ import { Stylist } from '../../model/stylist/stylist.model';
 @Injectable()
 export class StylistProvider {
 
-  constructor(public http: HttpClient
+  constructor(public http: HttpClient,
              @Inject(API_CONFIG) public config: ApiConfig) {}
 
 /**
@@ -18,9 +18,7 @@ export class StylistProvider {
  */
 getStylists() {
      return this.http.get<Stylist>(this.config.endpointURL + this.config.stylistsPath);
-
   }
-
 /**
  * Create a new stylist
  *
