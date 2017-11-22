@@ -30,6 +30,8 @@ import { UserProvider } from '../providers/user/user';
 import { API_CONFIG_VALUES } from '../config/api.config';
 import { API_CONFIG } from '../model/api.config';
 import { StylistProvider } from '../providers/stylist/stylist';
+import { LocationProvider } from '../providers/location/location';
+import { RegisterPageModule } from '../pages/register/register.module';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { StylistProvider } from '../providers/stylist/stylist';
     LandingPageModule,
     LoginPageModule,
     TabsPageModule,
+    RegisterPageModule,
     ComponentsModule,
     StoreModule.forRoot(APP_REDUCER),
     // Note that you must instrument after importing StoreModule
@@ -55,23 +58,21 @@ import { StylistProvider } from '../providers/stylist/stylist';
     EffectsModule.forRoot([AuthEffects])
   ],
   bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp
-
-  ],
+  entryComponents: [MyApp],
   providers: [
     StatusBar,
     SplashScreen,
     Facebook,
     Geolocation,
     GoogleMaps,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     UserProvider,
     {
       provide: API_CONFIG,
       useValue: API_CONFIG_VALUES
     },
-    StylistProvider
+    StylistProvider,
+    LocationProvider
   ]
 })
 export class AppModule {}

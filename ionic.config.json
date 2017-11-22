@@ -4,5 +4,11 @@
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "proxies": [
+    {
+        "path": "/",
+        "proxyUrl": "https://frozen-sands-96988.herokuapp.com"
+    }
+]
 }

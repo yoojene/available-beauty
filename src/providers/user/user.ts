@@ -30,9 +30,9 @@ export class UserProvider {
    * @returns
    * @memberof UserProvider
    */
-  public addUser(user) {
-    return this.http
-      .post(this.config.endpointURL + this.config.userPath, user)
+  public addUser(user: any) {
+    console.log(user);
+    return this.http.post<User>(this.config.endpointURL + this.config.usersPath, user);
   }
   /**
    * Update existing user details
