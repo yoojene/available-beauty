@@ -32,7 +32,10 @@ export class UserProvider {
    */
   public addUser(user: any) {
     console.log(user);
-    return this.http.post<User>(this.config.endpointURL + this.config.usersPath, user);
+    return this.http.post<User>(
+      this.config.endpointURL + this.config.usersPath,
+      user
+    );
   }
   /**
    * Update existing user details
@@ -47,7 +50,7 @@ export class UserProvider {
       .put(
         this.config.endpointURL + this.config.usersPath + userId,
         userDetails
-      )
+      );
   }
 /**
  * Delete a user
@@ -59,7 +62,7 @@ export class UserProvider {
 public deleteUser(userId) {
     // When would we do this?  Account delete only?
     return this.http
-      .delete(this.config.endpointURL + this.config.usersPath)
+      .delete(this.config.endpointURL + this.config.usersPath);
 
   }
 }

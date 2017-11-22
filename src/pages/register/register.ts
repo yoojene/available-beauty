@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { UserProvider } from '../../providers/user/user';
 import { LocationProvider } from '../../providers/location/location';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Generated class for the RegisterPage page.
@@ -41,36 +42,41 @@ export class RegisterPage {
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad RegisterPage");
-         this.location.getGeoLocation()
-          .then(res => this.coords = res);
-          // .subscribe(res => {
-          //   this.coords = res
-          // });
-          console.log(this.coords);
+
+    this.location.getGeoLocation()
+        .then(res => this.coords = res);
+        console.log(this.coords);
   }
 
   doRegister() {
+
     console.log(this.registerForm.value);
+
     if (this.registerForm.valid) {
       console.log("registered!");
 
-      // let location = this.location.getGeoLocation();
       console.log(this.coords);
-      // let user = Object.assign({}, this.registerForm.value, {"homeLocation" : this.coords})
+
       let user = this.registerForm.value;
 
       console.log(this.registerForm.value);
       console.log(user);
 
-      delete user.password;
+      // delete user.password;
 
       user.homeLocation = this.coords
-       console.log(user);
+      console.log(user);
+      console.log(JSON.stringify(user));
 
 
-      this.user.addUser(user)
-        .subscribe(res => console.log(res),
-         err => console.error(err));
+      this.user.addUser(user).subscribe(
+        res => {
+          console.log(res)
+        },
+        (err: HttpErrorResponse) => {
+           console.error(err)
+         }
+        );
     }
   }
 }
