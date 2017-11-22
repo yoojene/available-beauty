@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
@@ -24,6 +25,10 @@ import { AuthEffects } from '../model/auth/auth.effects';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { ComponentsModule } from '../components/components.module';
 import { GoogleMaps } from '@ionic-native/google-maps';
+import { UserProvider } from '../providers/user/user';
+
+import { API_CONFIG_VALUES } from '../config/api.config';
+import { API_CONFIG } from '../model/api.config';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,7 @@ import { GoogleMaps } from '@ionic-native/google-maps';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
     HomePageModule,
     LoginBackgroundSliderPageModule,
@@ -58,7 +64,12 @@ import { GoogleMaps } from '@ionic-native/google-maps';
     Facebook,
     Geolocation,
     GoogleMaps,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    UserProvider,
+    {
+      provide: API_CONFIG,
+      useValue: API_CONFIG_VALUES
+    }
   ]
 })
 export class AppModule {}
