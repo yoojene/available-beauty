@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { MyProvidersModule } from '../providers/providers.module';
+import { MapProvidersModule } from '../providers/maps/map.providers.module';
 import { IonMaps } from './ion-maps/ion-maps';
 // import { IonStaticMapsComponent } from './ion-static-maps/ion-static-maps';
 import { IonMarker } from './ion-marker/ion-marker';
@@ -13,7 +13,7 @@ import { IonMarker } from './ion-marker/ion-marker';
     IonMarker,
   ],
 	imports: [
-    MyProvidersModule.forRoot(),
+    MapProvidersModule.forRoot(),
   ],
 	exports: [
     IonMaps,
