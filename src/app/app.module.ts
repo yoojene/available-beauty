@@ -29,6 +29,7 @@ import { UserProvider } from '../providers/user/user';
 
 import { API_CONFIG_VALUES } from '../config/api.config';
 import { API_CONFIG } from '../model/api.config';
+import { StylistProvider } from '../providers/stylist/stylist';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { API_CONFIG } from '../model/api.config';
     {
       provide: API_CONFIG,
       useValue: API_CONFIG_VALUES
-    }
+    },
+    StylistProvider
   ]
 })
 export class AppModule {}
