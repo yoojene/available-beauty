@@ -16,6 +16,17 @@ export function authReducer(state = authState.initialState,
         isLoggedIn: false,
       })
 
+      case authActions.REGISTER_SUCCESS:
+      return Object.assign({}, state, {
+        registrationDetails: action.payload
+      })
+
+      case authActions.REGISTER_ERROR:
+      return Object.assign({}, state, {
+        registrationError: action.payload
+      })
+
+
       default:
         return state;
   }

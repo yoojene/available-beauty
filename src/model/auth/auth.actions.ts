@@ -1,14 +1,18 @@
-import { Action } from "@ngrx/store";
-import { LoginDetails } from "./auth.state";
+import { Action } from '@ngrx/store';
+import { LoginDetails } from './auth.state';
 
 export const LOGIN =  '[Auth] Login';
-export const LOGIN_SUCCESS = "[Auth] Login Success";
-export const LOGIN_ERROR = "[Auth] Login Error";
+export const LOGIN_SUCCESS = '[Auth] Login Success';
+export const LOGIN_ERROR = '[Auth] Login Error';
 
-export const LOGOUT = "[Auth] Logout";
-export const LOGOUT_SUCCESS = "[Auth] Logout Success";
+export const LOGOUT = '[Auth] Logout';
+export const LOGOUT_SUCCESS = '[Auth] Logout Success';
 
-export const USER_NOT_VALIDATED = "[Auth] User Not Validated";
+export const USER_NOT_VALIDATED = '[Auth] User Not Validated';
+
+export const REGISTER = '[Auth] Register';
+export const REGISTER_SUCCESS = '[Auth] Register Success';
+export const REGISTER_ERROR = '[Auth] Register Error';
 
 
 // Login
@@ -39,7 +43,7 @@ export class LoginErrorAction implements Action {
 export class LogoutAction implements Action {
   readonly type = LOGOUT;
   constructor(public payload: LoginDetails) {
-    console.info("LogoutAction()", payload);
+    console.info('LogoutAction()', payload);
   }
 }
 
@@ -53,11 +57,31 @@ export class LogoutSuccessAction implements Action {
 
 export class UserNotValidatedAction implements Action {
   readonly type = USER_NOT_VALIDATED;
-
   constructor(public payload?: any) {
     console.error(`UserNotValidatedAction()`, payload);
   }
 }
+
+// Register
+
+export class RegisterAction implements Action {
+  readonly type = REGISTER;
+  constructor(public payload: any) {
+    console.info("RegisterAction()", payload);
+  }
+}
+export class RegisterSuccessAction implements Action {
+  readonly type = REGISTER_SUCCESS;
+  constructor(public payload: any) {
+    console.info("RegisterSuccessAction()", payload);
+  }
+}
+export class RegisterErrorAction implements Action {
+  readonly type = REGISTER_ERROR;
+    constructor(public payload: any) {
+      console.info("RegisterErrorAction()", payload);
+    }
+  }
 
 
 // Type
@@ -67,6 +91,9 @@ LoginSuccessAction |
 LoginErrorAction |
 LogoutAction |
 LogoutSuccessAction |
-UserNotValidatedAction;
+UserNotValidatedAction |
+RegisterAction |
+RegisterSuccessAction |
+RegisterErrorAction;
 
 

@@ -2,9 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { Store } from "@ngrx/store";
+import { AppState } from "../../model/app.state";
+
 import { UserProvider } from '../../providers/user/user';
 import { LocationProvider } from '../../providers/location/location';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RegisterAction, RegisterErrorAction } from '../../model/auth/auth.actions';
 
 /**
  * Generated class for the RegisterPage page.
@@ -27,7 +31,8 @@ export class RegisterPage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     public user: UserProvider,
-    public location: LocationProvider
+    public location: LocationProvider,
+    private store: Store<AppState>
   ) {
     this.registerForm = formBuilder.group({
       name: ["", Validators.required],
@@ -59,25 +64,31 @@ export class RegisterPage {
 
       let user = this.registerForm.value;
 
-      console.log(this.registerForm.value);
-      console.log(user);
 
-      // delete user.password;
 
       user.homeLocation = this.coords
       console.log(user);
       console.log(JSON.stringify(user));
 
+      // this.store.dispatch(new RegisterAction(user));
+      // TODO Needs more work
 
-      this.user.addUser(user).subscribe(
-        res => {
+      // For now call user service and API
+      this.user.addUser(user)
+      .subscribe(res => {
           console.log(res);
           // success - move to HomePage
+          this.navCtrl.push('HomePage');
         },
         (err: HttpErrorResponse) => {
-           console.error(err)
+           console.error(err);
+           // Throw some dialog or error text
          }
         );
+    }else{
+      // Error!
+      this.store.dispatch(new RegisterErrorAction(this.registerForm.value));
+      // Throw some dialog or error text
     }
   }
 }
