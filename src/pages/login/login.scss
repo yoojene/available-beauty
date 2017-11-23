@@ -1,8 +1,8 @@
 page-login {
-  .scroll-content {
-    margin-top: 0 !important;
-    overflow: hidden;
-  }
+  // .scroll-content {
+  //   margin-top: 0 !important;
+  //   overflow: hidden;
+  // }
 
   .logo {
     width: 70%;
@@ -38,7 +38,7 @@ page-login {
   }
   .login-container {
     background-color: grey;
-     background-size: cover;
+    background-size: cover;
     color: black;
     position: absolute;
     top: 0;
@@ -55,4 +55,10 @@ page-login {
   ion-header.header.header-md::after{
     background-image: none;
   }
+
+  .login-button {
+    width: 215px;
+  }
+
+
 }

@@ -6,9 +6,6 @@
 -->
 <ion-header>
 
-  <ion-navbar transparent hideBackButton="true">
-  </ion-navbar>
-
 </ion-header>
 
 
@@ -24,16 +21,16 @@
         <p (click)="openResetPassword()">
           <strong>Forgot your password?</strong>
         </p>
-          <button ion-button margin color="tonal">Login</button>
-
+          <button class="login-button" ion-button margin color="tonal">Login</button>
       </form>
-      <button ion-button icon-start margin color="blue" (click)="doFacebookLogin()">
-        <ion-icon name="logo-facebook"></ion-icon>
-        Sign in with Facebook
-      </button>
-
-      <button ion-button margin color="tonal">Register</button>
-      <img class="logo" src="assets/img/Logo Main - Tonal2.png" />
+          <div>
+          <button ion-button icon-start margin color="blue" (click)="doFacebookLogin()">
+            <ion-icon name="logo-facebook"></ion-icon>
+            Sign in with Facebook
+          </button>
+          </div>
+          <div>
+            <img class="logo" src="assets/img/Logo Main - Tonal2.png" />
+          </div>
     </div>
-
 </ion-content>
