@@ -50,4 +50,49 @@ page-landing {
     opacity: 0.8;
   }
 
+  .ab-logo {
+    background: url('../assets/img/Logo Main - Tonal2.png') no-repeat;
+     background-size: cover;
+     background-position: center;
+     height: 30rem;
+     width: auto;
+  }
+
+
+
+  @media (min-width: 568px) {
+
+    .ab-logo {
+  //  background: url('../assets/img/Logo Main - Tonal2.png') no-repeat;
+    // background-size: cover;
+    // background-position: center;
+     height: 50rem;
+     width: 50rem;
+  }
+
+  }
+
+  @media (min-width: 768px) {
+    .ab-logo {
+     height: 40rem;
+     width: 40rem;
+  }
+}
+
+  @media (min-width: 968px) {
+    .ab-logo {
+     height: 40rem;
+     width: 40rem;
+     margin-left: 33rem;
+    }
+  }
+  @media (min-width: 1468px) {
+
+    .ab-logo {
+     height: 40rem;
+     width: 40rem;
+     margin-left: 50rem;
+    }
+
+  }
 }
