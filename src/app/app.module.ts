@@ -1,12 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
-import { MyApp } from './app.component';
+import { AvailableBeautyApp } from './app.component';
 
 import { HomePageModule } from '../pages/home/home.module';
 import { LoginBackgroundSliderPageModule } from '../pages/login-background-slider/login-background-slider.module';
@@ -17,6 +17,7 @@ import { APP_REDUCER } from '../model/app.reducer';
 
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -35,13 +36,14 @@ import { RegisterPageModule } from '../pages/register/register.module';
 
 @NgModule({
   declarations: [
-    MyApp
+    AvailableBeautyApp
     // TabsPage
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(AvailableBeautyApp),
+    IonicStorageModule.forRoot(),
     HomePageModule,
     LoginBackgroundSliderPageModule,
     LandingPageModule,
@@ -58,7 +60,7 @@ import { RegisterPageModule } from '../pages/register/register.module';
     EffectsModule.forRoot([AuthEffects])
   ],
   bootstrap: [IonicApp],
-  entryComponents: [MyApp],
+  entryComponents: [AvailableBeautyApp],
   providers: [
     StatusBar,
     SplashScreen,

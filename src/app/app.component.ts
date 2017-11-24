@@ -7,16 +7,14 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginBackgroundSliderPage } from '../pages/login-background-slider/login-background-slider';
 import { LandingPage } from '../pages/landing/landing';
-import { Geolocation } from "@ionic-native/geolocation";
+import { Geolocation } from '@ionic-native/geolocation';
 
 
 @Component({
   templateUrl: "app.html"
 })
-
-
-export class MyApp {
-  // rootPage: string = "TabsPage"; // This needs to be updated once logged in / registered to be TabsPage
+export class AvailableBeautyApp {
+  // rootPage: string = 'TabsPage'; // This needs to be updated once logged in / registered to be TabsPage
   rootPage: string = "LandingPage"; // This needs to be updated once logged in / registered to be TabsPage
 
   lat: number;
@@ -34,21 +32,18 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
       // this.getGeoLocation();
-      });
-  };
-
+    });
+  }
 
   getGeoLocation() {
-
-    this.geolocation.getCurrentPosition()
+    this.geolocation
+      .getCurrentPosition()
       .then(resp => {
         this.lat = resp.coords.latitude;
         this.long = resp.coords.longitude;
         console.log(this.lat);
         console.log(this.long);
-
       })
       .catch(err => console.error("Error getting location", err));
   }
-
 }
