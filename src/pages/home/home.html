@@ -14,30 +14,46 @@
 <ion-item-divider>
 
 </ion-item-divider>
-
-    {{lat}}
-    {{long}}
-
-
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
       <!--Custom HTML marker-->
       <!-- lat="lat" lng="long" -->
       <!-- <ion-marker lat="40.717317" lng="-73.995284" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
+      <!-- <ion-marker lat="{{lat}}" lng="{{long}}" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
 
       <!--Custom icon marker-->
       <!-- <ion-marker lat="40.718217" lng="-73.991434" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
+      <!-- <ion-marker lat="{{lat}}" lng="{long}}" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
 
       <!--Normal marker-->
       <!-- <ion-marker lat="40.718417" lng="-73.996734" label="Y" title="Normal Marker"></ion-marker> -->
+      <ion-marker lat="{{lat}}" lng="{{long}}" label="Y" title="Me"></ion-marker>
+      <div *ngFor="let stylist of stylists$ | async">
+        <ion-marker
+          lat="{{stylist.baseLocation[0]}}"
+          lng="{{stylist.baseLocation[1]}}"
+          label="{{stylist.name[0]}}"
+          title="{{stylist.name}}">
+        </ion-marker>
+        </div>
     </ion-maps>
+
+    <div>
+      <ion-list>
+        <ion-item *ngFor="let stylist of stylists$ | async">
+          <ion-avatar item-start>
+            <img src="{{stylist.avatarImage}}">
+          </ion-avatar>
+          {{stylist.name}}
+        </ion-item>
+      </ion-list>
+    </div>
+
+
 
     <ion-fab right bottom>
       <button ion-fab [disabled]="!mapButton" (click)="toggleMap()">
         <ion-icon name="pin"></ion-icon>
       </button>
     </ion-fab>
-
-  <!-- </ion-item> -->
-
 
 </ion-content>

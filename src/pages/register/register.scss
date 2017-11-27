@@ -1,3 +1,36 @@
 page-register {
 
+    .logo {
+      width: 70%;
+      height: auto;
+      padding-top: 5vh;
+      margin-bottom: 15vh;
+    }
+
+
+
+   .register-container {
+    background-color: grey;
+    background-size: cover;
+    color: black;
+    position: absolute;
+    top: 0;
+    padding: 5vw;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 2;
+  }
+
+    ion-item {
+    color: white !important;
+    padding-left: 10px !important;
+    margin-bottom: 10px;
+    background-color: transparent !important;
+    font-size: 0.9em;
+  }
+   ::-webkit-input-placeholder {
+    color: black !important;
+  }
+
 }

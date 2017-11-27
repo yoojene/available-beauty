@@ -4,6 +4,7 @@ import "rxjs/add/operator/catch";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import { Geolocation } from "@ionic-native/geolocation";
+import { StorageProvider } from '../storage/storage'
 
 /*
   Generated class for the LocationProvider provider.
@@ -14,7 +15,8 @@ import { Geolocation } from "@ionic-native/geolocation";
 @Injectable()
 export class LocationProvider {
   constructor(
-              private geolocation: Geolocation
+              private geolocation: Geolocation,
+              private storage: StorageProvider
             ) {
     console.log("Hello LocationProvider Provider");
   }
@@ -25,10 +27,9 @@ export class LocationProvider {
       .watchPosition()
       .filter(p => p.coords !== undefined)
       .subscribe(position => {
-        //this.storage.set("geolat", position.coords.latitude);
-        //this.storage.set("geolong", position.coords.longitude);
-        console.log([position.coords.latitude, position.coords.longitude])
-        return [position.coords.latitude, position.coords.longitude]
+        console.log([position.coords.latitude, position.coords.longitude]);
+        this.storage.setStorage('geolocation', [position.coords.latitude, position.coords.longitude])
+        return [position.coords.latitude, position.coords.longitude];
       });
   }
 
@@ -38,11 +39,8 @@ export class LocationProvider {
     return this.geolocation
       .getCurrentPosition()
       .then(resp => {
-
-        console.log(resp.coords.latitude);
-        console.log(resp.coords.longitude);
-
         console.log([resp.coords.latitude, resp.coords.longitude]);
+        this.storage.setStorage('geolocation', [resp.coords.latitude, resp.coords.longitude])
         return [resp.coords.latitude, resp.coords.longitude];
       })
       .catch(err => console.error("Error getting location", err));

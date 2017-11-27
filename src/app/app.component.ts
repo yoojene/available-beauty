@@ -7,7 +7,8 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginBackgroundSliderPage } from '../pages/login-background-slider/login-background-slider';
 import { LandingPage } from '../pages/landing/landing';
-import { Geolocation } from '@ionic-native/geolocation';
+// import { Geolocation } from '@ionic-native/geolocation';
+import { LocationProvider } from '../providers/location/location';
 
 
 @Component({
@@ -24,26 +25,30 @@ export class AvailableBeautyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    private geolocation: Geolocation
+    private location: LocationProvider
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      // this.getGeoLocation();
+      this.setGeoLocation();
     });
   }
 
-  getGeoLocation() {
-    this.geolocation
-      .getCurrentPosition()
-      .then(resp => {
-        this.lat = resp.coords.latitude;
-        this.long = resp.coords.longitude;
-        console.log(this.lat);
-        console.log(this.long);
-      })
-      .catch(err => console.error("Error getting location", err));
+  setGeoLocation(){
+    this.location.watchGeoLocation()
   }
+
+  // getGeoLocation() {
+  //   this.geolocation
+  //     .getCurrentPosition()
+  //     .then(resp => {
+  //       this.lat = resp.coords.latitude;
+  //       this.long = resp.coords.longitude;
+  //       console.log(this.lat);
+  //       console.log(this.long);
+  //     })
+  //     .catch(err => console.error("Error getting location", err));
+  // }
 }

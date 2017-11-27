@@ -31,7 +31,7 @@ export class LandingPage {
   }
 
   openPage(){
-    this.navCtrl.push('RegisterPage');
+    this.navCtrl.push('LoginPage');
 
   }
 }

@@ -54,6 +54,7 @@ export class LoginPage {
     if (!this.loginForm.valid) {
        this.store.dispatch(new UserNotValidatedAction({
          error: `Invalid or empty data`,
+         // TODO Add visual error message on form
          }));
 
     } else {
@@ -76,8 +77,11 @@ export class LoginPage {
           isNativeLogin: false
         }));
 
-    // Dispatch login action (FB only?)
 
+  }
 
+  openRegisterPage() {
+
+    this.navCtrl.push('RegisterPage');
   }
 }

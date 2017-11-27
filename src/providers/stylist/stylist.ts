@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Stylist } from '../../model/stylist/stylist.model';
+import { MOCK_STYLISTS } from '../../mocks/stylist.mocks';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class StylistProvider {
@@ -17,8 +19,11 @@ export class StylistProvider {
  * @memberof StylistProvider
  */
 getStylists() {
-     return this.http.get<Stylist>(this.config.endpointURL + this.config.stylistsPath);
+    //  return this.http.get<Stylist>(this.config.endpointURL + this.config.stylistsPath);
+    return Observable.of(MOCK_STYLISTS);
   }
+
+
 /**
  * Create a new stylist
  *

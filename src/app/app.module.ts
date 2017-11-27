@@ -33,6 +33,7 @@ import { API_CONFIG } from '../model/api.config';
 import { StylistProvider } from '../providers/stylist/stylist';
 import { LocationProvider } from '../providers/location/location';
 import { RegisterPageModule } from '../pages/register/register.module';
+import { StorageProvider } from '../providers/storage/storage';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { RegisterPageModule } from '../pages/register/register.module';
       useValue: API_CONFIG_VALUES
     },
     StylistProvider,
-    LocationProvider
+    LocationProvider,
+    StorageProvider
   ]
 })
 export class AppModule {}

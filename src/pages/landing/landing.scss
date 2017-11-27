@@ -50,6 +50,9 @@ page-landing {
     opacity: 0.8;
   }
 
+}
+
+// Logo used on reg pages
   .ab-logo {
     background: url('../assets/img/Logo Main - Tonal2.png') no-repeat;
      background-size: cover;
@@ -59,13 +62,9 @@ page-landing {
   }
 
 
-
   @media (min-width: 568px) {
 
     .ab-logo {
-  //  background: url('../assets/img/Logo Main - Tonal2.png') no-repeat;
-    // background-size: cover;
-    // background-position: center;
      height: 50rem;
      width: 50rem;
   }
@@ -95,4 +94,3 @@ page-landing {
     }
 
   }
-}

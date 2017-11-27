@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
-import { Geolocation } from '@ionic-native/geolocation';
+import { StylistProvider } from "../../providers/stylist/stylist";
+import { Observable } from 'rxjs/Observable';
+import { Stylist } from '../../model/stylist/stylist.model';
+import { StorageProvider } from '../../providers/storage/storage';
 
 @IonicPage()
 @Component({
@@ -13,39 +16,42 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
+  private stylists$: Observable<Stylist[]>;
+
   constructor(
     public navCtrl: NavController,
-    private geolocation: Geolocation
-  )
-  {}
+    private storage: StorageProvider,
+    private stylist: StylistProvider
+  ) {}
 
   ionViewDidLoad() {
     this.getGeoLocation();
   }
 
-
-
   toggleMap() {
     if (!this.showMap) {
+      this.getStylists();
       this.showMap = true;
     } else {
       this.showMap = false;
     }
-
   }
 
   getGeoLocation() {
-    this.geolocation
-      .getCurrentPosition()
-      .then(resp => {
-        this.lat = resp.coords.latitude;
-        this.long = resp.coords.longitude;
-
+    this.storage.getStorage('geolocation')
+    .subscribe(res => {
+      console.log(res);
+      if (res){
+        this.lat = res[0];
+        this.long = res[1];
+        console.log(this.lat)
+        console.log(this.long)
         this.mapButton = true;
+      }
+    });
+  }
 
-        console.log(this.lat);
-        console.log(this.long);
-      })
-      .catch(err => console.error("Error getting location", err));
+  getStylists() {
+    this.stylists$ = this.stylist.getStylists();
   }
 }

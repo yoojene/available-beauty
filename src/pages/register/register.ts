@@ -64,8 +64,6 @@ export class RegisterPage {
 
       let user = this.registerForm.value;
 
-
-
       user.homeLocation = this.coords
       console.log(user);
       console.log(JSON.stringify(user));
@@ -77,18 +75,19 @@ export class RegisterPage {
       this.user.addUser(user)
       .subscribe(res => {
           console.log(res);
-          // success - move to HomePage
-          this.navCtrl.push('HomePage');
+          // success - move to back to login page
+          this.navCtrl.pop();
         },
         (err: HttpErrorResponse) => {
            console.error(err);
-           // Throw some dialog or error text
+           // TODO: Show visual error message
          }
         );
     }else{
       // Error!
       this.store.dispatch(new RegisterErrorAction(this.registerForm.value));
-      // Throw some dialog or error text
+      this.navCtrl.pop();
+      // TODO: Show visual error message
     }
   }
 }
