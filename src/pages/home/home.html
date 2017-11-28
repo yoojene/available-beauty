@@ -7,13 +7,13 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-item>
-    <ion-label stacked> Look for beauty </ion-label>
-    <ion-input placeholder="Search" clearInput></ion-input>
-  </ion-item>
-<ion-item-divider>
-
-</ion-item-divider>
+  <div class="search-item" (click)="showSearch()"> Search </div>
+  <br>
+  <!-- <ion-item> -->
+  <!-- <ion-label> Look for beauty </ion-label> -->
+  <!-- <ion-input placeholder="Search" clearInput></ion-input> -->
+  <!-- Search -->
+  <!-- </ion-item> -->
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
       <!--Custom HTML marker-->
       <!-- lat="lat" lng="long" -->
@@ -36,10 +36,10 @@
         </ion-marker>
         </div>
     </ion-maps>
-
+    <br>
     <div>
       <ion-list>
-        <ion-item *ngFor="let stylist of stylists$ | async">
+        <ion-item *ngFor="let stylist of stylists$ | async" (click)="openProfile(stylist)">
           <ion-avatar item-start>
             <img src="{{stylist.avatarImage}}">
           </ion-avatar>

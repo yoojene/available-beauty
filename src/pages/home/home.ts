@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { NavController, IonicPage, ModalController, Events } from 'ionic-angular';
 import { StylistProvider } from "../../providers/stylist/stylist";
 import { Observable } from 'rxjs/Observable';
 import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
+import { SearchPage } from '../search/search';
 
 @IonicPage()
 @Component({
@@ -21,7 +22,9 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
-    private stylist: StylistProvider
+    private stylist: StylistProvider,
+    private modalCtrl: ModalController,
+    private events: Events
   ) {}
 
   ionViewDidLoad() {
@@ -30,7 +33,6 @@ export class HomePage {
 
   toggleMap() {
     if (!this.showMap) {
-      this.getStylists();
       this.showMap = true;
     } else {
       this.showMap = false;
@@ -38,14 +40,13 @@ export class HomePage {
   }
 
   getGeoLocation() {
-    this.storage.getStorage('geolocation')
-    .subscribe(res => {
+    this.storage.getStorage("geolocation").subscribe(res => {
       console.log(res);
-      if (res){
+      if (res) {
         this.lat = res[0];
         this.long = res[1];
-        console.log(this.lat)
-        console.log(this.long)
+        console.log(this.lat);
+        console.log(this.long);
         this.mapButton = true;
       }
     });
@@ -53,5 +54,22 @@ export class HomePage {
 
   getStylists() {
     this.stylists$ = this.stylist.getStylists();
+  }
+
+  showSearch() {
+    let searchModal = this.modalCtrl.create(SearchPage);
+
+    searchModal.onDidDismiss(data => {
+      console.log("dismissed ", data);
+      this.getStylists();
+    });
+
+    searchModal.present();
+  }
+
+  openProfile(stylist){
+    console.log(stylist)
+    // this.navCtrl.parent.select(2).;
+     this.events.publish("change-profile-tab", 2, 2, stylist);
   }
 }

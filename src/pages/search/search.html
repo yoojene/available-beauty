@@ -1,0 +1,31 @@
+<!--
+  Generated template for the SearchPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="false">
+
+    <ion-title>Search</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!-- <input type="text" placeholder="Enter some stuff"> -->
+  <ion-item>
+    <ion-label stacked> Look for beauty </ion-label>
+    <ion-input type="text" placeholder="Search" (keyup.enter)="onEnterTap($event)"></ion-input>
+  </ion-item>
+  <ion-item-divider>
+
+  </ion-item-divider>
+
+<ion-item>
+  Recent search items
+</ion-item>
+
+</ion-content>

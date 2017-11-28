@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 // import { Keyboard } from '@ionic-native/keyboard';
 
@@ -7,7 +7,7 @@ import { BookingsPage } from '../bookings/bookings';
 import { ProfilePage } from '../profile/profile';
 // import { ResourcesPage } from '../resources/resources';
 // import { SettingsPage } from '../settings/settings';
-import { NavParams, NavController, Platform, IonicPage } from 'ionic-angular';
+import { NavParams, NavController, Platform, IonicPage, Events, Tabs } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -15,19 +15,31 @@ import { NavParams, NavController, Platform, IonicPage } from 'ionic-angular';
   templateUrl: "tabs.html"
 })
 export class TabsPage {
+  @ViewChild(Tabs) tabs: Tabs;
+
   showTabs: boolean;
   showkeyboard: boolean;
 
   tab1Root: any = HomePage;
   tab2Root: any = BookingsPage;
   tab3Root: any = ProfilePage;
+  tab1Params = {id: 0};
+  tab2Params = {id: 1};
+  tab3Params = {id: 2, stylist: ""};
 
   constructor(
     private _platform: Platform,
     private navParams: NavParams,
     // private keyboard: Keyboard,
-    private navCtrl: NavController
-  ) {}
+    private navCtrl: NavController,
+    private events: Events
+  ) {
+    events.subscribe("change-profile-tab", (tab, id, param) => {
+      this.tab3Params.id = id;
+      this.tab3Params.stylist = param
+      this.tabs.select(tab);
+    });
+  }
 
   ionViewWillEnter() {
     // this.keyboard.onKeyboardShow().subscribe(() => {
