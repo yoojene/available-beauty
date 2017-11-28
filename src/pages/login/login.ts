@@ -9,13 +9,7 @@ import { AppState } from '../../model/app.state';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { LoginAction, UserNotValidatedAction, LoginSuccessAction } from '../../model/auth/auth.actions';
 
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { APP_TEST_CONFIG } from '../../config/app.test.config';
 
 @IonicPage({defaultHistory: ['LandingPage']})
 @Component({
@@ -30,11 +24,15 @@ export class LoginPage {
               public navCtrl: NavController,
               public plt: Platform) {
 
-
     this.loginForm = formBuilder.group({
-      email: ['', Validators.required],
+      // email: ['', Validators.required],
+      email: [APP_TEST_CONFIG.email, Validators.required],
+      // password: [
+      //   '',
+      //   Validators.compose([Validators.minLength(6), Validators.required])
+      // ]
       password: [
-        '',
+        APP_TEST_CONFIG.password,
         Validators.compose([Validators.minLength(6), Validators.required])
       ]
     });
