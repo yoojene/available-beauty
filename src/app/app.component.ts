@@ -40,15 +40,4 @@ export class AvailableBeautyApp {
     this.location.watchGeoLocation()
   }
 
-  // getGeoLocation() {
-  //   this.geolocation
-  //     .getCurrentPosition()
-  //     .then(resp => {
-  //       this.lat = resp.coords.latitude;
-  //       this.long = resp.coords.longitude;
-  //       console.log(this.lat);
-  //       console.log(this.long);
-  //     })
-  //     .catch(err => console.error("Error getting location", err));
-  // }
 }
