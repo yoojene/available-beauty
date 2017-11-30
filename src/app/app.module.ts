@@ -34,6 +34,7 @@ import { StylistProvider } from '../providers/stylist/stylist';
 import { LocationProvider } from '../providers/location/location';
 import { RegisterPageModule } from '../pages/register/register.module';
 import { StorageProvider } from '../providers/storage/storage';
+import { SearchProvider } from '../providers/search/search';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { StorageProvider } from '../providers/storage/storage';
     },
     StylistProvider,
     LocationProvider,
-    StorageProvider
+    StorageProvider,
+    SearchProvider
   ]
 })
 export class AppModule {}

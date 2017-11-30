@@ -1,7 +1,8 @@
 <ion-header>
   <ion-navbar hideBackButton="true">
     <ion-title>
-      Available Beauty
+      <!-- Available Beauty -->
+      <img src="assets/img/AB_logo_text.png">
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -9,11 +10,6 @@
 <ion-content padding>
   <div class="search-item" (click)="showSearch()"> Search </div>
   <br>
-  <!-- <ion-item> -->
-  <!-- <ion-label> Look for beauty </ion-label> -->
-  <!-- <ion-input placeholder="Search" clearInput></ion-input> -->
-  <!-- Search -->
-  <!-- </ion-item> -->
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
       <!--Custom HTML marker-->
       <!-- lat="lat" lng="long" -->
@@ -39,16 +35,18 @@
     <br>
     <div>
       <ion-list>
-        <ion-item *ngFor="let stylist of stylists$ | async" (click)="openProfile(stylist)">
-          <ion-avatar item-start>
-            <img src="{{stylist.avatarImage}}">
-          </ion-avatar>
-          {{stylist.name}}
-        </ion-item>
+          <ion-card *ngFor="let stylist of stylists$ | async" (click)="openProfile(stylist)">
+            <ion-card-content>
+            <ion-item no-padding no-border>
+            <ion-avatar item-start>
+              <img src="{{stylist.avatarImage}}">
+            </ion-avatar>
+            {{stylist.name}}
+            </ion-item>
+            </ion-card-content>
+          </ion-card>
       </ion-list>
     </div>
-
-
 
     <ion-fab right bottom>
       <button ion-fab [disabled]="!mapButton" (click)="toggleMap()">

@@ -68,8 +68,6 @@ export class HomePage {
   }
 
   openProfile(stylist){
-    console.log(stylist)
-    // this.navCtrl.parent.select(2).;
      this.events.publish("change-profile-tab", 2, 2, stylist);
   }
 }

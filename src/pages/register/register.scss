@@ -1,5 +1,13 @@
 page-register {
 
+  ion-header {
+    background-color: grey;
+  }
+
+  .back-button {
+    color: black;
+  }
+
     .logo {
       width: 70%;
       height: auto;
@@ -15,9 +23,10 @@ page-register {
     color: black;
     position: absolute;
     top: 0;
-    padding: 5vw;
+    padding: 0vw 5vw 5vw 5vw;
     text-align: center;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     z-index: 2;
   }

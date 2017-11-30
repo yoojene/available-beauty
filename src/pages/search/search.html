@@ -16,16 +16,24 @@
 
 <ion-content padding>
   <!-- <input type="text" placeholder="Enter some stuff"> -->
+  <form [formGroup]="searchForm" (submit)="onSubmit()">
   <ion-item>
     <ion-label stacked> Look for beauty </ion-label>
-    <ion-input type="text" placeholder="Search" (keyup.enter)="onEnterTap($event)"></ion-input>
+    <ion-input type="text" placeholder="Search" formControlName="search"></ion-input>
   </ion-item>
+  </form>
+
   <ion-item-divider>
 
   </ion-item-divider>
 
-<ion-item>
-  Recent search items
-</ion-item>
+<!-- <div *ngIf="previousTerms && previousTerms.length > 0; then current else previous"></div> -->
+  <!-- <ng-template #previous> -->
+    <ion-item *ngFor="let item of previousTerms | async">
+    {{item.term}}
+  </ion-item>
+  <!-- </ng-template> -->
+  <!-- <ng-template #current> -->
 
+  <!-- </ng-template> -->
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, ModalController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -22,7 +22,8 @@ export class LoginPage {
   constructor(public store: Store<AppState>,
               public formBuilder: FormBuilder,
               public navCtrl: NavController,
-              public plt: Platform) {
+              public plt: Platform,
+              private modal: ModalController) {
 
     this.loginForm = formBuilder.group({
       // email: ['', Validators.required],
@@ -80,6 +81,10 @@ export class LoginPage {
 
   openRegisterPage() {
 
-    this.navCtrl.push('RegisterPage');
+    let regModal = this.modal.create('RegisterPage');
+
+    regModal.present();
+
+    // this.navCtrl.push('RegisterPage');
   }
 }

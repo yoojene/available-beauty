@@ -17,11 +17,11 @@ export class ProfilePage {
 
   id: number;
   stylist: any;
+  toggled: boolean = false;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private events: Events) {
-    // console.log(this.navParams);
     this.id = navParams.get("id");
     this.stylist = navParams.get("stylist");
 
@@ -36,6 +36,14 @@ export class ProfilePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
 
+  }
+
+  toggleHeart() {
+    if (!this.toggled){
+      this.toggled = true;
+      return;
+    }
+    this.toggled = false;
   }
 
 

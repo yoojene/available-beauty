@@ -13,22 +13,39 @@
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-list-header>
-<img src="{{stylist.avatarImage}}">
-    </ion-list-header>
-
-    <ion-item>
-        {{stylist.name}}
-    </ion-item>
-    <ion-item>
-   {{stylist.bio}}
-    </ion-item>
+<ion-content class="page-profile" padding>
+  <ion-card>
+    <ion-row>
+        <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-profile--profile-card-button" name="heart" (click)="toggleHeart()">
+        </ion-icon>
+    </ion-row>
+    <img src="{{stylist.avatarImage}}">
+    <ion-card-title>
+     <ion-item>
+       {{stylist.name}}
+       </ion-item>
+    </ion-card-title>
+    <ion-card-content no-padding>
       <ion-item>
- {{stylist.emailAddress}}
+        {{stylist.bio}}
       </ion-item>
-
-  </ion-list>
-
+      <ion-item>
+        {{stylist.emailAddress}}
+      </ion-item>
+      <ion-item>
+       <ion-row>
+         <ion-icon name="star">
+         </ion-icon>
+         <ion-icon name="star">
+         </ion-icon>
+         <ion-icon name="star">
+         </ion-icon>
+         <ion-icon class="page-profile--selected-star-icon" name="star">
+         </ion-icon>
+         <ion-icon class="page-profile--selected-star-icon" name="star">
+         </ion-icon>
+       </ion-row>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

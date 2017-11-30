@@ -1,3 +1,21 @@
 page-profile {
 
+  .page-profile {
+
+
+
+    &--profile-card-button {
+      position: absolute;
+      padding: 2vw;
+      font-size: 4rem;
+      color: white;
+    }
+
+    &--selected-star-icon {
+      color: lightgrey;
+    }
+
+
+  }
+
 }
