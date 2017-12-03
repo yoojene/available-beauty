@@ -74,6 +74,12 @@ export class LoginPage {
       const userPassword = this.loginForm.value.password;
 
       this.auth.doLogin(userEmail, userPassword)
+      .then(res => {
+        console.log(res);
+        this.navCtrl.push('HomePage');
+      }, err =>  {
+        console.error(err.message);
+      });
 
 
 

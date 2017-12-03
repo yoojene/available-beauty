@@ -14,18 +14,9 @@ export class AuthProvider {
               private store: Store<AppState>,
               private fb: Facebook) {}
 
-  public doLogin(event) {
-    console.log('native login success', event);
-
-
-    firebase.auth().signInWithEmailAndPassword(event.email, event.password)
-    .then(res => {
-      console.log(res);
-      this.app.getActiveNav().push('TabsPage');
-    }, err =>  {
-      console.error(err);
-    });
-
+  public doLogin(email, password) {
+    console.log('native login success', email + ' ' +  password);
+    return firebase.auth().signInWithEmailAndPassword(email, password)
   }
 
   public doSocialLogin(event) {
