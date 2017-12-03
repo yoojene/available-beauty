@@ -16,7 +16,7 @@ import 'rxjs/add/operator/mergeMap';
 
 import { LoginSuccessAction, RegisterSuccessAction, RegisterErrorAction } from './auth.actions';
 
-import {AuthService} from '../../providers/auth/auth.provider';
+import {AuthProvider} from '../../providers/auth/auth';
 import {UserProvider} from '../../providers/user/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppState } from '../app.state';
@@ -26,7 +26,7 @@ import { AppState } from '../app.state';
 export class AuthEffects {
   constructor(
     private actions$: Actions,
-    private authService: AuthService,
+    private auth: AuthProvider,
     private store: Store<AppState>,
     private user: UserProvider,
     private app: App
@@ -40,9 +40,9 @@ export class AuthEffects {
       let payload = (action as any).payload;
 
       if (payload.isNativeLogin) {
-        this.authService.doLogin(payload);
+        this.auth.doLogin(payload.email, payload.password);
       } else {
-        this.authService.doSocialLogin(payload);
+        this.auth.doSocialLogin(payload);
       }
     });
 
