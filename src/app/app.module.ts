@@ -19,6 +19,9 @@ import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
@@ -29,7 +32,9 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 import { UserProvider } from '../providers/user/user';
 
 import { API_CONFIG_VALUES } from '../config/api.config';
+import { FIREBASE_CONFIG_VALUES } from '../config/firebase.config';
 import { API_CONFIG } from '../model/api.config';
+
 import { StylistProvider } from '../providers/stylist/stylist';
 import { LocationProvider } from '../providers/location/location';
 import { RegisterPageModule } from '../pages/register/register.module';
@@ -46,6 +51,8 @@ import { SearchProvider } from '../providers/search/search';
     HttpClientModule,
     IonicModule.forRoot(AvailableBeautyApp),
     IonicStorageModule.forRoot(),
+    AngularFireModule.initializeApp(FIREBASE_CONFIG_VALUES),
+    AngularFireDatabaseModule,
     HomePageModule,
     LoginBackgroundSliderPageModule,
     LandingPageModule,

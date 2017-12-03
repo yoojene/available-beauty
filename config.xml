@@ -19,6 +19,12 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
+    <universal-links>
+      <host name="mn7sb.app.goo.gl" scheme="https" />
+      <host name="available-beauty-1511287868565.firebaseapp.com" scheme="https">
+          <path url="/__/auth/callback"/>
+      </host>
+  </universal-links>
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -39,6 +45,7 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+        <preference name="AndroidLaunchMode" value="singleTask" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -85,7 +92,6 @@
         <variable name="APP_ID" value="125684678101312" />
         <variable name="APP_NAME" value="Available Beauty" />
     </plugin>
-    <engine name="android" spec="~6.1.2" />
     <plugin name="cordova-plugin-geolocation" spec="~2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
@@ -96,4 +102,15 @@
     <allow-navigation href="http://192.168.0.10:8101" />
     <plugin name="cordova-sqlite-storage" spec="~2.1.2" />
     <engine name="ios" spec="~4.3.1" />
+    <engine name="android" spec="~6.1.2" />
+    <plugin name="cordova-plugin-buildinfo" spec="~2.0.1" />
+    <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
+    <plugin name="cordova-plugin-browsertab" spec="~0.2.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.7.2" />
+    <plugin name="cordova-plugin-customurlscheme" spec="~4.3.0">
+        <variable name="URL_SCHEME" value="com.available.beauty" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
 </widget>

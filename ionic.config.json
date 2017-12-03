@@ -1,14 +1,14 @@
 {
   "name": "available-beauty",
-  "app_id": "",
+  "app_id": "53665cc8",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
   },
   "proxies": [
     {
-        "path": "/",
-        "proxyUrl": "https://frozen-sands-96988.herokuapp.com"
+      "path": "/",
+      "proxyUrl": "https://frozen-sands-96988.herokuapp.com"
     }
-]
+  ]
 }
