@@ -1,23 +1,30 @@
 import {Injectable} from '@angular/core';
 import {Facebook, FacebookLoginResponse} from '@ionic-native/facebook';
 import {App} from 'ionic-angular';
+import {Store} from '@ngrx/store';
+
+import firebase from 'firebase';
+import { UserNotValidatedAction } from '../../model/auth/auth.actions';
+import { AppState } from '../../model/app.state';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class AuthService {
+export class AuthProvider {
   constructor(private app: App,
+              private store: Store<AppState>,
               private fb: Facebook) {}
 
   public doLogin(event) {
     console.log('native login success', event);
 
-    // Call /login API
-    // Return success / failure
-    // Update store with success / failure
 
-    this.app.getActiveNav().push('TabsPage');
-
-    //  this.navCtrl.push('HomePage');
-
+    firebase.auth().signInWithEmailAndPassword(event.email, event.password)
+    .then(res => {
+      console.log(res);
+      this.app.getActiveNav().push('TabsPage');
+    }, err =>  {
+      console.error(err);
+    });
 
   }
 

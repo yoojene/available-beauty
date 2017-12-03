@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ModalController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -11,20 +11,31 @@ import { LoginAction, UserNotValidatedAction, LoginSuccessAction } from '../../m
 
 import { APP_TEST_CONFIG } from '../../config/app.test.config';
 
-@IonicPage({defaultHistory: ['LandingPage']})
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
+
+import { AuthProvider } from '../../providers/auth/auth';
+
+@IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
+
 export class LoginPage {
+
   public loginForm: any;
 
-  constructor(public store: Store<AppState>,
-              public formBuilder: FormBuilder,
-              public navCtrl: NavController,
-              public plt: Platform,
-              private modal: ModalController) {
-
+  constructor(
+    public store: Store<AppState>,
+    public formBuilder: FormBuilder,
+    public navCtrl: NavController,
+    public plt: Platform,
+    private modal: ModalController,
+    public afAuth: AngularFireAuth,
+    public auth: AuthProvider
+  ) {
     this.loginForm = formBuilder.group({
       // email: ['', Validators.required],
       email: [APP_TEST_CONFIG.email, Validators.required],
@@ -37,12 +48,12 @@ export class LoginPage {
         Validators.compose([Validators.minLength(6), Validators.required])
       ]
     });
-
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-    console.log(this.plt.platforms())
+    console.log(this.plt.platforms());
+
   }
 
   openResetPassword() {
@@ -51,36 +62,33 @@ export class LoginPage {
 
   doLogin() {
     if (!this.loginForm.valid) {
-       this.store.dispatch(new UserNotValidatedAction({
-         error: `Invalid or empty data`,
-         // TODO Add visual error message on form
-         }));
-
+      this.store.dispatch(
+        new UserNotValidatedAction({
+          error: `Invalid or empty data`
+          // TODO Add visual error message on form
+        })
+      );
     } else {
 
       const userEmail = this.loginForm.value.email;
       const userPassword = this.loginForm.value.password;
 
-      this.store.dispatch(new LoginAction({
-        email: userEmail,
-        password: userPassword,
-        isNativeLogin: true
-      }));
+      this.auth.doLogin(userEmail, userPassword)
+
+
 
     }
   }
 
   doFacebookLogin() {
-
-      this.store.dispatch(new LoginAction({
-          isNativeLogin: false
-        }));
-
-
+    this.store.dispatch(
+      new LoginAction({
+        isNativeLogin: false
+      })
+    );
   }
 
   openRegisterPage() {
-
     let regModal = this.modal.create('RegisterPage');
 
     regModal.present();

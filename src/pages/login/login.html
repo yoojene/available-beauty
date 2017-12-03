@@ -9,8 +9,8 @@
 </ion-header>
 
 
-<ion-content>
-    <div class="login-container">
+<ion-content class="page-login">
+    <div class="page-login--login-container">
       <form [formGroup]="loginForm" (submit)="doLogin()">
         <ion-item>
           <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
@@ -23,6 +23,7 @@
         </p>
           <button class="login-button" ion-button margin color="tonal">Login</button>
       </form>
+
           <div>
           <button ion-button icon-start margin color="blue" (click)="doFacebookLogin()">
             <ion-icon name="logo-facebook"></ion-icon>
