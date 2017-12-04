@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -31,7 +31,6 @@ export class LoginPage {
     public store: Store<AppState>,
     public formBuilder: FormBuilder,
     public navCtrl: NavController,
-    public plt: Platform,
     private modal: ModalController,
     public afAuth: AngularFireAuth,
     public auth: AuthProvider
@@ -52,7 +51,6 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-    console.log(this.plt.platforms());
 
   }
 
@@ -60,7 +58,8 @@ export class LoginPage {
     console.log('Reset password clicked');
   }
 
-  doLogin() {
+  onLoginSubmit() {
+
     if (!this.loginForm.valid) {
       this.store.dispatch(
         new UserNotValidatedAction({
@@ -73,11 +72,12 @@ export class LoginPage {
       const userEmail = this.loginForm.value.email;
       const userPassword = this.loginForm.value.password;
 
-      this.auth.doLogin(userEmail, userPassword)
-      .then(res => {
+      this.auth.doNativeLogin(userEmail, userPassword)
+      .then((res) => {
         console.log(res);
-        this.navCtrl.push('HomePage');
+        this.navCtrl.push('TabsPage');
       }, err =>  {
+        console.error(err.code);
         console.error(err.message);
       });
 
@@ -86,12 +86,35 @@ export class LoginPage {
     }
   }
 
-  doFacebookLogin() {
-    this.store.dispatch(
-      new LoginAction({
-        isNativeLogin: false
-      })
-    );
+  onFacebookTap() {
+    // this.store.dispatch(
+    //   new LoginAction({
+    //     isNativeLogin: false
+    //   })
+    // );
+
+    // const success = status => {console.log(status)};
+    // window.cookies.clear((res) => console.log(res + ' cookies cleared!'));
+
+    this.auth.doFacebookLogin()
+    .then(res => {
+      console.log(res);
+
+      if (res.errorCode){
+        throw new Error(res.errorMessage);
+      }else{
+        this.navCtrl.push('TabsPage');
+      }
+
+    }).catch(err => console.error(err));
+  }
+
+  onGoogleTap() {
+
+  }
+
+  onTwitterTap() {
+
   }
 
   openRegisterPage() {

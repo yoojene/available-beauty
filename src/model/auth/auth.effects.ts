@@ -40,9 +40,9 @@ export class AuthEffects {
       let payload = (action as any).payload;
 
       if (payload.isNativeLogin) {
-        this.auth.doLogin(payload.email, payload.password);
+        // this.auth.doLogin(payload.email, payload.password);
       } else {
-        this.auth.doSocialLogin(payload);
+        // this.auth.doSocialLogin();
       }
     });
 

@@ -7,7 +7,6 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginBackgroundSliderPage } from '../pages/login-background-slider/login-background-slider';
 import { LandingPage } from '../pages/landing/landing';
-// import { Geolocation } from '@ionic-native/geolocation';
 import { LocationProvider } from '../providers/location/location';
 
 
@@ -39,5 +38,4 @@ export class AvailableBeautyApp {
   setGeoLocation(){
     this.location.watchGeoLocation()
   }
-
 }

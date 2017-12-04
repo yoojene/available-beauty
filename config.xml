@@ -20,11 +20,11 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <universal-links>
-      <host name="mn7sb.app.goo.gl" scheme="https" />
-      <host name="available-beauty-1511287868565.firebaseapp.com" scheme="https">
-          <path url="/__/auth/callback"/>
-      </host>
-  </universal-links>
+        <host name="mn7sb.app.goo.gl" scheme="https" />
+        <host name="available-beauty-1511287868565.firebaseapp.com" scheme="https">
+            <path url="/__/auth/callback" />
+        </host>
+    </universal-links>
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
