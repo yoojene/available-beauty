@@ -6,7 +6,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../model/app.state';
 
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { LoginAction, UserNotValidatedAction, LoginSuccessAction } from '../../model/auth/auth.actions';
 
 import { APP_TEST_CONFIG } from '../../config/app.test.config';
@@ -16,6 +15,7 @@ import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthProvider } from '../../providers/auth/auth';
+import { TwitterConnect, TwitterConnectResponse } from '@ionic-native/twitter-connect';
 
 @IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
@@ -81,8 +81,6 @@ export class LoginPage {
         console.error(err.message);
       });
 
-
-
     }
   }
 
@@ -100,13 +98,15 @@ export class LoginPage {
     .then(res => {
       console.log(res);
 
-      if (res.errorCode){
-        throw new Error(res.errorMessage);
+      if (res.code){ // Firebase errors coming back in .then()??
+        throw new Error(res.message);
+
       }else{
         this.navCtrl.push('TabsPage');
       }
 
-    }).catch(err => console.error(err));
+    })
+    .catch(err => console.error(err))  // TODO show dialog here;
   }
 
   onGoogleTap() {
@@ -114,11 +114,17 @@ export class LoginPage {
     this.auth.doGoogleLogin()
     .then(res => {
       console.log(res);
+      this.navCtrl.push('TabsPage');
     }).catch(err => console.error(err));
 
   }
 
   onTwitterTap() {
+
+    this.auth.doTwitterLogin()
+    .then((res: TwitterConnectResponse) => {
+      console.log(res);
+    }, err => {console.log(err)})
 
   }
 

@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Facebook, FacebookLoginResponse} from '@ionic-native/facebook';
+import {TwitterConnect} from '@ionic-native/twitter-connect';
+import {GooglePlus} from '@ionic-native/google-plus';
 import {App, Platform} from 'ionic-angular';
 import {Store} from '@ngrx/store';
 
@@ -12,6 +14,8 @@ import { StorageProvider } from '../storage/storage';
 import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider } from 'angular4-social-login';
 
+import { API_CONFIG_VALUES } from '../../config/api.config';
+
 
 @Injectable()
 export class AuthProvider {
@@ -22,7 +26,9 @@ export class AuthProvider {
     private storage: StorageProvider,
     private afauth: AngularFireAuth,
     private socialAuthService: AuthService,
-    private fb: Facebook
+    private fb: Facebook,
+    private google: GooglePlus,
+    private twitter: TwitterConnect
   ) {}
 
   public doNativeLogin(email, password) {
@@ -43,7 +49,6 @@ export class AuthProvider {
       console.log("web");
       return this.doSocialWebLogin(FacebookLoginProvider.PROVIDER_ID);
     }
-
   }
 
   private doFacebookCordovaLogin() {
@@ -60,9 +65,11 @@ export class AuthProvider {
           .signInWithCredential(facebookCredential)
           .then(success => {
             console.log("Firebase success; " + JSON.stringify(success));
+            return success;
           })
           .catch(err => {
             console.error("Firebase error: " + JSON.stringify(err));
+            return err;
           });
       })
       .catch(e => {
@@ -79,7 +86,7 @@ export class AuthProvider {
     return this.fb.getLoginStatus();
   }
 
-  doGoogleLogin() {
+  public doGoogleLogin(): Promise<any> {
     if (this.plt.is("cordova")) {
       //On device
       console.log("in cordova");
@@ -93,10 +100,49 @@ export class AuthProvider {
 
   doGoogleCordovaLogin() {
 
-    let p = new Promise(resolve => console.log('success'))
+    console.log('doCordovaLogin');
+
+    return this.google
+      .login({
+        webClientId: API_CONFIG_VALUES.google_ab_app_web_client_id,
+        offline: true
+      })
+      .then(res => {
+          const googleCred = firebase.auth.GoogleAuthProvider.credential(res.idToken);
+
+          return this.afauth.auth
+            .signInWithCredential(googleCred)
+            .then(response => {
+              console.log("Firebase success: " + JSON.stringify(response));
+              return response;
+            })
+            .catch(err => {
+              console.error("Firebase error: " + JSON.stringify(err));
+              return err;
+            });
+        }, err => {
+          console.error("Error: ", err);
+
+          return Promise.reject(err);
+        });
+  }
+
+  doTwitterLogin() {
+    if (this.plt.is("cordova")) {
+      //On device
+      return this.doTwitterCordovaLogin();
+    } else {
+      return this.doTwitterWebLogin();
+    }
+  }
+
+  doTwitterCordovaLogin() {
+    return this.twitter.login();
+  }
+
+  doTwitterWebLogin() {
+    let p = new Promise(resolve => console.log("success"));
     return p;
-
-
-  };
+  }
 }
 

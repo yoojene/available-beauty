@@ -118,4 +118,7 @@
         <variable name="TWITTER_KEY" value="lEzfSrt05fUb5324vZMbUHkEO" />
         <variable name="TWITTER_SECRET" value="OFQrLFimxHyWP9OPN7XotLkDOAtuO5TxB1XWoImPnhSinW7R8y" />
     </plugin>
+    <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3" />
+    </plugin>
 </widget>
