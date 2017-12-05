@@ -15,69 +15,88 @@ import { FacebookLoginProvider, GoogleLoginProvider } from 'angular4-social-logi
 
 @Injectable()
 export class AuthProvider {
-  constructor(private app: App,
-              private plt: Platform,
-              private store: Store<AppState>,
-              private storage: StorageProvider,
-              private afauth: AngularFireAuth,
-              private socialAuthService: AuthService,
-              private fb: Facebook) {}
-
-
+  constructor(
+    private app: App,
+    private plt: Platform,
+    private store: Store<AppState>,
+    private storage: StorageProvider,
+    private afauth: AngularFireAuth,
+    private socialAuthService: AuthService,
+    private fb: Facebook
+  ) {}
 
   public doNativeLogin(email, password) {
-    console.log('native afth login success', email + ' ' +  password);
-    // return this.afauth.auth.signInWithEmailAndPassword(email, password);
-    return firebase.auth().signInWithEmailAndPassword(email, password)
+    console.log("native afth login success", email + " " + password);
+    return this.afauth.auth.signInWithEmailAndPassword(email, password);
+    // return firebase.auth().signInWithEmailAndPassword(email, password)
   }
 
   public doFacebookLogin(): Promise<any> {
-    console.log('doFacebookLogin()');
+    console.log("doFacebookLogin()");
 
-    // this.getFBLoginStatus().then(res => console.log(res));
-
-      if (this.plt.is('cordova')){
-        //On device
-        console.log('in cordova')
-        return this.fb
-          .login(['email'])
-             .then((res: FacebookLoginResponse) => {
-                console.log('Logged into Facebook using plugin', res);
-
-                const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
-
-                 return this.afauth.auth
-                   .signInWithCredential(facebookCredential)
-                   .then(success => {
-                     console.log('Firebase success; ' + JSON.stringify(success));
-                   })
-                   .catch(err => {
-                     console.error('Firebase error: ' + JSON.stringify(err));
-                   });
-            })
-            .catch(e => {
-               console.error('Error! ', e);
-               return e;
-            });
-
-      } else {
-        // web
-        console.log('web');
-        return this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
-
-      }
-
-
-
-    // Call facebook API
-    // Return success / failure
-    // Update store with success / failure
+    if (this.plt.is("cordova")) {
+      //On device
+      console.log("in cordova");
+      return this.doFacebookCordovaLogin();
+    } else {
+      // web
+      console.log("web");
+      return this.doSocialWebLogin(FacebookLoginProvider.PROVIDER_ID);
     }
 
-  public getFBLoginStatus() {
+  }
 
+  private doFacebookCordovaLogin() {
+    return this.fb
+      .login(["email"])
+      .then((res: FacebookLoginResponse) => {
+        console.log("Logged into Facebook using plugin", res);
+
+        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
+          res.authResponse.accessToken
+        );
+
+        return this.afauth.auth
+          .signInWithCredential(facebookCredential)
+          .then(success => {
+            console.log("Firebase success; " + JSON.stringify(success));
+          })
+          .catch(err => {
+            console.error("Firebase error: " + JSON.stringify(err));
+          });
+      })
+      .catch(e => {
+        console.error("Error! ", e);
+        return e;
+      });
+  }
+
+  private doSocialWebLogin(providerId) {
+    return this.socialAuthService.signIn(providerId);
+  }
+
+  public getFBLoginStatus() {
     return this.fb.getLoginStatus();
   }
 
+  doGoogleLogin() {
+    if (this.plt.is("cordova")) {
+      //On device
+      console.log("in cordova");
+      return this.doGoogleCordovaLogin();
+    } else {
+      // web
+      console.log("web");
+      return this.doSocialWebLogin(GoogleLoginProvider.PROVIDER_ID);
+    }
   }
+
+  doGoogleCordovaLogin() {
+
+    let p = new Promise(resolve => console.log('success'))
+    return p;
+
+
+  };
+}
 

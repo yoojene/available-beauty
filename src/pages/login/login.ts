@@ -111,6 +111,11 @@ export class LoginPage {
 
   onGoogleTap() {
 
+    this.auth.doGoogleLogin()
+    .then(res => {
+      console.log(res);
+    }).catch(err => console.error(err));
+
   }
 
   onTwitterTap() {
