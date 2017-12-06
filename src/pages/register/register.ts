@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { Store } from "@ngrx/store";
-import { AppState } from "../../model/app.state";
+import { Store } from '@ngrx/store';
+import { AppState } from '../../model/app.state';
 
 import { UserProvider } from '../../providers/user/user';
 import { LocationProvider } from '../../providers/location/location';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterAction, RegisterErrorAction } from '../../model/auth/auth.actions';
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the RegisterPage page.
@@ -19,8 +20,8 @@ import { RegisterAction, RegisterErrorAction } from '../../model/auth/auth.actio
 
 @IonicPage()
 @Component({
-  selector: "page-register",
-  templateUrl: "register.html"
+  selector: 'page-register',
+  templateUrl: 'register.html'
 })
 export class RegisterPage {
   public registerForm: any;
@@ -32,21 +33,22 @@ export class RegisterPage {
     public formBuilder: FormBuilder,
     public user: UserProvider,
     public location: LocationProvider,
+    private auth: AuthProvider,
     private store: Store<AppState>
   ) {
     this.registerForm = formBuilder.group({
-      name: ["", Validators.required],
-      emailAddress: ["", Validators.required],
-      phoneNumber: ["", Validators.required],
+      name: ['', Validators.required],
+      emailAddress: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
       password: [
-        "",
+        '',
         Validators.compose([Validators.minLength(6), Validators.required])
       ]
     });
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad RegisterPage");
+    console.log('ionViewDidLoad RegisterPage');
 
     this.location.getGeoLocation()
         .then(res => this.coords = res);
@@ -58,7 +60,6 @@ export class RegisterPage {
     console.log(this.registerForm.value);
 
     if (this.registerForm.valid) {
-      console.log("registered!");
 
       console.log(this.coords);
 
@@ -72,17 +73,28 @@ export class RegisterPage {
       // TODO Needs more work
 
       // For now call user service and API
-      this.user.addUser(user)
-      .subscribe(res => {
-          console.log(res);
-          // success - move to back to login page
-          this.navCtrl.pop();
-        },
-        (err: HttpErrorResponse) => {
-           console.error(err);
-           // TODO: Show visual error message
-         }
-        );
+      // this.user.addUser(user)
+      // .subscribe(res => {
+      //     console.log(res);
+      //     this.navCtrl.pop();
+      //   },
+      //   (err: HttpErrorResponse) => {
+      //      console.error(err);
+      //      // TODO: Show visual error message
+      //    }
+      //   );
+
+        this.auth.doRegister(user)
+        .then(res => {
+
+          console.log('User Registered : ' + JSON.stringify(res));
+          this.navCtrl.push('TabsPage');
+
+          // TODO Update realtime db here with  /user information (coords etc)
+
+        }).catch(err => console.error(err)); // TODO: Show visual error message
+
+
     }else{
       // Error!
       this.store.dispatch(new RegisterErrorAction(this.registerForm.value));

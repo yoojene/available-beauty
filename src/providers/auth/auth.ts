@@ -31,27 +31,44 @@ export class AuthProvider {
     private twitter: TwitterConnect
   ) {}
 
-  public doNativeLogin(email, password) {
-    console.log("native afth login success", email + " " + password);
+/**
+ * Email/password login
+ *
+ * @param {any} email
+ * @param {any} password
+ * @returns
+ * @memberof AuthProvider
+ */
+public doNativeLogin(email, password) {
+    console.log('native afth login success', email + ' ' + password);
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
-    // return firebase.auth().signInWithEmailAndPassword(email, password)
   }
 
-  public doFacebookLogin(): Promise<any> {
-    console.log("doFacebookLogin()");
+/**
+ * Facebook login wrapper method
+ *
+ * @returns {Promise<any>}
+ * @memberof AuthProvider
+ */
+public doFacebookLogin(): Promise<any> {
+    console.log('doFacebookLogin()');
 
-    if (this.plt.is("cordova")) {
-      //On device
-      console.log("in cordova");
+    if (this.plt.is('cordova')) {
+      console.log('in cordova');
       return this.doFacebookCordovaLogin();
     } else {
-      // web
       console.log('web');
       return this.doSocialWebLogin(FacebookLoginProvider.PROVIDER_ID);
     }
   }
-
-  private doFacebookCordovaLogin() {
+/**
+ * Facebook login on device
+ *
+ * @private
+ * @returns
+ * @memberof AuthProvider
+ */
+private doFacebookCordovaLogin() {
     return this.fb
       .login(['email'])
       .then((res: FacebookLoginResponse) => {
@@ -77,31 +94,46 @@ export class AuthProvider {
         return e;
       });
   }
-
-  private doSocialWebLogin(providerId) {
+/**
+ * Wrapper method for SocialAuthService.signIn()
+ *
+ * @private
+ * @param {any} providerId
+ * @returns
+ * @memberof AuthProvider
+ */
+private doSocialWebLogin(providerId) {
     return this.socialAuthService.signIn(providerId);
   }
 
   public getFBLoginStatus() {
     return this.fb.getLoginStatus();
   }
-
-  public doGoogleLogin(): Promise<any> {
+/**
+ * Google login wrapper method
+ *
+ * @returns {Promise<any>}
+ * @memberof AuthProvider
+ */
+public doGoogleLogin(): Promise<any> {
     if (this.plt.is('cordova')) {
-      //On device
       console.log('in cordova');
       return this.doGoogleCordovaLogin();
     } else {
-      // web
       console.log('web');
       return this.doSocialWebLogin(GoogleLoginProvider.PROVIDER_ID);
     }
   }
 
-  doGoogleCordovaLogin() {
+/**
+ * Google OAuth login on device
+ *
+ * @returns
+ * @memberof AuthProvider
+ */
+private doGoogleCordovaLogin() {
 
     console.log('doCordovaLogin');
-
     return this.google
       .login({
         webClientId: API_CONFIG_VALUES.google_ab_app_web_client_id,
@@ -109,7 +141,6 @@ export class AuthProvider {
       })
       .then(res => {
           const googleCred = firebase.auth.GoogleAuthProvider.credential(res.idToken);
-
           return this.afauth.auth
             .signInWithCredential(googleCred)
             .then(response => {
@@ -122,12 +153,16 @@ export class AuthProvider {
             });
         }, err => {
           console.error('Error: ', err);
-
           return Promise.reject(err);
         });
   }
-
-  doTwitterLogin() {
+/**
+ * Twitter login wrapper method
+ *
+ * @returns
+ * @memberof AuthProvider
+ */
+public doTwitterLogin() {
     if (this.plt.is('cordova')) {
       //On device
       return this.doTwitterCordovaLogin();
@@ -135,8 +170,14 @@ export class AuthProvider {
       return this.doTwitterWebLogin();
     }
   }
-
-  doTwitterCordovaLogin() {
+/**
+ * Twitter login on device
+ *
+ * @private
+ * @returns
+ * @memberof AuthProvider
+ */
+private doTwitterCordovaLogin() {
 
     return this.twitter.login()
     .then(res => {
@@ -146,11 +187,11 @@ export class AuthProvider {
       return this.afauth.auth
         .signInWithCredential(twitterCred)
         .then(response => {
-          console.log("Firebase success " + response);
+          console.log('Firebase success ' + response);
           return response;
         })
         .catch(err => {
-          console.error("Firebase error: " + JSON.stringify(err));
+          console.error('Firebase error: ' + JSON.stringify(err));
           return err;
          });
 
@@ -160,10 +201,30 @@ export class AuthProvider {
 
     })
   }
-
-  doTwitterWebLogin() {
+/**
+ * Twitter login on web
+ *
+ * @returns
+ * @memberof AuthProvider
+ */
+doTwitterWebLogin() {
     let p = new Promise(resolve => console.log('success'));
     return p;
+  }
+
+// Registration
+
+/**
+ * Register account in Firebase
+ *
+ * @param {any} user
+ * @returns
+ * @memberof AuthProvider
+ */
+doRegister(user) {
+
+    return this.afauth.auth.createUserWithEmailAndPassword(user.emailAddress, user.password)
+
   }
 }
 
