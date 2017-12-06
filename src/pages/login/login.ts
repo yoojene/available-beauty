@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -33,7 +33,8 @@ export class LoginPage {
     public navCtrl: NavController,
     private modal: ModalController,
     public afAuth: AngularFireAuth,
-    public auth: AuthProvider
+    public auth: AuthProvider,
+    private loading: LoadingController
   ) {
     this.loginForm = formBuilder.group({
       // email: ['', Validators.required],
@@ -72,13 +73,19 @@ export class LoginPage {
       const userEmail = this.loginForm.value.email;
       const userPassword = this.loginForm.value.password;
 
-      this.auth.doNativeLogin(userEmail, userPassword)
-      .then((res) => {
-        console.log(res);
-        this.navCtrl.push('TabsPage');
-      }, err =>  {
-        console.error(err.code);
-        console.error(err.message);
+      let loading = this.loading.create()
+
+      loading.present().then(() => {
+
+        this.auth.doNativeLogin(userEmail, userPassword).then(res => {
+          console.log(res);
+          loading.dismiss();
+          this.navCtrl.push("TabsPage");
+        }, err => {
+          loading.dismiss();
+          console.error(err.code);
+          console.error(err.message);
+        });
       });
 
     }
@@ -93,6 +100,9 @@ export class LoginPage {
 
     // const success = status => {console.log(status)};
     // window.cookies.clear((res) => console.log(res + ' cookies cleared!'));
+    let loading = this.loading.create()
+
+    loading.present().then(() => {
 
     this.auth.doFacebookLogin()
     .then(res => {
@@ -102,29 +112,53 @@ export class LoginPage {
         throw new Error(res.message);
 
       }else{
+        loading.dismiss();
         this.navCtrl.push('TabsPage');
       }
 
     })
-    .catch(err => console.error(err))  // TODO show dialog here;
+
+    .catch(err => {
+      console.error(err);
+      loading.dismiss();
+    })  // TODO show dialog here;
+
+    });
   }
 
   onGoogleTap() {
 
-    this.auth.doGoogleLogin()
-    .then(res => {
-      console.log(res);
-      this.navCtrl.push('TabsPage');
-    }).catch(err => console.error(err));
+    let loading = this.loading.create()
+
+    loading.present().then(() => {
+      this.auth.doGoogleLogin()
+      .then(res => {
+        loading.dismiss();
+        console.log(res);
+        this.navCtrl.push('TabsPage');
+      }).catch(err => {
+        loading.dismiss();
+        console.error(err);
+      });
+  });
 
   }
 
   onTwitterTap() {
 
-    this.auth.doTwitterLogin()
-    .then((res: TwitterConnectResponse) => {
-      console.log(res);
-    }, err => {console.log(err)})
+    let loading = this.loading.create();
+
+    loading.present().then(() => {
+       this.auth.doTwitterLogin()
+        .then((res: TwitterConnectResponse) => {
+          console.log(res);
+          loading.dismiss();
+          this.navCtrl.push('TabsPage');
+        }, err => {
+          loading.dismiss();
+          console.log(err);
+        })
+    });
 
   }
 

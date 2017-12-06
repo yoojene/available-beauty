@@ -46,16 +46,16 @@ export class AuthProvider {
       return this.doFacebookCordovaLogin();
     } else {
       // web
-      console.log("web");
+      console.log('web');
       return this.doSocialWebLogin(FacebookLoginProvider.PROVIDER_ID);
     }
   }
 
   private doFacebookCordovaLogin() {
     return this.fb
-      .login(["email"])
+      .login(['email'])
       .then((res: FacebookLoginResponse) => {
-        console.log("Logged into Facebook using plugin", res);
+        console.log('Logged into Facebook using plugin', res);
 
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
           res.authResponse.accessToken
@@ -64,16 +64,16 @@ export class AuthProvider {
         return this.afauth.auth
           .signInWithCredential(facebookCredential)
           .then(success => {
-            console.log("Firebase success; " + JSON.stringify(success));
+            console.log('Firebase success; ' + JSON.stringify(success));
             return success;
           })
           .catch(err => {
-            console.error("Firebase error: " + JSON.stringify(err));
+            console.error('Firebase error: ' + JSON.stringify(err));
             return err;
           });
       })
       .catch(e => {
-        console.error("Error! ", e);
+        console.error('Error! ', e);
         return e;
       });
   }
@@ -87,13 +87,13 @@ export class AuthProvider {
   }
 
   public doGoogleLogin(): Promise<any> {
-    if (this.plt.is("cordova")) {
+    if (this.plt.is('cordova')) {
       //On device
-      console.log("in cordova");
+      console.log('in cordova');
       return this.doGoogleCordovaLogin();
     } else {
       // web
-      console.log("web");
+      console.log('web');
       return this.doSocialWebLogin(GoogleLoginProvider.PROVIDER_ID);
     }
   }
@@ -113,22 +113,22 @@ export class AuthProvider {
           return this.afauth.auth
             .signInWithCredential(googleCred)
             .then(response => {
-              console.log("Firebase success: " + JSON.stringify(response));
+              console.log('Firebase success: ' + JSON.stringify(response));
               return response;
             })
             .catch(err => {
-              console.error("Firebase error: " + JSON.stringify(err));
+              console.error('Firebase error: ' + JSON.stringify(err));
               return err;
             });
         }, err => {
-          console.error("Error: ", err);
+          console.error('Error: ', err);
 
           return Promise.reject(err);
         });
   }
 
   doTwitterLogin() {
-    if (this.plt.is("cordova")) {
+    if (this.plt.is('cordova')) {
       //On device
       return this.doTwitterCordovaLogin();
     } else {
@@ -137,11 +137,32 @@ export class AuthProvider {
   }
 
   doTwitterCordovaLogin() {
-    return this.twitter.login();
+
+    return this.twitter.login()
+    .then(res => {
+
+      const twitterCred = firebase.auth.TwitterAuthProvider.credential(res.token, res.secret);
+
+      return this.afauth.auth
+        .signInWithCredential(twitterCred)
+        .then(response => {
+          console.log("Firebase success " + response);
+          return response;
+        })
+        .catch(err => {
+          console.error("Firebase error: " + JSON.stringify(err));
+          return err;
+         });
+
+    },err => {
+      console.error(err);
+      return err;
+
+    })
   }
 
   doTwitterWebLogin() {
-    let p = new Promise(resolve => console.log("success"));
+    let p = new Promise(resolve => console.log('success'));
     return p;
   }
 }
