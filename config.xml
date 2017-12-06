@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.available.beauty" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.available.availablebeauty" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Available Beauty</name>
     <description>Looking for beauty whereever it may be!</description>
     <author email="siteadmin@availablebeauty.com" href="http://availablebeauty.com/">Available Beauty Team</author>
@@ -88,10 +88,6 @@
     <plugin name="cordova-plugin-device" spec="1.1.4" />
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.11" />
-    <plugin name="cordova-plugin-facebook4" spec="~1.9.1">
-        <variable name="APP_ID" value="125684678101312" />
-        <variable name="APP_NAME" value="Available Beauty" />
-    </plugin>
     <plugin name="cordova-plugin-geolocation" spec="~2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
@@ -101,8 +97,6 @@
     </plugin>
     <allow-navigation href="http://192.168.0.10:8101" />
     <plugin name="cordova-sqlite-storage" spec="~2.1.2" />
-    <engine name="ios" spec="~4.3.1" />
-    <engine name="android" spec="~6.1.2" />
     <plugin name="cordova-plugin-buildinfo" spec="~2.0.1" />
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
     <plugin name="cordova-plugin-browsertab" spec="~0.2.0" />
@@ -121,4 +115,10 @@
     <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3" />
     </plugin>
+    <engine name="android" spec="~6.1.2" />
+    <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
+        <variable name="APP_ID" value="125684678101312" />
+        <variable name="APP_NAME" value="Available Beauty" />
+    </plugin>
+    <engine name="ios" spec="~4.3.1" />
 </widget>
