@@ -2,8 +2,8 @@
   <ion-navbar transparent hideBackButton="false">
   </ion-navbar>
 </ion-header>
-<ion-content>
-  <div class="register-container">
+<ion-content class="page-register">
+  <div class="page-register--register-container">
     <form [formGroup]="registerForm" (submit)="doRegister()">
       <ion-item>
         <ion-input formControlName="name" type="text" placeholder="Name"></ion-input>
@@ -12,20 +12,57 @@
         <ion-input formControlName="emailAddress" type="email" placeholder="Email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
+          <button
+          type="button"
+          ion-button
+          icon-only
+          outline
+          clear
+          item-right
+          (click)="showPassword(pwinput)">
+            <ion-icon
+            [style.color]="input.type === 'password' ? 'black' : 'white'"
+            name="eye">
+            </ion-icon>
+            </button>
+        <ion-input #pwinput
+          formControlName="password"
+          type="password"
+          placeholder="Password"
+          clearInput>
+        </ion-input>
       </ion-item>
       <ion-item>
-        <ion-input formControlName="password" type="password" placeholder="Confirm Password"></ion-input>
+        <button
+          type="button"
+          ion-button
+          icon-only
+          outline
+          clear
+          item-right
+          (click)="showPassword(input)">
+            <ion-icon
+            [style.color]="input.type === 'password' ? 'black' : 'white'"
+            name="eye">
+            </ion-icon>
+            </button>
+        <ion-input #input
+          formControlName="confpassword"
+          type="password"
+          placeholder="Confirm Password"
+          clearInput>
+        </ion-input>
       </ion-item>
-      <ion-item>
-        <ion-input formControlName="phoneNumber" type="telephone" placeholder="Telephone"></ion-input>
-      </ion-item>
+        <div *ngIf="registerForm.controls.confpassword.errors?.MatchPassword" class="invalid-reg">{{passwordError}}</div>
+        <div *ngIf="invalidReg" class="invalid-reg"> {{regError}} </div>
+
       <button
         ion-button
         margin
         [disabled]="!registerForm.valid"
         color="tonal">Register
       </button>
+
     </form>
     <!-- <div class="ab-logo"></div> -->
   </div>

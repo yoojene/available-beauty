@@ -145,12 +145,21 @@ export class LoginPage {
     let regModal = this.modal.create('RegisterPage');
     regModal.present();
   }
-
-  onEmailFocus() {
+/**
+ * Reset boolean for server side error display
+ *
+ * @memberof LoginPage
+ */
+onEmailFocus() {
     this.invalidLogin = false;
   }
-
-  showPassword(input) {
+/**
+ * Toggle password or text input
+ *
+ * @param {any} input
+ * @memberof LoginPage
+ */
+showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
   }
 }

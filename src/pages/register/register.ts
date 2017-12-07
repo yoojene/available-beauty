@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
+import { PasswordValidation } from '../../forms/password-validation';
+
 
 import { Store } from '@ngrx/store';
 import { AppState } from '../../model/app.state';
@@ -24,8 +26,14 @@ import { AuthProvider } from '../../providers/auth/auth';
   templateUrl: 'register.html'
 })
 export class RegisterPage {
+
   public registerForm: any;
-  private coords: any
+  public regError: any;
+  public invalidReg: boolean = false;
+  private coords: any;
+
+
+  public passwordError: string = 'Passwords do not match';
 
   constructor(
     public navCtrl: NavController,
@@ -39,17 +47,21 @@ export class RegisterPage {
     this.registerForm = formBuilder.group({
       name: ['', Validators.required],
       emailAddress: ['', Validators.compose([Validators.required, Validators.email])],
-      phoneNumber: ['', Validators.required],
       password: [
         '',
         Validators.compose([Validators.minLength(6), Validators.required])
-      ]
-    });
+      ],
+      confpassword: [
+        '',
+        Validators.compose([Validators.minLength(6), Validators.required])
+      ]}, {validator: PasswordValidation.MatchPassword})
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
 
+
+    // Need this anymore?
     this.location.getGeoLocation()
         .then(res => this.coords = res);
         console.log(this.coords);
@@ -62,9 +74,7 @@ export class RegisterPage {
     if (this.registerForm.valid) {
 
       console.log(this.coords);
-
       let user = this.registerForm.value;
-
       user.homeLocation = this.coords
       console.log(user);
       console.log(JSON.stringify(user));
@@ -90,9 +100,13 @@ export class RegisterPage {
           console.log('User Registered : ' + JSON.stringify(res));
           this.navCtrl.push('TabsPage');
 
-          // TODO Update realtime db here with  /user information (coords etc)
+          // TODO Update Firebase Realtime db here with  /user information (coords etc)?
 
-        }).catch(err => console.error(err)); // TODO: Show visual error message
+        }).catch(err => {
+          this.invalidReg = true;
+          this.regError = err.message;
+          console.error(err);
+        });
 
 
     }else{
@@ -101,5 +115,14 @@ export class RegisterPage {
       this.navCtrl.pop();
       // TODO: Show visual error message
     }
+  }
+/**
+ * Toggle password or text input
+ *
+ * @param {any} input
+ * @memberof RegisterPage
+ */
+showPassword(input) {
+    input.type = input.type === 'password' ? 'text' : 'password';
   }
 }
