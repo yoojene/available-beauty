@@ -13,15 +13,44 @@
     <div class="page-login--login-container">
       <form [formGroup]="loginForm" (submit)="onLoginSubmit()">
         <ion-item>
-          <ion-input formControlName="email" type="email" placeholder="Email"></ion-input>
+          <ion-input
+          formControlName="email"
+          type="email"
+          placeholder="Email"
+          (focus)="onEmailFocus()"
+          clearInput></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input formControlName="password" type="password" placeholder="Password"></ion-input>
+            <button type="button"
+              ion-button
+              icon-only
+              outline
+              clear
+              item-right
+              (click)="showPassword(input)">
+                <ion-icon
+                [style.color]="input.type === 'password' ? 'black' : 'white'"
+                name="eye">
+                </ion-icon>
+            </button>
+          <ion-input #input
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            (focus)="onEmailFocus()"
+            clearInput>
+          </ion-input>
         </ion-item>
+        <div *ngIf="invalidLogin" class="invalid-login"> {{error}} </div>
         <p (click)="openResetPassword()">
           <strong>Forgot your password?</strong>
         </p>
-          <button class="login-button" ion-button margin color="tonal">Login</button>
+          <button class="login-button"
+            ion-button
+            margin
+            [disabled]="!loginForm.valid"
+            color="tonal">Login
+          </button>
       </form>
 
           <div>

@@ -22,10 +22,13 @@ page-login {
     z-index: 2;
 
     .invalid-login {
+      padding-top: 10px;
       color: red;
       }
 
     }
+
+
 
   }
 
@@ -85,6 +88,5 @@ page-login {
   .login-button {
     width: 215px;
   }
-
 
 }

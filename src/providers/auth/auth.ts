@@ -15,6 +15,7 @@ import { AuthService } from 'angular4-social-login';
 import { FacebookLoginProvider, GoogleLoginProvider } from 'angular4-social-login';
 
 import { API_CONFIG_VALUES } from '../../config/api.config';
+import { SocialUser } from 'angular4-social-login/entities/user';
 
 
 @Injectable()
@@ -68,7 +69,7 @@ public doFacebookLogin(): Promise<any> {
  * @returns
  * @memberof AuthProvider
  */
-private doFacebookCordovaLogin() {
+private doFacebookCordovaLogin(): Promise<any> {
     return this.fb
       .login(['email'])
       .then((res: FacebookLoginResponse) => {
@@ -86,12 +87,12 @@ private doFacebookCordovaLogin() {
           })
           .catch(err => {
             console.error('Firebase error: ' + JSON.stringify(err));
-            return err;
+            return Promise.reject(err);
           });
       })
       .catch(e => {
         console.error('Error! ', e);
-        return e;
+        return Promise.reject(e);
       });
   }
 /**
@@ -102,7 +103,7 @@ private doFacebookCordovaLogin() {
  * @returns
  * @memberof AuthProvider
  */
-private doSocialWebLogin(providerId) {
+private doSocialWebLogin(providerId): Promise<SocialUser> {
     return this.socialAuthService.signIn(providerId);
   }
 
@@ -131,7 +132,7 @@ public doGoogleLogin(): Promise<any> {
  * @returns
  * @memberof AuthProvider
  */
-private doGoogleCordovaLogin() {
+private doGoogleCordovaLogin(): Promise<any> {
 
     console.log('doCordovaLogin');
     return this.google
@@ -149,7 +150,7 @@ private doGoogleCordovaLogin() {
             })
             .catch(err => {
               console.error('Firebase error: ' + JSON.stringify(err));
-              return err;
+              return Promise.reject(err);
             });
         }, err => {
           console.error('Error: ', err);
@@ -162,7 +163,7 @@ private doGoogleCordovaLogin() {
  * @returns
  * @memberof AuthProvider
  */
-public doTwitterLogin() {
+public doTwitterLogin(): Promise<any> {
     if (this.plt.is('cordova')) {
       //On device
       return this.doTwitterCordovaLogin();
@@ -177,7 +178,7 @@ public doTwitterLogin() {
  * @returns
  * @memberof AuthProvider
  */
-private doTwitterCordovaLogin() {
+private doTwitterCordovaLogin(): Promise<any>{
 
     return this.twitter.login()
     .then(res => {
@@ -187,17 +188,17 @@ private doTwitterCordovaLogin() {
       return this.afauth.auth
         .signInWithCredential(twitterCred)
         .then(response => {
-          console.log('Firebase success ' + response);
+          console.log('Firebase success ' + JSON.stringify(response));
           return response;
         })
         .catch(err => {
           console.error('Firebase error: ' + JSON.stringify(err));
-          return err;
+          return Promise.reject(err);
          });
 
     },err => {
       console.error(err);
-      return err;
+      return Promise.reject(err);
 
     })
   }
@@ -221,10 +222,23 @@ doTwitterWebLogin() {
  * @returns
  * @memberof AuthProvider
  */
-doRegister(user) {
+doRegister(user): Promise<any>{
 
     return this.afauth.auth.createUserWithEmailAndPassword(user.emailAddress, user.password)
 
   }
+
+// Password Reset
+
+doResetPassword(email): Promise<any> {
+
+  return this.afauth.auth.sendPasswordResetEmail(email)
+  .then(res => {
+    console.log(res);
+    return res;
+  });
+
+  }
+
 }
 

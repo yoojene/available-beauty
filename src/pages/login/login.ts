@@ -22,10 +22,10 @@ import { TwitterConnect, TwitterConnectResponse } from '@ionic-native/twitter-co
   selector: 'page-login',
   templateUrl: 'login.html'
 })
-
 export class LoginPage {
-
   public loginForm: any;
+  public invalidLogin: boolean = false;
+  public error: string;
 
   constructor(
     public store: Store<AppState>,
@@ -37,12 +37,10 @@ export class LoginPage {
     private loading: LoadingController
   ) {
     this.loginForm = formBuilder.group({
-      // email: ['', Validators.required],
-      email: [APP_TEST_CONFIG.email, Validators.required],
-      // password: [
-      //   '',
-      //   Validators.compose([Validators.minLength(6), Validators.required])
-      // ]
+      email: [
+        APP_TEST_CONFIG.email,
+        Validators.compose([Validators.required, Validators.email])
+      ],
       password: [
         APP_TEST_CONFIG.password,
         Validators.compose([Validators.minLength(6), Validators.required])
@@ -52,121 +50,107 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-
   }
 
   openResetPassword() {
-    console.log('Reset password clicked');
+    let passModal = this.modal.create('PasswordPage');
+    passModal.present();
   }
 
   onLoginSubmit() {
-
-    if (!this.loginForm.valid) {
-      this.store.dispatch(
-        new UserNotValidatedAction({
-          error: `Invalid or empty data`
-          // TODO Add visual error message on form
-        })
-      );
-    } else {
-
-      const userEmail = this.loginForm.value.email;
-      const userPassword = this.loginForm.value.password;
-
-      let loading = this.loading.create()
-
-      loading.present().then(() => {
-
-        this.auth.doNativeLogin(userEmail, userPassword).then(res => {
-          console.log(res);
-          loading.dismiss();
-          this.navCtrl.push("TabsPage");
-        }, err => {
-          loading.dismiss();
-          console.error(err.code);
-          console.error(err.message);
-        });
-      });
-
-    }
-  }
-
-  onFacebookTap() {
-    // this.store.dispatch(
-    //   new LoginAction({
-    //     isNativeLogin: false
-    //   })
-    // );
-
-    // const success = status => {console.log(status)};
-    // window.cookies.clear((res) => console.log(res + ' cookies cleared!'));
-    let loading = this.loading.create()
-
-    loading.present().then(() => {
-
-    this.auth.doFacebookLogin()
-    .then(res => {
-      console.log(res);
-
-      if (res.code){ // Firebase errors coming back in .then()??
-        throw new Error(res.message);
-
-      }else{
-        loading.dismiss();
-        this.navCtrl.push('TabsPage');
-      }
-
-    })
-
-    .catch(err => {
-      console.error(err);
-      loading.dismiss();
-    })  // TODO show dialog here;
-
-    });
-  }
-
-  onGoogleTap() {
-
-    let loading = this.loading.create()
-
-    loading.present().then(() => {
-      this.auth.doGoogleLogin()
-      .then(res => {
-        loading.dismiss();
-        console.log(res);
-        this.navCtrl.push('TabsPage');
-      }).catch(err => {
-        loading.dismiss();
-        console.error(err);
-      });
-  });
-
-  }
-
-  onTwitterTap() {
+    const userEmail = this.loginForm.value.email;
+    const userPassword = this.loginForm.value.password;
 
     let loading = this.loading.create();
 
     loading.present().then(() => {
-       this.auth.doTwitterLogin()
-        .then((res: TwitterConnectResponse) => {
+      this.auth.doNativeLogin(userEmail, userPassword).then(
+        res => {
           console.log(res);
           loading.dismiss();
           this.navCtrl.push('TabsPage');
-        }, err => {
+        },
+        err => {
           loading.dismiss();
-          console.log(err);
-        })
+          this.invalidLogin = true;
+          this.error = err.message; // This is the Firebase message - too techy?
+          console.error(err.code);
+          console.error(err.message);
+        }
+      );
     });
+  }
 
+  onFacebookTap() {
+    let loading = this.loading.create();
+
+    loading.present().then(() => {
+      this.auth
+        .doFacebookLogin()
+        .then(res => {
+          console.log(res);
+          loading.dismiss();
+          this.navCtrl.push('TabsPage');
+        })
+        .catch(err => {
+          console.error(err);
+          loading.dismiss();
+          this.invalidLogin = true;
+          this.error = `${err.email} ${err.message}`; // This is the Firebase message - too techy?
+        });
+    });
+  }
+
+  onGoogleTap() {
+    let loading = this.loading.create();
+
+    loading.present().then(() => {
+      this.auth
+        .doGoogleLogin()
+        .then(res => {
+          loading.dismiss();
+          console.log(res);
+          this.navCtrl.push('TabsPage');
+        })
+        .catch(err => {
+          loading.dismiss();
+          console.error(err);
+          this.invalidLogin = true;
+          this.error = err; // Actual error code returned from Google Auth i.e. 12501
+        });
+    });
+  }
+
+  onTwitterTap() {
+    let loading = this.loading.create();
+
+    loading.present().then(() => {
+      this.auth.doTwitterLogin().then(
+        (res: TwitterConnectResponse) => {
+          console.log(res);
+          loading.dismiss();
+          this.navCtrl.push('TabsPage');
+        },
+        err => {
+          loading.dismiss();
+          console.error(err);  // Eg: Failed Login Session
+          // We are not setting this.error here as Twitter opens up the native Oauth window so
+          // any errors are captured there.
+        }
+      );
+    });
   }
 
   openRegisterPage() {
     let regModal = this.modal.create('RegisterPage');
-
     regModal.present();
+  }
 
-    // this.navCtrl.push('RegisterPage');
+  onEmailFocus() {
+    this.invalidLogin = false;
+  }
+
+  showPassword(input) {
+    input.type = input.type === 'password' ? 'text' : 'password';
   }
 }

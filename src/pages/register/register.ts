@@ -38,7 +38,7 @@ export class RegisterPage {
   ) {
     this.registerForm = formBuilder.group({
       name: ['', Validators.required],
-      emailAddress: ['', Validators.required],
+      emailAddress: ['', Validators.compose([Validators.required, Validators.email])],
       phoneNumber: ['', Validators.required],
       password: [
         '',

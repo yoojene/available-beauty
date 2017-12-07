@@ -20,8 +20,13 @@
       <ion-item>
         <ion-input formControlName="phoneNumber" type="telephone" placeholder="Telephone"></ion-input>
       </ion-item>
-      <button ion-button margin color="tonal">Register</button>
+      <button
+        ion-button
+        margin
+        [disabled]="!registerForm.valid"
+        color="tonal">Register
+      </button>
     </form>
-    <div class="ab-logo"></div>
+    <!-- <div class="ab-logo"></div> -->
   </div>
 </ion-content>

@@ -41,6 +41,8 @@ import { RegisterPageModule } from '../pages/register/register.module';
 import { StorageProvider } from '../providers/storage/storage';
 import { SearchProvider } from '../providers/search/search';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AvailableBeautyApp
@@ -51,6 +53,7 @@ import { SearchProvider } from '../providers/search/search';
     HttpClientModule,
     IonicModule.forRoot(AvailableBeautyApp),
     IonicStorageModule.forRoot(),
+    ReactiveFormsModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG_VALUES),
     AngularFireDatabaseModule,
     HomePageModule,
