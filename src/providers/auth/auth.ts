@@ -104,7 +104,10 @@ private doFacebookCordovaLogin(): Promise<any> {
  * @memberof AuthProvider
  */
 private doSocialWebLogin(providerId): Promise<SocialUser> {
-    return this.socialAuthService.signIn(providerId);
+    return this.socialAuthService.signIn(providerId).then((res) => {
+      console.log(res);
+      return res;
+    });
   }
 
   public getFBLoginStatus() {
