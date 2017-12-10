@@ -211,9 +211,10 @@ private doTwitterCordovaLogin(): Promise<any>{
  * @returns
  * @memberof AuthProvider
  */
-doTwitterWebLogin() {
-    let p = new Promise(resolve => console.log('success'));
-    return p;
+doTwitterWebLogin(): Promise<any> {
+
+    let a = 'not working yet';
+    return Promise.reject(a);
   }
 
 // Registration
