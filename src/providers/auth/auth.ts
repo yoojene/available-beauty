@@ -20,6 +20,8 @@ import { SocialUser } from 'angular4-social-login/entities/user';
 
 @Injectable()
 export class AuthProvider {
+  private socialProvider: any;
+
   constructor(
     private app: App,
     private plt: Platform,
@@ -32,48 +34,48 @@ export class AuthProvider {
     private twitter: TwitterConnect
   ) {}
 
-/**
- * Email/password login
- *
- * @param {any} email
- * @param {any} password
- * @returns
- * @memberof AuthProvider
- */
-public doNativeLogin(email, password) {
-    console.log('native afth login success', email + ' ' + password);
+  /**
+   * Email/password login
+   *
+   * @param {any} email
+   * @param {any} password
+   * @returns
+   * @memberof AuthProvider
+   */
+  public doNativeLogin(email, password) {
+    console.log("native afth login success", email + " " + password);
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
   }
 
-/**
- * Facebook login wrapper method
- *
- * @returns {Promise<any>}
- * @memberof AuthProvider
- */
-public doFacebookLogin(): Promise<any> {
-    console.log('doFacebookLogin()');
+  /**
+   * Facebook login wrapper method
+   *
+   * @returns {Promise<any>}
+   * @memberof AuthProvider
+   */
+  public doFacebookLogin(): Promise<any> {
+    console.log("doFacebookLogin()");
 
-    if (this.plt.is('cordova')) {
-      console.log('in cordova');
+    if (this.plt.is("cordova")) {
+      console.log("in cordova");
       return this.doFacebookCordovaLogin();
     } else {
-      console.log('web');
-      return this.doSocialWebLogin(FacebookLoginProvider.PROVIDER_ID);
+      this.socialProvider = "Facebook";
+      return this.doSocialWebLogin(this.socialProvider);
     }
   }
-/**
- * Facebook login on device
- *
- * @private
- * @returns
- * @memberof AuthProvider
- */
-private doFacebookCordovaLogin(): Promise<any> {
+  /**
+   * Facebook login on device
+   *
+   * @private
+   * @returns
+   * @memberof AuthProvider
+   */
+  private doFacebookCordovaLogin(): Promise<any> {
     return this.fb
-      .login(['email'])
+      .login(["email"])
       .then((res: FacebookLoginResponse) => {
-        console.log('Logged into Facebook using plugin', res);
+        console.log("Logged into Facebook using plugin", res);
 
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
           res.authResponse.accessToken
@@ -82,69 +84,93 @@ private doFacebookCordovaLogin(): Promise<any> {
         return this.afauth.auth
           .signInWithCredential(facebookCredential)
           .then(success => {
-            console.log('Firebase success; ' + JSON.stringify(success));
+            console.log("Firebase success; " + JSON.stringify(success));
             return success;
           })
           .catch(err => {
-            console.error('Firebase error: ' + JSON.stringify(err));
+            console.error("Firebase error: " + JSON.stringify(err));
             return Promise.reject(err);
           });
       })
       .catch(e => {
-        console.error('Error! ', e);
+        console.error("Error! ", e);
         return Promise.reject(e);
       });
   }
-/**
- * Wrapper method for SocialAuthService.signIn()
- *
- * @private
- * @param {any} providerId
- * @returns
- * @memberof AuthProvider
- */
-private doSocialWebLogin(providerId): Promise<SocialUser> {
-    return this.socialAuthService.signIn(providerId).then((res) => {
-      console.log(res);
-      return res;
-    });
+  /**
+   * Wrapper method for Firebase.auth.signInWithPopup()
+   *
+   * @private
+   * @param {any} providerId
+   * @returns
+   * @memberof AuthProvider
+   */
+  private doSocialWebLogin(providerId): Promise<SocialUser> {
+    // return this.socialAuthService.signIn(providerId).then(res => {
+    //   console.log(res);
+    //   return res;
+    // });
+    let socialProvider;
+
+    switch (providerId) {
+      case 'Facebook':
+        socialProvider = new firebase.auth.FacebookAuthProvider();
+        break;
+      case 'Google':
+        socialProvider = new firebase.auth.GoogleAuthProvider();
+        break;
+      case 'Twitter':
+        socialProvider = new firebase.auth.TwitterAuthProvider();
+        break;
+    }
+
+    return this.afauth.auth
+      .signInWithPopup(socialProvider)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return Promise.reject(err);
+      });
   }
 
   public getFBLoginStatus() {
     return this.fb.getLoginStatus();
   }
-/**
- * Google login wrapper method
- *
- * @returns {Promise<any>}
- * @memberof AuthProvider
- */
-public doGoogleLogin(): Promise<any> {
+  /**
+   * Google login wrapper method
+   *
+   * @returns {Promise<any>}
+   * @memberof AuthProvider
+   */
+  public doGoogleLogin(): Promise<any> {
     if (this.plt.is('cordova')) {
       console.log('in cordova');
       return this.doGoogleCordovaLogin();
     } else {
-      console.log('web');
-      return this.doSocialWebLogin(GoogleLoginProvider.PROVIDER_ID);
+      this.socialProvider = 'Google';
+      return this.doSocialWebLogin(this.socialProvider);
     }
   }
 
-/**
- * Google OAuth login on device
- *
- * @returns
- * @memberof AuthProvider
- */
-private doGoogleCordovaLogin(): Promise<any> {
-
+  /**
+   * Google OAuth login on device
+   *
+   * @returns
+   * @memberof AuthProvider
+   */
+  private doGoogleCordovaLogin(): Promise<any> {
     console.log('doCordovaLogin');
     return this.google
       .login({
         webClientId: API_CONFIG_VALUES.google_ab_app_web_client_id,
         offline: true
       })
-      .then(res => {
-          const googleCred = firebase.auth.GoogleAuthProvider.credential(res.idToken);
+      .then(
+        res => {
+          const googleCred = firebase.auth.GoogleAuthProvider.credential(
+            res.idToken
+          );
           return this.afauth.auth
             .signInWithCredential(googleCred)
             .then(response => {
@@ -155,94 +181,84 @@ private doGoogleCordovaLogin(): Promise<any> {
               console.error('Firebase error: ' + JSON.stringify(err));
               return Promise.reject(err);
             });
-        }, err => {
+        },
+        err => {
           console.error('Error: ', err);
           return Promise.reject(err);
-        });
+        }
+      );
   }
-/**
- * Twitter login wrapper method
- *
- * @returns
- * @memberof AuthProvider
- */
-public doTwitterLogin(): Promise<any> {
+  /**
+   * Twitter login wrapper method
+   *
+   * @returns
+   * @memberof AuthProvider
+   */
+  public doTwitterLogin(): Promise<any> {
     if (this.plt.is('cordova')) {
       //On device
       return this.doTwitterCordovaLogin();
     } else {
-      return this.doTwitterWebLogin();
+      this.socialProvider = 'Twitter';
+      return this.doSocialWebLogin(this.socialProvider);
     }
   }
-/**
- * Twitter login on device
- *
- * @private
- * @returns
- * @memberof AuthProvider
- */
-private doTwitterCordovaLogin(): Promise<any>{
+  /**
+   * Twitter login on device
+   *
+   * @private
+   * @returns
+   * @memberof AuthProvider
+   */
+  private doTwitterCordovaLogin(): Promise<any> {
+    return this.twitter.login().then(
+      res => {
+        const twitterCred = firebase.auth.TwitterAuthProvider.credential(
+          res.token,
+          res.secret
+        );
 
-    return this.twitter.login()
-    .then(res => {
-
-      const twitterCred = firebase.auth.TwitterAuthProvider.credential(res.token, res.secret);
-
-      return this.afauth.auth
-        .signInWithCredential(twitterCred)
-        .then(response => {
-          console.log('Firebase success ' + JSON.stringify(response));
-          return response;
-        })
-        .catch(err => {
-          console.error('Firebase error: ' + JSON.stringify(err));
-          return Promise.reject(err);
-         });
-
-    },err => {
-      console.error(err);
-      return Promise.reject(err);
-
-    })
-  }
-/**
- * Twitter login on web
- *
- * @returns
- * @memberof AuthProvider
- */
-doTwitterWebLogin(): Promise<any> {
-
-    let a = 'not working yet';
-    return Promise.reject(a);
+        return this.afauth.auth
+          .signInWithCredential(twitterCred)
+          .then(response => {
+            console.log('Firebase success ' + JSON.stringify(response));
+            return response;
+          })
+          .catch(err => {
+            console.error('Firebase error: ' + JSON.stringify(err));
+            return Promise.reject(err);
+          });
+      },
+      err => {
+        console.error(err);
+        return Promise.reject(err);
+      }
+    );
   }
 
-// Registration
+  // Registration
 
-/**
- * Register account in Firebase
- *
- * @param {any} user
- * @returns
- * @memberof AuthProvider
- */
-doRegister(user): Promise<any>{
-
-    return this.afauth.auth.createUserWithEmailAndPassword(user.emailAddress, user.password)
-
+  /**
+   * Register account in Firebase
+   *
+   * @param {any} user
+   * @returns
+   * @memberof AuthProvider
+   */
+  doRegister(user): Promise<any> {
+    return this.afauth.auth.createUserWithEmailAndPassword(
+      user.emailAddress,
+      user.password
+    );
   }
 
-// Password Reset
+  // Password Reset
 
-doResetPassword(email): Promise<any> {
-
-  return this.afauth.auth.sendPasswordResetEmail(email)
-  .then(res => {
-    console.log(res);
-    return res;
-  });
-
+  doResetPassword(email): Promise<any> {
+    return this.afauth.auth.sendPasswordResetEmail(email).then(res => {
+      console.log(res);
+      return res;
+    });
   }
-
 }
 
