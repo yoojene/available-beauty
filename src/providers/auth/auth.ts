@@ -11,11 +11,8 @@ import { UserNotValidatedAction } from '../../model/auth/auth.actions';
 import { AppState } from '../../model/app.state';
 import { Observable } from 'rxjs/Observable';
 import { StorageProvider } from '../storage/storage';
-import { AuthService } from 'angular4-social-login';
-import { FacebookLoginProvider, GoogleLoginProvider } from 'angular4-social-login';
 
 import { API_CONFIG_VALUES } from '../../config/api.config';
-import { SocialUser } from 'angular4-social-login/entities/user';
 
 
 @Injectable()
@@ -28,7 +25,6 @@ export class AuthProvider {
     private store: Store<AppState>,
     private storage: StorageProvider,
     private afauth: AngularFireAuth,
-    private socialAuthService: AuthService,
     private fb: Facebook,
     private google: GooglePlus,
     private twitter: TwitterConnect
@@ -105,7 +101,7 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  private doSocialWebLogin(providerId): Promise<SocialUser> {
+  private doSocialWebLogin(providerId): Promise<any> {
     // return this.socialAuthService.signIn(providerId).then(res => {
     //   console.log(res);
     //   return res;
