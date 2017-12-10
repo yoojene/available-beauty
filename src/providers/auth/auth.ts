@@ -102,10 +102,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private doSocialWebLogin(providerId): Promise<any> {
-    // return this.socialAuthService.signIn(providerId).then(res => {
-    //   console.log(res);
-    //   return res;
-    // });
+
     let socialProvider;
 
     switch (providerId) {
