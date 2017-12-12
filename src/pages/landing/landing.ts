@@ -20,18 +20,30 @@ import { RegisterPage } from '../register/register';
 export class LandingPage {
   backgrounds = [
     'assets/img/background/background-1.jpg',
-    'assets/img/background/background-2.jpg',
-    'assets/img/background/background-3.jpg',
-    'assets/img/background/background-4.jpg'
+    'assets/img/background/man-studio-portrait-light-90764.jpeg',
+    'assets/img/background/pexels-photo-556665_1.jpg',
+    'assets/img/background/pexels-photo-97218_1.jpg'
   ];
+
+  tourSlides: any = [
+    {
+      slideText: 'Find salons and beauty specialists available near to you'
+    },
+    {
+      slideText: 'View recommendations, ratings and  reviews '
+    },
+    {
+      slideText: 'Get deals on the treatments you want'
+    }
+  ];
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
   }
 
-  openPage(){
+  openPage() {
     this.navCtrl.push('LoginPage');
-
   }
 }

@@ -1,4 +1,28 @@
 page-landing {
+
+  .landing-page {
+
+    &--tour-slides {
+      // position: absolute;
+      // top: 30vh;
+      height: 100%;
+      // padding-top: 30px;
+    }
+
+    &--login-container {
+    color: white;
+    position: absolute;
+    top: 0;
+    padding: 10vw;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 2;
+  }
+
+
+
+  }
   .scroll-content {
     margin-top: 0 ;
     // overflow: hidden;
@@ -20,7 +44,6 @@ page-landing {
     border-color: transparent;
   }
   .slide-zoom {
-    background: rgba(32, 32, 32, 0.2) ;
     height: 100%;
   }
   ion-slides {
@@ -54,35 +77,43 @@ page-landing {
 
 // Logo used on reg pages
   .ab-logo {
-    background: url('../assets/img/AB_logo_main_tonal.png') no-repeat;
+     background: url('../assets/img/AB_logo_main_no_text_white.png') no-repeat;
      background-size: cover;
      background-position: center;
-     height: 30rem;
+     height: 25rem;
      width: auto;
+  }
+
+  .ab-text {
+     background: url('../assets/img/AB_logo_text_only_white.png') no-repeat;
+    background-size: contain;
+     background-position: center;
+     height: 10rem;
   }
 
 
   @media (min-width: 568px) {
 
     .ab-logo {
-     height: 50rem;
-     width: 50rem;
-  }
-
+     height: 26rem;
+     width: 26rem;
+     margin-left: 15rem;
+    }
   }
 
   @media (min-width: 768px) {
     .ab-logo {
-     height: 40rem;
-     width: 40rem;
+     height: 26rem;
+     width: 26rem;
+     margin-left: 31rem;
   }
 }
 
   @media (min-width: 968px) {
     .ab-logo {
-     height: 40rem;
-     width: 40rem;
-     margin-left: 33rem;
+     height: 26rem;
+     width: 26rem;
+     margin-left: 39rem;
     }
   }
   @media (min-width: 1468px) {
@@ -92,5 +123,4 @@ page-landing {
      width: 40rem;
      margin-left: 50rem;
     }
-
   }

@@ -89,4 +89,47 @@ page-login {
     width: 215px;
   }
 
+  .ab-logo {
+    background: url('../assets/img/AB_logo_main_no_text_black.png') no-repeat;
+     background-size: cover;
+     background-position: center;
+     height: 25rem;
+     width: auto;
+  }
+
+
+  @media (min-width: 568px) {
+
+    .ab-logo {
+     height: 26rem;
+     width: 26rem;
+     margin-left: 15rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .ab-logo {
+     height: 26rem;
+     width: 26rem;
+     margin-left: 31rem;
+  }
+}
+
+  @media (min-width: 968px) {
+    .ab-logo {
+     height: 26rem;
+     width: 26rem;
+     margin-left: 39rem;
+    }
+  }
+  @media (min-width: 1468px) {
+
+    .ab-logo {
+     height: 40rem;
+     width: 40rem;
+     margin-left: 50rem;
+    }
+  }
+
+
 }

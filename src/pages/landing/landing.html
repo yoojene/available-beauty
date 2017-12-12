@@ -1,11 +1,20 @@
 <ion-header no-border>
 </ion-header>
-<ion-content>
+<ion-content class="landing-page">
   <ion-slides pager="false" autoplay="2000" loop="true" speed="1500" effect="fade">
     <ion-slide class="slide-background swiper-no-swiping" *ngFor="let background of backgrounds" [ngStyle]="{'background-image': 'url(' + background +')'}">
     </ion-slide>
   </ion-slides>
-  <div class="login-container">
+
+  <div class="landing-page--login-container">
+    <div class="ab-logo"></div>
+    <div class="ab-text"></div>
+      <ion-slides centeredSlides pager autoplay="3000" speed="500" loop class="landing-page--tour-slides">
+        <ion-slide *ngFor="let slide of tourSlides">
+          <div>{{slide.slideText}}</div>
+          <br>
+        </ion-slide>
+      </ion-slides>
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -14,6 +23,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    <div class="ab-logo"></div>
+
   </div>
 </ion-content>

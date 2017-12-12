@@ -39,7 +39,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doNativeLogin(email, password) {
-    console.log("native afth login success", email + " " + password);
+    console.log('native afth login success', email + ' ' + password);
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -50,13 +50,13 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doFacebookLogin(): Promise<any> {
-    console.log("doFacebookLogin()");
+    console.log('doFacebookLogin()');
 
-    if (this.plt.is("cordova")) {
-      console.log("in cordova");
+    if (this.plt.is('cordova')) {
+      console.log('in cordova');
       return this.doFacebookCordovaLogin();
     } else {
-      this.socialProvider = "Facebook";
+      this.socialProvider = 'Facebook';
       return this.doSocialWebLogin(this.socialProvider);
     }
   }
@@ -69,9 +69,9 @@ export class AuthProvider {
    */
   private doFacebookCordovaLogin(): Promise<any> {
     return this.fb
-      .login(["email"])
+      .login(['email'])
       .then((res: FacebookLoginResponse) => {
-        console.log("Logged into Facebook using plugin", res);
+        console.log('Logged into Facebook using plugin', res);
 
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
           res.authResponse.accessToken
@@ -80,16 +80,16 @@ export class AuthProvider {
         return this.afauth.auth
           .signInWithCredential(facebookCredential)
           .then(success => {
-            console.log("Firebase success; " + JSON.stringify(success));
+            console.log('Firebase success; ' + JSON.stringify(success));
             return success;
           })
           .catch(err => {
-            console.error("Firebase error: " + JSON.stringify(err));
+            console.error('Firebase error: ' + JSON.stringify(err));
             return Promise.reject(err);
           });
       })
       .catch(e => {
-        console.error("Error! ", e);
+        console.error('Error! ', e);
         return Promise.reject(e);
       });
   }
