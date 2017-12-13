@@ -77,16 +77,12 @@ export class AuthProvider {
           res.authResponse.accessToken
         );
 
-        return this.afauth.auth
-          .signInWithCredential(facebookCredential)
-          .then(success => {
-            console.log('Firebase success; ' + JSON.stringify(success));
-            return success;
-          })
-          .catch(err => {
-            console.error('Firebase error: ' + JSON.stringify(err));
-            return Promise.reject(err);
-          });
+       return this.callSignInWithCredentials(facebookCredential).then(
+         newUser => {
+           this.addUserProfile(newUser);
+         }
+       );
+
       })
       .catch(e => {
         console.error('Error! ', e);
@@ -121,6 +117,8 @@ export class AuthProvider {
       .signInWithPopup(socialProvider)
       .then(res => {
         return res;
+      }).then(newUser => {
+        this.addUserProfile(newUser);
       })
       .catch(err => {
         return Promise.reject(err);
@@ -164,16 +162,11 @@ export class AuthProvider {
           const googleCred = firebase.auth.GoogleAuthProvider.credential(
             res.idToken
           );
-          return this.afauth.auth
-            .signInWithCredential(googleCred)
-            .then(response => {
-              console.log('Firebase success: ' + JSON.stringify(response));
-              return response;
-            })
-            .catch(err => {
-              console.error('Firebase error: ' + JSON.stringify(err));
-              return Promise.reject(err);
-            });
+          return this.callSignInWithCredentials(googleCred).then(
+            newUser => {
+              this.addUserProfile(newUser);
+            }
+          );
         },
         err => {
           console.error('Error: ', err);
@@ -211,16 +204,12 @@ export class AuthProvider {
           res.secret
         );
 
-        return this.afauth.auth
-          .signInWithCredential(twitterCred)
-          .then(response => {
-            console.log('Firebase success ' + JSON.stringify(response));
-            return response;
-          })
-          .catch(err => {
-            console.error('Firebase error: ' + JSON.stringify(err));
-            return Promise.reject(err);
-          });
+        return this.callSignInWithCredentials(twitterCred)
+        .then(
+          newUser => {
+            this.addUserProfile(newUser);
+          }
+        );
       },
       err => {
         console.error(err);
@@ -239,10 +228,14 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   doRegister(user): Promise<any> {
-    return this.afauth.auth.createUserWithEmailAndPassword(
-      user.emailAddress,
-      user.password
-    );
+    return this.afauth.auth
+      .createUserWithEmailAndPassword(user.emailAddress, user.password)
+      .then(newUser => {
+        return Promise.all([
+          this.updateUserProfile(newUser, user),
+          this.addUserProfile(newUser)
+        ]);
+      });
   }
 
   // Password Reset
@@ -252,6 +245,86 @@ export class AuthProvider {
       console.log(res);
       return res;
     });
+  }
+
+  // Angular Fire utils
+/**
+ * Wrapper for afauth.auth.signInWithCredentials
+ *
+ * @param {any} credential
+ * @returns
+ * @memberof AuthProvider
+ */
+callSignInWithCredentials(credential) {
+
+    console.log('callsigninwithcreds')
+
+    return this.afauth.auth
+    .signInWithCredential(credential)
+    .then(res => {
+      console.log('Firebase success ' + JSON.stringify(res));
+      return res;
+    })
+    .catch(err => {
+      console.error('Firebase error: ' + JSON.stringify(err));
+      return Promise.reject(err);
+    })
+  }
+
+  // Firebase utils
+
+/**
+ * Wrapper for firebase user.updateProfile
+ *
+ * @param {any} firebaseUser
+ * @param {any} user
+ * @returns
+ * @memberof AuthProvider
+ */
+updateUserProfile(firebaseUser, user) {
+
+  console.log(firebaseUser);
+  console.log(user);
+
+  return firebaseUser
+    .updateProfile(
+      { displayName: user.name,
+        photoUrl: user.photo },
+    );
+
+}
+
+// Realtime DB
+
+/**
+ * Creates userProfile record in realtime DB
+ *
+ * @param {any} user
+ * @returns
+ * @memberof AuthProvider
+ */
+addUserProfile(user) {
+    console.log('addUserProfile ', user);
+    // Sometimes (on social web logins for eg) FirebaseUser comes in another object
+    // this strips it out
+    let userParam;
+
+    if (user.user){
+      userParam = user.user;
+    }else{
+      userParam = user;
+    }
+
+    console.log(userParam);
+
+    return firebase
+      .database()
+      .ref('/userProfile')
+      .child(userParam.uid)
+      .set({ email: userParam.email,
+             avatar: userParam.photoURL
+      });
+
   }
 }
 
