@@ -34,6 +34,7 @@ export class RegisterPage {
 
 
   public passwordError: string = 'Passwords do not match';
+  public minLengthError: string = 'Passwords must be 6 characters or more';
 
   constructor(
     public navCtrl: NavController,
@@ -101,6 +102,8 @@ export class RegisterPage {
           this.navCtrl.push('TabsPage');
 
           // TODO Update Firebase Realtime db here with  /user information (coords etc)?
+
+
 
         }).catch(err => {
           this.invalidReg = true;

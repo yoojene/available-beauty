@@ -9,6 +9,10 @@ import { LoginBackgroundSliderPage } from '../pages/login-background-slider/logi
 import { LandingPage } from '../pages/landing/landing';
 import { LocationProvider } from '../providers/location/location';
 
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireAction } from 'angularfire2/database/interfaces';
+
+
 
 @Component({
   templateUrl: "app.html"
@@ -24,7 +28,8 @@ export class AvailableBeautyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    private location: LocationProvider
+    private location: LocationProvider,
+    private afAuth: AngularFireAuth
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -32,10 +37,29 @@ export class AvailableBeautyApp {
       statusBar.styleDefault();
       splashScreen.hide();
       this.setGeoLocation();
+      this.checkAuthState();
     });
   }
 
   setGeoLocation(){
     this.location.watchGeoLocation()
+  }
+
+  checkAuthState() {
+    console.log('checking auth state....')
+    this.afAuth.authState
+    .subscribe(res => {
+
+      console.log(res);
+      if (res) {
+        // Nav to homepage
+        this.rootPage = 'TabsPage';
+      } else {
+        // Login page
+        this.rootPage = 'LandingPage'
+      }
+
+    });
+
   }
 }

@@ -32,6 +32,7 @@
           clearInput>
         </ion-input>
       </ion-item>
+        <div *ngIf="registerForm.controls.password.errors?.minlength" class="invalid-reg">{{minLengthError}}</div>
       <ion-item>
         <button
           type="button"
