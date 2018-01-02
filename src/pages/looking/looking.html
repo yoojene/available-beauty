@@ -1,6 +1,5 @@
 
 <ion-header>
-
   <ion-navbar hideBackButton="true">
     <ion-title>
       <!-- Available Beauty -->
@@ -10,30 +9,49 @@
 
 </ion-header>
 
-
 <ion-content padding>
 <br>
   <div text-center> {{lookingForTitle}} </div>
 <br>
-<ion-buttons text-center>
-  <button ion-button round color="aubergine"> Hair </button>
-  <button ion-button round color="aubergine"> Nails </button>
-  <button ion-button round color="aubergine"> Treatments </button>
+ <ion-buttons text-center>
+  <button
+  *ngFor="let option of beautyOptions"
+  ion-button round
+  [color]="option.disabled ? 'primary' : 'aubergine'"
+  (click)="setDisabled(option, beautyOptions)"
+  [disabled]="option.disabled"
+  >
+    {{option.name}}
+  </button>
 </ion-buttons>
-
   <br>
-
   <br>
-  <div text-center> {{lookingWhenTitle}} </div>
-<br>
-  <span text-center *ngFor="let date of availableDates; let i = index">
-    <button ion-button round color="primary"> {{date.day}}</button>
-  </span>
+    <div text-center> {{lookingWhenTitle}} </div>
   <br>
-
+  <ion-buttons text-center>
+      <button
+       *ngFor="let date of availableDates; let i = index"
+      ion-button
+      round
+      [color]="date.disabled ? 'primary' : 'aubergine'"
+      (click)="setDisabled(date, availableDates)"
+      [disabled]="date.disabled">
+      {{date.day}}
+    </button>
+  </ion-buttons>
   <br>
-  <div text-center> {{searchTitle}} </div>
-
+  <ion-buttons right>
+    <button
+    ion-button
+    icon-only
+    color="danger"
+    (click)="resetDisabled()">
+    <ion-icon outline name="close">
+    </ion-icon>
+    </button>
+  </ion-buttons>
+  <br>
+    <!-- <div text-center> {{searchTitle}} </div> -->
   <br>
 <div text-center>
   <button ion-button large color="secondary" (click)="goToHome()"> Search </button>
