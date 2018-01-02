@@ -6,6 +6,9 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
 
+import { AngularFireAuth } from 'angularfire2/auth';
+
+
 @IonicPage()
 @Component({
   selector: "page-home",
@@ -24,7 +27,8 @@ export class HomePage {
     private storage: StorageProvider,
     private stylist: StylistProvider,
     private modalCtrl: ModalController,
-    private events: Events
+    private events: Events,
+    private afauth: AngularFireAuth
   ) {}
 
   ionViewDidLoad() {
@@ -70,4 +74,9 @@ export class HomePage {
   openProfile(stylist){
      this.events.publish("change-profile-tab", 2, 2, stylist);
   }
+
+  doLogOut() {
+    this.afauth.auth.signOut()
+  }
+
 }
