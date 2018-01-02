@@ -1,0 +1,43 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-title>
+      <!-- Available Beauty -->
+      <img src="assets/img/AB_logo_text.png">
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<br>
+  <div text-center> {{lookingForTitle}} </div>
+<br>
+<ion-buttons text-center>
+  <button ion-button round color="aubergine"> Hair </button>
+  <button ion-button round color="aubergine"> Nails </button>
+  <button ion-button round color="aubergine"> Treatments </button>
+</ion-buttons>
+
+  <br>
+
+  <br>
+  <div text-center> {{lookingWhenTitle}} </div>
+<br>
+  <span text-center *ngFor="let date of availableDates; let i = index">
+    <button ion-button round color="primary"> {{date.day}}</button>
+  </span>
+  <br>
+
+  <br>
+  <div text-center> {{searchTitle}} </div>
+
+  <br>
+<div text-center>
+  <button ion-button large color="secondary" (click)="goToHome()"> Search </button>
+</div>
+
+
+</ion-content>

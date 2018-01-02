@@ -53,7 +53,7 @@ export class AvailableBeautyApp {
       console.log(res);
       if (res) {
         // Nav to homepage
-        this.rootPage = 'TabsPage';
+        this.rootPage = 'LookingPage';
       } else {
         // Login page
         this.rootPage = 'LandingPage'

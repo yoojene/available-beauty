@@ -68,7 +68,7 @@ export class LoginPage {
         res => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('TabsPage');
+          this.navCtrl.push('LookingPage');
         },
         err => {
           loading.dismiss();
@@ -90,7 +90,7 @@ export class LoginPage {
         .then(res => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('TabsPage');
+          this.navCtrl.push('LookingPage');
         })
         .catch(err => {
           console.error(err);
@@ -110,7 +110,7 @@ export class LoginPage {
         .then(res => {
           loading.dismiss();
           console.log(res);
-          this.navCtrl.push('TabsPage');
+          this.navCtrl.push('LookingPage');
         })
         .catch(err => {
           loading.dismiss();
@@ -129,7 +129,7 @@ export class LoginPage {
         (res: TwitterConnectResponse) => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('TabsPage');
+          this.navCtrl.push('LookingPage');
         },
         err => {
           loading.dismiss();
