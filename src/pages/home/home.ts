@@ -1,18 +1,15 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage, ModalController, Events } from 'ionic-angular';
-import { StylistProvider } from "../../providers/stylist/stylist";
+import { StylistProvider } from '../../providers/stylist/stylist';
 import { Observable } from 'rxjs/Observable';
 import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
 
-import { AngularFireAuth } from 'angularfire2/auth';
-
-
 @IonicPage()
 @Component({
-  selector: "page-home",
-  templateUrl: "home.html"
+  selector: 'page-home',
+  templateUrl: 'home.html'
 })
 export class HomePage {
   public lat: number;
@@ -27,8 +24,7 @@ export class HomePage {
     private storage: StorageProvider,
     private stylist: StylistProvider,
     private modalCtrl: ModalController,
-    private events: Events,
-    private afauth: AngularFireAuth
+    private events: Events
   ) {}
 
   ionViewDidLoad() {
@@ -44,7 +40,7 @@ export class HomePage {
   }
 
   getGeoLocation() {
-    this.storage.getStorage("geolocation").subscribe(res => {
+    this.storage.getStorage('geolocation').subscribe(res => {
       console.log(res);
       if (res) {
         this.lat = res[0];
@@ -64,7 +60,7 @@ export class HomePage {
     let searchModal = this.modalCtrl.create(SearchPage);
 
     searchModal.onDidDismiss(data => {
-      console.log("dismissed ", data);
+      console.log('dismissed ', data);
       this.getStylists();
     });
 
@@ -72,11 +68,8 @@ export class HomePage {
   }
 
   openProfile(stylist){
-     this.events.publish("change-profile-tab", 2, 2, stylist);
+     this.events.publish("change-stylist-profile-tab", 2, 2, stylist);
   }
 
-  doLogOut() {
-    this.afauth.auth.signOut()
-  }
 
 }

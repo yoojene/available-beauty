@@ -1,0 +1,29 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-title>Profile</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="{{user?.avatarImage}}">
+
+      </ion-avatar>
+         {{user?.name}}
+    </ion-item>
+    <!-- <ion-item>/ion-item> -->
+    <ion-item>{{user?.emailAddress}}</ion-item>
+    <!-- <ion-item>{{user.emailAddress}}</ion-item> -->
+  </ion-list>
+  <button left bottom ion-button color="danger" (click)="doLogOut()">
+    Log Out
+  </button>
+
+</ion-content>

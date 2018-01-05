@@ -1,5 +1,5 @@
 <!--
-  Generated template for the ProfilePage page.
+  Generated template for the stylist-profilePage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,16 +7,16 @@
 <ion-header>
 
   <ion-navbar hideBackButton="true">
-    <ion-title>Profile</ion-title>
+    <ion-title>Stylist</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content class="page-profile" padding>
+<ion-content class="page-stylist-profile" padding>
   <ion-card>
     <ion-row>
-        <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-profile--profile-card-button" name="heart" (click)="toggleHeart()">
+        <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button" name="heart" (click)="toggleHeart()">
         </ion-icon>
     </ion-row>
     <img src="{{stylist.avatarImage}}">
@@ -40,9 +40,9 @@
          </ion-icon>
          <ion-icon name="star">
          </ion-icon>
-         <ion-icon class="page-profile--selected-star-icon" name="star">
+         <ion-icon class="page-stylist-profile--selected-star-icon" name="star">
          </ion-icon>
-         <ion-icon class="page-profile--selected-star-icon" name="star">
+         <ion-icon class="page-stylist-profile--selected-star-icon" name="star">
          </ion-icon>
        </ion-row>
       </ion-item>

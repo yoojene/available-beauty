@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 
 /**
- * Generated class for the ProfilePage page.
+ * Generated class for the StylistProfilePage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,10 +10,10 @@ import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-profile',
-  templateUrl: 'profile.html',
+  selector: 'page-stylist-profile',
+  templateUrl: 'stylist-profile.html',
 })
-export class ProfilePage {
+export class StylistProfilePage {
 
   id: number;
   stylist: any;
@@ -25,7 +25,7 @@ export class ProfilePage {
     this.id = navParams.get("id");
     this.stylist = navParams.get("stylist");
 
-     events.subscribe("change-profile-tab", (tab, id, param) => {
+     events.subscribe("change-stylist-profile-tab", (tab, id, param) => {
        this.id = id;
        this.stylist = param;
      });

@@ -4,15 +4,15 @@ import { Component, ViewChild } from '@angular/core';
 
 import { HomePage } from '../home/home';
 import { BookingsPage } from '../bookings/bookings';
-import { ProfilePage } from '../profile/profile';
-// import { ResourcesPage } from '../resources/resources';
-// import { SettingsPage } from '../settings/settings';
+import { StylistProfilePage } from '../stylist-profile/stylist-profile';
+import { UserProfilePage } from '../user-profile/user-profile';
+
 import { NavParams, NavController, Platform, IonicPage, Events, Tabs } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: "page-tabs",
-  templateUrl: "tabs.html"
+  selector: 'page-tabs',
+  templateUrl: 'tabs.html'
 })
 export class TabsPage {
   @ViewChild(Tabs) tabs: Tabs;
@@ -22,10 +22,12 @@ export class TabsPage {
 
   tab1Root: any = HomePage;
   tab2Root: any = BookingsPage;
-  tab3Root: any = ProfilePage;
+  tab3Root: any = StylistProfilePage;
+  tab4Root: any = UserProfilePage;
   tab1Params = {id: 0};
   tab2Params = {id: 1};
-  tab3Params = {id: 2, stylist: ""};
+  tab3Params = {id: 2, stylist: ''};
+  tab4Params = {id: 3};
 
   constructor(
     private _platform: Platform,
@@ -34,7 +36,7 @@ export class TabsPage {
     private navCtrl: NavController,
     private events: Events
   ) {
-    events.subscribe("change-profile-tab", (tab, id, param) => {
+    events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
       this.tab3Params.id = id;
       this.tab3Params.stylist = param
       this.tabs.select(tab);

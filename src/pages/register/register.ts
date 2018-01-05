@@ -46,7 +46,7 @@ export class RegisterPage {
     private store: Store<AppState>
   ) {
     this.registerForm = formBuilder.group({
-      name: ['', Validators.required],
+      displayName: ['', Validators.required],
       emailAddress: ['', Validators.compose([Validators.required, Validators.email])],
       password: [
         '',
@@ -81,35 +81,18 @@ export class RegisterPage {
       console.log(JSON.stringify(user));
 
       // this.store.dispatch(new RegisterAction(user));
-      // TODO Needs more work
 
-      // For now call user service and API
-      // this.user.addUser(user)
-      // .subscribe(res => {
-      //     console.log(res);
-      //     this.navCtrl.pop();
-      //   },
-      //   (err: HttpErrorResponse) => {
-      //      console.error(err);
-      //      // TODO: Show visual error message
-      //    }
-      //   );
-
-        this.auth.doRegister(user)
+      this.auth.doRegister(user)
         .then(res => {
 
           console.log('User Registered : ' + JSON.stringify(res));
           this.navCtrl.push('TabsPage');
 
-          // TODO Update Firebase Realtime db here with  /user information (coords etc)?
-
-
-
-        }).catch(err => {
-          this.invalidReg = true;
-          this.regError = err.message;
-          console.error(err);
-        });
+      }).catch(err => {
+        this.invalidReg = true;
+        this.regError = err.message;
+        console.error(err);
+      });
 
 
     }else{

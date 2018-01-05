@@ -39,7 +39,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doNativeLogin(email, password) {
-    console.log('native afth login success', email + ' ' + password);
+    console.log("native afth login success", email + " " + password);
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -50,13 +50,13 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doFacebookLogin(): Promise<any> {
-    console.log('doFacebookLogin()');
+    console.log("doFacebookLogin()");
 
-    if (this.plt.is('cordova')) {
-      console.log('in cordova');
+    if (this.plt.is("cordova")) {
+      console.log("in cordova");
       return this.doFacebookCordovaLogin();
     } else {
-      this.socialProvider = 'Facebook';
+      this.socialProvider = "Facebook";
       return this.doSocialWebLogin(this.socialProvider);
     }
   }
@@ -69,23 +69,22 @@ export class AuthProvider {
    */
   private doFacebookCordovaLogin(): Promise<any> {
     return this.fb
-      .login(['email'])
+      .login(["email"])
       .then((res: FacebookLoginResponse) => {
-        console.log('Logged into Facebook using plugin', res);
+        console.log("Logged into Facebook using plugin", res);
 
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
           res.authResponse.accessToken
         );
 
-       return this.callSignInWithCredentials(facebookCredential).then(
-         newUser => {
-           this.addUserProfile(newUser);
-         }
-       );
-
+        return this.callSignInWithCredentials(facebookCredential).then(
+          newUser => {
+            this.addUserProfile(newUser);
+          }
+        );
       })
       .catch(e => {
-        console.error('Error! ', e);
+        console.error("Error! ", e);
         return Promise.reject(e);
       });
   }
@@ -98,17 +97,16 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private doSocialWebLogin(providerId): Promise<any> {
-
     let socialProvider;
 
     switch (providerId) {
-      case 'Facebook':
+      case "Facebook":
         socialProvider = new firebase.auth.FacebookAuthProvider();
         break;
-      case 'Google':
+      case "Google":
         socialProvider = new firebase.auth.GoogleAuthProvider();
         break;
-      case 'Twitter':
+      case "Twitter":
         socialProvider = new firebase.auth.TwitterAuthProvider();
         break;
     }
@@ -117,7 +115,8 @@ export class AuthProvider {
       .signInWithPopup(socialProvider)
       .then(res => {
         return res;
-      }).then(newUser => {
+      })
+      .then(newUser => {
         this.addUserProfile(newUser);
       })
       .catch(err => {
@@ -162,11 +161,9 @@ export class AuthProvider {
           const googleCred = firebase.auth.GoogleAuthProvider.credential(
             res.idToken
           );
-          return this.callSignInWithCredentials(googleCred).then(
-            newUser => {
-              this.addUserProfile(newUser);
-            }
-          );
+          return this.callSignInWithCredentials(googleCred).then(newUser => {
+            this.addUserProfile(newUser);
+          });
         },
         err => {
           console.error('Error: ', err);
@@ -204,12 +201,9 @@ export class AuthProvider {
           res.secret
         );
 
-        return this.callSignInWithCredentials(twitterCred)
-        .then(
-          newUser => {
-            this.addUserProfile(newUser);
-          }
-        );
+        return this.callSignInWithCredentials(twitterCred).then(newUser => {
+          this.addUserProfile(newUser);
+        });
       },
       err => {
         console.error(err);
@@ -227,20 +221,26 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  doRegister(user): Promise<any> {
+  doRegister(user: any): Promise<any> {
     return this.afauth.auth
       .createUserWithEmailAndPassword(user.emailAddress, user.password)
       .then(newUser => {
         return Promise.all([
           this.updateUserProfile(newUser, user),
-          this.addUserProfile(newUser)
+          this.addUserProfile(newUser, user)
         ]);
       });
   }
 
   // Password Reset
-
-  doResetPassword(email): Promise<any> {
+  /**
+   *
+   *
+   * @param {any} email
+   * @returns {Promise<any>}
+   * @memberof AuthProvider
+   */
+  doResetPassword(email: any): Promise<any> {
     return this.afauth.auth.sendPasswordResetEmail(email).then(res => {
       console.log(res);
       return res;
@@ -248,71 +248,80 @@ export class AuthProvider {
   }
 
   // Angular Fire utils
-/**
- * Wrapper for afauth.auth.signInWithCredentials
- *
- * @param {any} credential
- * @returns
- * @memberof AuthProvider
- */
-callSignInWithCredentials(credential) {
-
-    console.log('callsigninwithcreds')
+  /**
+   * Wrapper for afauth.auth.signInWithCredentials
+   *
+   * @param {any} credential
+   * @returns
+   * @memberof AuthProvider
+   */
+  callSignInWithCredentials(credential: any) {
+    console.log('callsigninwithcreds');
 
     return this.afauth.auth
-    .signInWithCredential(credential)
-    .then(res => {
-      console.log('Firebase success ' + JSON.stringify(res));
-      return res;
-    })
-    .catch(err => {
-      console.error('Firebase error: ' + JSON.stringify(err));
-      return Promise.reject(err);
-    })
+      .signInWithCredential(credential)
+      .then(res => {
+        console.log('Firebase success ' + JSON.stringify(res));
+        return res;
+      })
+      .catch(err => {
+        console.error('Firebase error: ' + JSON.stringify(err));
+        return Promise.reject(err);
+      });
   }
 
-  // Firebase utils
+  // ** Firebase utils ** //
 
-/**
- * Wrapper for firebase user.updateProfile
- *
- * @param {any} firebaseUser
- * @param {any} user
- * @returns
- * @memberof AuthProvider
- */
-updateUserProfile(firebaseUser, user) {
+  /**
+   * Wrapper for Firebase user.updateProfile object
+   *
+   * @param {any} firebaseUser
+   * @param {any} user
+   * @returns
+   * @memberof AuthProvider
+   */
+  updateUserProfile(firebaseUser, user) {
+    console.log(firebaseUser);
+    console.log(user);
 
-  console.log(firebaseUser);
-  console.log(user);
+    return firebaseUser.updateProfile({
+      displayName: user.displayName
+      // photoURL: user.photo
+    });
+  }
 
-  return firebaseUser
-    .updateProfile(
-      { displayName: user.name,
-        photoUrl: user.photo },
-    );
+  // ** Realtime DB ** //
 
-}
+  /**
+   * Creates userProfile record in realtime DB
+   *
+   * @param {any} newUser FirebaseUser returned from native createUserWithEmailAndPassword()
+   * @param {any} user user details from RegisterPage component
+   * @returns
+   * @memberof AuthProvider
+   */
+  addUserProfile(newUser: any, user?: any) {
 
-// Realtime DB
 
-/**
- * Creates userProfile record in realtime DB
- *
- * @param {any} user
- * @returns
- * @memberof AuthProvider
- */
-addUserProfile(user) {
-    console.log('addUserProfile ', user);
-    // Sometimes (on social web logins for eg) FirebaseUser comes in another object
-    // this strips it out
+    // TODO this first bit is a mess, trying to accout for social and native logins  - userParam!!!
     let userParam;
 
-    if (user.user){
-      userParam = user.user;
-    }else{
+    if (!user) {
+      console.log('there is no user?')
+      userParam = newUser;
+      console.log(userParam)
+    } else {
       userParam = user;
+    }
+    console.log('addUserProfile ', newUser, user);
+
+    // Sometimes (on social web logins for eg) FirebaseUser comes in another object
+    // this strips it out
+    console.log(userParam);
+    if (newUser.user) {
+      userParam = newUser.user;
+    } else {
+      userParam = newUser;
     }
 
     console.log(userParam);
@@ -321,10 +330,14 @@ addUserProfile(user) {
       .database()
       .ref('/userProfile')
       .child(userParam.uid)
-      .set({ email: userParam.email,
-             avatar: userParam.photoURL
+      .set({
+        name: userParam.displayName,
+        emailAddress: userParam.email,
+        avatarImage: userParam.photoURL,
+        phoneNumber: null, // dummy
+        // homeLocation: user.homeLocation, // can't set this from social logins as not passed from Reg form object
+        averageStarRating: null //
       });
-
   }
 }
 
