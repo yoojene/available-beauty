@@ -12,6 +12,7 @@ import { LocationProvider } from '../../providers/location/location';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegisterAction, RegisterErrorAction } from '../../model/auth/auth.actions';
 import { AuthProvider } from '../../providers/auth/auth';
+import { StorageProvider } from '../../providers/storage/storage';
 
 /**
  * Generated class for the RegisterPage page.
@@ -43,6 +44,7 @@ export class RegisterPage {
     public user: UserProvider,
     public location: LocationProvider,
     private auth: AuthProvider,
+    private storage: StorageProvider,
     private store: Store<AppState>
   ) {
     this.registerForm = formBuilder.group({
@@ -59,13 +61,13 @@ export class RegisterPage {
   }
 
   ionViewDidLoad() {
+
     console.log('ionViewDidLoad RegisterPage');
 
-
-    // Need this anymore?
-    this.location.getGeoLocation()
-        .then(res => this.coords = res);
-        console.log(this.coords);
+    this.storage.getStorage('geolocation')
+      .subscribe(
+        res => this.coords = res
+      );
   }
 
   doRegister() {

@@ -36,12 +36,12 @@ export class AvailableBeautyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      this.setGeoLocation();
+      this.watchGeoLocation();
       this.checkAuthState();
     });
   }
 
-  setGeoLocation(){
+  watchGeoLocation(){
     this.location.watchGeoLocation()
   }
 

@@ -69,9 +69,9 @@ export class AuthProvider {
    */
   private doFacebookCordovaLogin(): Promise<any> {
     return this.fb
-      .login(["email"])
+      .login(['email'])
       .then((res: FacebookLoginResponse) => {
-        console.log("Logged into Facebook using plugin", res);
+        console.log('Logged into Facebook using plugin', res);
 
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(
           res.authResponse.accessToken
@@ -84,7 +84,7 @@ export class AuthProvider {
         );
       })
       .catch(e => {
-        console.error("Error! ", e);
+        console.error('Error! ', e);
         return Promise.reject(e);
       });
   }
@@ -100,13 +100,13 @@ export class AuthProvider {
     let socialProvider;
 
     switch (providerId) {
-      case "Facebook":
+      case 'Facebook':
         socialProvider = new firebase.auth.FacebookAuthProvider();
         break;
-      case "Google":
+      case 'Google':
         socialProvider = new firebase.auth.GoogleAuthProvider();
         break;
-      case "Twitter":
+      case 'Twitter':
         socialProvider = new firebase.auth.TwitterAuthProvider();
         break;
     }
@@ -302,42 +302,45 @@ export class AuthProvider {
    */
   addUserProfile(newUser: any, user?: any) {
 
+    // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
 
-    // TODO this first bit is a mess, trying to accout for social and native logins  - userParam!!!
     let userParam;
-
-    if (!user) {
-      console.log('there is no user?')
-      userParam = newUser;
-      console.log(userParam)
-    } else {
-      userParam = user;
-    }
-    console.log('addUserProfile ', newUser, user);
-
-    // Sometimes (on social web logins for eg) FirebaseUser comes in another object
-    // this strips it out
-    console.log(userParam);
     if (newUser.user) {
       userParam = newUser.user;
     } else {
       userParam = newUser;
     }
 
-    console.log(userParam);
+    let userProfile;
+    if (!user) {
+
+      console.log('there is no user, social login')
+      userProfile = {
+        name: userParam.displayName,
+        emailAddress: userParam.email,
+        avatarImage: userParam.photoURL,
+        phoneNumber: null, // dummy
+        // homeLocation: user.homeLocation
+      }
+
+    } else {
+
+      userProfile = {
+        name: user.displayName,
+        emailAddress: user.emailAddress,
+        avatarImage: null, // link to dummy image?
+        phoneNumber: null, // dummy
+        homeLocation: user.homeLocation
+      }
+    }
+
+    console.log(userProfile);
 
     return firebase
       .database()
       .ref('/userProfile')
       .child(userParam.uid)
-      .set({
-        name: userParam.displayName,
-        emailAddress: userParam.email,
-        avatarImage: userParam.photoURL,
-        phoneNumber: null, // dummy
-        // homeLocation: user.homeLocation, // can't set this from social logins as not passed from Reg form object
-        averageStarRating: null //
-      });
+      .set(userProfile);
   }
 }
 
