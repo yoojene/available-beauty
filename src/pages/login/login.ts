@@ -26,11 +26,13 @@ export class LoginPage {
   public loginForm: any;
   public invalidLogin: boolean = false;
   public error: string;
+  private loginType: string;
 
   constructor(
     public store: Store<AppState>,
     public formBuilder: FormBuilder,
     public navCtrl: NavController,
+    public navParams: NavParams,
     private modal: ModalController,
     public afAuth: AngularFireAuth,
     public auth: AuthProvider,
@@ -50,6 +52,10 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+    console.log(this.navParams.get('loginType'));
+
+    this.loginType = this.navParams.get('loginType');
+
   }
 
   openResetPassword() {
@@ -142,7 +148,7 @@ export class LoginPage {
   }
 
   openRegisterPage() {
-    let regModal = this.modal.create('RegisterPage');
+    let regModal = this.modal.create('RegisterPage', {'loginType': this.loginType});
     regModal.present();
   }
 /**

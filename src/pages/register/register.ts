@@ -63,6 +63,7 @@ export class RegisterPage {
   ionViewDidLoad() {
 
     console.log('ionViewDidLoad RegisterPage');
+    console.log(this.navParams.get('loginType'))
 
     this.storage.getStorage('geolocation')
       .subscribe(

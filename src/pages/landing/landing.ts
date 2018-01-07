@@ -37,13 +37,20 @@ export class LandingPage {
     }
   ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  lookingTitle = 'Looking for Beauty';
+  offeringTitle = 'Offering Beauty';
+
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
   }
 
-  openPage() {
-    this.navCtrl.push('LoginPage');
+  openPage(el) {
+    console.log(el);
+    const type = el._elementRef.nativeElement.name;
+
+    this.navCtrl.push('LoginPage', {'loginType': type});
   }
 }

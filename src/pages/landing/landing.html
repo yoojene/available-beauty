@@ -18,8 +18,8 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-        <button ion-button margin color="tonal" (click)="openPage()">Looking for Beauty</button>
-        <button ion-button margin color="tonal" (click)="openPage()">Offering Beauty</button>
+        <button #looking name="Looking" ion-button margin color="tonal" (click)="openPage(looking)"> {{lookingTitle}} </button>
+        <button #offering name="Offering" ion-button margin color="tonal" (click)="openPage(offering)"> {{offeringTitle}} </button>
           </ion-col>
         </ion-row>
       </ion-grid>
