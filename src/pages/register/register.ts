@@ -27,15 +27,14 @@ import { StorageProvider } from '../../providers/storage/storage';
   templateUrl: 'register.html'
 })
 export class RegisterPage {
-
   public registerForm: any;
   public regError: any;
   public invalidReg: boolean = false;
   private coords: any;
 
-
   public passwordError: string = 'Passwords do not match';
   public minLengthError: string = 'Passwords must be 6 characters or more';
+  public termsConditionsText: any = '<p> By signing up you agree to the <a href="">Terms and Conditions</a> and <a href=""> Privacy Policy</a></p>';
 
   constructor(
     public navCtrl: NavController,
@@ -47,71 +46,72 @@ export class RegisterPage {
     private storage: StorageProvider,
     private store: Store<AppState>
   ) {
-    this.registerForm = formBuilder.group({
-      displayName: ['', Validators.required],
-      emailAddress: ['', Validators.compose([Validators.required, Validators.email])],
-      password: [
-        '',
-        Validators.compose([Validators.minLength(6), Validators.required])
-      ],
-      confpassword: [
-        '',
-        Validators.compose([Validators.minLength(6), Validators.required])
-      ]}, {validator: PasswordValidation.MatchPassword})
+    this.registerForm = formBuilder.group(
+      {
+        displayName: ['', Validators.required],
+        emailAddress: [
+          '',
+          Validators.compose([Validators.required, Validators.email])
+        ],
+        password: [
+          '',
+          Validators.compose([Validators.minLength(6), Validators.required])
+        ],
+        confpassword: [
+          '',
+          Validators.compose([Validators.minLength(6), Validators.required])
+        ]
+      },
+      { validator: PasswordValidation.MatchPassword }
+    );
   }
 
   ionViewDidLoad() {
-
     console.log('ionViewDidLoad RegisterPage');
-    console.log(this.navParams.get('loginType'))
+    console.log(this.navParams.get('loginType'));
 
-    this.storage.getStorage('geolocation')
-      .subscribe(
-        res => this.coords = res
-      );
+    this.storage
+      .getStorage('geolocation')
+      .subscribe(res => (this.coords = res));
   }
 
   doRegister() {
-
     console.log(this.registerForm.value);
 
     if (this.registerForm.valid) {
-
       console.log(this.coords);
       let user = this.registerForm.value;
-      user.homeLocation = this.coords
+      user.homeLocation = this.coords;
       console.log(user);
       console.log(JSON.stringify(user));
 
       // this.store.dispatch(new RegisterAction(user));
 
-      this.auth.doRegister(user)
+      this.auth
+        .doRegister(user)
         .then(res => {
-
           console.log('User Registered : ' + JSON.stringify(res));
           this.navCtrl.push('TabsPage');
-
-      }).catch(err => {
-        this.invalidReg = true;
-        this.regError = err.message;
-        console.error(err);
-      });
-
-
-    }else{
+        })
+        .catch(err => {
+          this.invalidReg = true;
+          this.regError = err.message;
+          console.error(err);
+        });
+    } else {
       // Error!
       this.store.dispatch(new RegisterErrorAction(this.registerForm.value));
       this.navCtrl.pop();
       // TODO: Show visual error message
     }
   }
-/**
- * Toggle password or text input
- *
- * @param {any} input
- * @memberof RegisterPage
- */
-showPassword(input) {
+  /**
+   * Toggle password or text input
+   *
+   * @param {any} input
+   * @memberof RegisterPage
+   */
+  showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
   }
 }
