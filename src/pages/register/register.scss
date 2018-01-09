@@ -4,7 +4,7 @@ page-register {
 
 
   &--register-container {
-    background-color: grey;
+    background-color: color($colors, lightbg);
     background-size: cover;
     color: black;
     position: absolute;
@@ -25,7 +25,7 @@ page-register {
   }
 
   ion-header {
-    background-color: grey;
+    background-color: color($colors, lightbg);
   }
 
   .back-button {
@@ -56,7 +56,7 @@ page-register {
   }
 
     ion-item {
-    color: white !important;
+    color: black !important;
     padding-left: 10px !important;
     margin-bottom: 10px;
     background-color: transparent !important;
