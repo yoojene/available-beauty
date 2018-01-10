@@ -357,6 +357,7 @@ export class AuthProvider {
         .set(userProfile);
     })
     }
+  }
 
   /**
    * Create the userProfile in Realtime DB with default avatar
