@@ -18,6 +18,7 @@ import { API_CONFIG_VALUES } from '../../config/api.config';
 @Injectable()
 export class AuthProvider {
   private socialProvider: any;
+  private geolocation: any;
 
   constructor(
     private app: App,
@@ -39,7 +40,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doNativeLogin(email, password) {
-    console.log("native afth login success", email + " " + password);
+    console.log('native afth login success', email + ' ' + password);
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -50,13 +51,13 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   public doFacebookLogin(): Promise<any> {
-    console.log("doFacebookLogin()");
+    console.log('doFacebookLogin()');
 
-    if (this.plt.is("cordova")) {
-      console.log("in cordova");
+    if (this.plt.is('cordova')) {
+      console.log('in cordova');
       return this.doFacebookCordovaLogin();
     } else {
-      this.socialProvider = "Facebook";
+      this.socialProvider = 'Facebook';
       return this.doSocialWebLogin(this.socialProvider);
     }
   }
@@ -221,7 +222,7 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  doRegister(user: any): Promise<any> {
+  public doRegister(user: any): Promise<any> {
     return this.afauth.auth
       .createUserWithEmailAndPassword(user.emailAddress, user.password)
       .then(newUser => {
@@ -240,7 +241,7 @@ export class AuthProvider {
    * @returns {Promise<any>}
    * @memberof AuthProvider
    */
-  doResetPassword(email: any): Promise<any> {
+  public doResetPassword(email: any): Promise<any> {
     return this.afauth.auth.sendPasswordResetEmail(email).then(res => {
       console.log(res);
       return res;
@@ -255,7 +256,7 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  callSignInWithCredentials(credential: any) {
+  private callSignInWithCredentials(credential: any) {
     console.log('callsigninwithcreds');
 
     return this.afauth.auth
@@ -270,6 +271,8 @@ export class AuthProvider {
       });
   }
 
+
+
   // ** Firebase utils ** //
 
   /**
@@ -280,7 +283,7 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  updateUserProfile(firebaseUser, user) {
+  private updateUserProfile(firebaseUser, user) {
     console.log(firebaseUser);
     console.log(user);
 
@@ -289,6 +292,9 @@ export class AuthProvider {
       // photoURL: user.photo
     });
   }
+
+
+
 
   // ** Realtime DB ** //
 
@@ -300,10 +306,9 @@ export class AuthProvider {
    * @returns
    * @memberof AuthProvider
    */
-  addUserProfile(newUser: any, user?: any) {
+  private addUserProfile(newUser: any, user?: any) {
 
     // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
-
     let userParam;
     if (newUser.user) {
       userParam = newUser.user;
@@ -313,34 +318,71 @@ export class AuthProvider {
 
     let userProfile;
     if (!user) {
+    // For Social logins, we need to location from storage
+    this.storage
+      .getStorage('geolocation')
+      .subscribe(res => {
 
-      console.log('there is no user, social login')
-      userProfile = {
-        name: userParam.displayName,
-        emailAddress: userParam.email,
-        avatarImage: userParam.photoURL,
-        phoneNumber: null, // dummy
-        // homeLocation: user.homeLocation
-      }
+        this.geolocation = res;
+
+        let userProfile = {
+          name: userParam.displayName,
+          emailAddress: userParam.email,
+          avatarImage: userParam.photoURL,
+          phoneNumber: null, // dummy
+          homeLocation: this.geolocation
+        };
+
+        console.log(userProfile);
+
+        return firebase
+          .database()
+          .ref("/userProfile")
+          .child(userParam.uid)
+          .set(userProfile);
+
+      });
 
     } else {
 
-      userProfile = {
+    this.createNativeUserProfile(user)
+    .then(res => {
+
+      userProfile = res;
+
+      return firebase
+        .database()
+        .ref('/userProfile')
+        .child(userParam.uid)
+        .set(userProfile);
+    })
+    }
+
+  /**
+   * Create the userProfile in Realtime DB with default avatar
+   *
+   * @private
+   * @param {any} user
+   * @returns
+   * @memberof AuthProvider
+   */
+  private createNativeUserProfile(user) {
+
+    return firebase.storage().ref().child('default-images/no-avatar.png')
+      .getDownloadURL().then(url => {
+
+      let userProfile = {
         name: user.displayName,
         emailAddress: user.emailAddress,
-        avatarImage: null, // link to dummy image?
+        avatarImage: url,
         phoneNumber: null, // dummy
         homeLocation: user.homeLocation
       }
-    }
 
-    console.log(userProfile);
+      return userProfile;
 
-    return firebase
-      .database()
-      .ref('/userProfile')
-      .child(userParam.uid)
-      .set(userProfile);
+      });
+
   }
 }
 

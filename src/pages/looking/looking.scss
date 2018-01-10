@@ -1,3 +1,10 @@
 page-looking {
 
+  .page-looking {
+
+    &--container {
+      background-color: color($colors, lightbg);
+    }
+  }
+
 }
