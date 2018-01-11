@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { StylistProvider } from '../../providers/stylist/stylist'
+import { AngularFireDatabase } from 'angularfire2/database';
+import { Stylist } from '../../model/stylist/stylist.model';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the StylistProfilePage page.
@@ -16,25 +21,80 @@ import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 export class StylistProfilePage {
 
   id: number;
-  stylist: any;
+  user: any;
   toggled: boolean = false;
+
+  stylist$: Observable<any>;
+
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private events: Events) {
+              private events: Events,
+              private stylist: StylistProvider,
+              private afdb: AngularFireDatabase) {
+
     this.id = navParams.get("id");
-    this.stylist = navParams.get("stylist");
+    this.user = navParams.get("user");
 
      events.subscribe("change-stylist-profile-tab", (tab, id, param) => {
        this.id = id;
-       this.stylist = param;
+       this.user = param;
+       console.log(this.user);
      });
 
-     console.log(this.stylist);
+     console.log(this.user);
+
+
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
+
+     this.getStylistDetails(this.user.key);
+
+  }
+
+
+
+  getStylistDetails(key) {
+
+    console.log(key);
+
+    this.stylist$ = this.stylist.getStylist(key).valueChanges();
+
+    console.log(this.stylist$)
+
+    this.stylist$.subscribe(res => console.log(res))
+
+    // this.stylist.getStylist(key).once('value', res => {
+    //   console.log(res.val());
+    // });
+
+    // this.stylist$ = this.stylist.getStylist(key);
+
+    // this.stylist$.subscribe(res => console.log(res));
+
+
+
+
+
+
+
+
+    // this.stylist.getStylist()
+
+    // const stylist$ = new Subject<string>();
+
+    // const queryObs = stylist$.switchMap(style =>
+    //   this.afdb.list<Stylist>('/stylistProfile', ref => ref.equalTo('userId')).valueChanges()
+    // );
+
+    // queryObs.subscribe(queriedItems => {
+    //   console.log(queriedItems);
+    // });
+
+    // stylist$.next('userId');
 
   }
 

@@ -19,18 +19,18 @@
         <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button" name="heart" (click)="toggleHeart()">
         </ion-icon>
     </ion-row>
-    <img src="{{stylist.avatarImage}}">
+    <!-- <img src="{{user.avatarImage}}"> -->
     <ion-card-title>
      <ion-item>
-       {{stylist.name}}
+       {{user.name}}
        </ion-item>
     </ion-card-title>
     <ion-card-content no-padding>
-      <ion-item>
+      <ion-item *ngFor="let stylist of stylist$ | async">
         {{stylist.bio}}
       </ion-item>
       <ion-item>
-        {{stylist.emailAddress}}
+        {{user.emailAddress}}
       </ion-item>
       <ion-item>
        <ion-row>

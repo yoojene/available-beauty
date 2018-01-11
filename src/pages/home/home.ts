@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage, ModalController, Events } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
+import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
 import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
+import { User } from '../../model/users/user.model';
 
 @IonicPage()
 @Component({
@@ -17,12 +19,14 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
-  private stylists$: Observable<Stylist[]>;
+  public stylists$: Observable<Stylist[]>;
+  public users: User[];
 
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
     private stylist: StylistProvider,
+    private user: UserProvider,
     private modalCtrl: ModalController,
     private events: Events
   ) {}
@@ -53,7 +57,37 @@ export class HomePage {
   }
 
   getStylists() {
-    this.stylists$ = this.stylist.getStylists();
+    this.stylists$ = this.stylist.getStylists().valueChanges();
+  }
+
+  getUsers() {
+
+    // this.users$ = this.user.getUsers().valueChanges();
+
+    this.user.getUsers().snapshotChanges()
+    .subscribe(actions => {
+
+      let users = []
+
+      // console.log(actions);
+      actions.forEach(act => {
+
+        let item = act.payload.val();
+        item.key = act.key;
+        // console.log(act.type)
+
+        return users.push(item);
+
+      })
+
+      console.log(users)
+
+      this.users = users;
+
+
+    });
+
+    // this.users$.subscribe(res => console.log(res));
   }
 
   showSearch() {
@@ -61,14 +95,14 @@ export class HomePage {
 
     searchModal.onDidDismiss(data => {
       console.log('dismissed ', data);
-      this.getStylists();
+      this.getUsers();
     });
 
     searchModal.present();
   }
 
-  openProfile(stylist){
-     this.events.publish("change-stylist-profile-tab", 2, 2, stylist);
+  openProfile(user){
+     this.events.publish('change-stylist-profile-tab', 2, 2, user);
   }
 
 

@@ -26,7 +26,7 @@ export class TabsPage {
   tab4Root: any = UserProfilePage;
   tab1Params = {id: 0};
   tab2Params = {id: 1};
-  tab3Params = {id: 2, stylist: ''};
+  tab3Params = {id: 2, user: ''};
   tab4Params = {id: 3};
 
   constructor(
@@ -38,7 +38,7 @@ export class TabsPage {
   ) {
     events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
       this.tab3Params.id = id;
-      this.tab3Params.stylist = param
+      this.tab3Params.user = param
       this.tabs.select(tab);
     });
   }

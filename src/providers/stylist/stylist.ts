@@ -6,10 +6,13 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { MOCK_STYLISTS } from '../../mocks/stylist.mocks';
 import { Observable } from 'rxjs/Observable';
 
+import { AngularFireDatabase } from 'angularfire2/database';
+
 @Injectable()
 export class StylistProvider {
 
   constructor(public http: HttpClient,
+              public afdb: AngularFireDatabase,
              @Inject(API_CONFIG) public config: ApiConfig) {}
 
 /**
@@ -20,8 +23,19 @@ export class StylistProvider {
  */
 getStylists() {
     //  return this.http.get<Stylist>(this.config.endpointURL + this.config.stylistsPath);
-    return Observable.of(MOCK_STYLISTS);
+    // return Observable.of(MOCK_STYLISTS);
+    return this.afdb.list<Stylist>('stylistProfile');
   }
+
+
+getStylist(uid) {
+
+  console.log(uid);
+
+  return this.afdb.list<Stylist>(`stylistProfile`, ref => ref.orderByChild('userId').equalTo(uid))
+
+
+}
 
 
 /**

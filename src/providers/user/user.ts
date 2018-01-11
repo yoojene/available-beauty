@@ -6,11 +6,15 @@ import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../model/users/user.model';
 
+import { AngularFireDatabase } from 'angularfire2/database';
+
+
 
 @Injectable()
 export class UserProvider {
   constructor(
     public http: HttpClient,
+    public afdb: AngularFireDatabase,
     @Inject(API_CONFIG) public config: ApiConfig
   ) {}
   /**
@@ -20,7 +24,8 @@ export class UserProvider {
    * @memberof UserProvider
    */
   public getUsers() {
-    return this.http.get<User>(this.config.endpointURL + this.config.usersPath);
+    // return this.http.get<User>(this.config.endpointURL + this.config.usersPath);
+    return this.afdb.list<User>('userProfile')
 
   }
   /**

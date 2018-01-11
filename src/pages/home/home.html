@@ -35,13 +35,13 @@
     <br>
     <div>
       <ion-list>
-          <ion-card *ngFor="let stylist of stylists$ | async" (click)="openProfile(stylist)">
+          <ion-card *ngFor="let user of users" (click)="openProfile(user)">
             <ion-card-content>
             <ion-item no-padding no-border>
             <ion-avatar item-start>
-              <img src="{{stylist.avatarImage}}">
+              <img src="{{user.avatarImage}}">
             </ion-avatar>
-            {{stylist.name}}
+            {{user.name}}
             </ion-item>
             </ion-card-content>
           </ion-card>
