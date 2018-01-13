@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage, ModalController, Events } from 'ionic-angular';
+import {
+  NavController,
+  IonicPage,
+  ModalController,
+  Events
+} from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
@@ -61,31 +66,27 @@ export class HomePage {
   }
 
   getUsers() {
-
     // this.users$ = this.user.getUsers().valueChanges();
 
-    this.user.getUsers().snapshotChanges()
-    .subscribe(actions => {
+    this.user
+      .getUsers()
+      .snapshotChanges()
+      .subscribe(actions => {
+        let users = [];
 
-      let users = []
+        // console.log(actions);
+        actions.forEach(act => {
+          let item = act.payload.val();
+          item.key = act.key;
+          // console.log(act.type)
 
-      // console.log(actions);
-      actions.forEach(act => {
+          return users.push(item);
+        });
 
-        let item = act.payload.val();
-        item.key = act.key;
-        // console.log(act.type)
+        console.log(users);
 
-        return users.push(item);
-
-      })
-
-      console.log(users)
-
-      this.users = users;
-
-
-    });
+        this.users = users;
+      });
 
     // this.users$.subscribe(res => console.log(res));
   }
@@ -101,9 +102,7 @@ export class HomePage {
     searchModal.present();
   }
 
-  openProfile(user){
-     this.events.publish('change-stylist-profile-tab', 2, 2, user);
+  openProfile(user) {
+    this.events.publish('change-stylist-profile-tab', 2, 2, user);
   }
-
-
 }

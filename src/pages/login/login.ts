@@ -1,12 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+  LoadingController
+} from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
 import { AppState } from '../../model/app.state';
 
-import { LoginAction, UserNotValidatedAction, LoginSuccessAction } from '../../model/auth/auth.actions';
+import {
+  LoginAction,
+  UserNotValidatedAction,
+  LoginSuccessAction
+} from '../../model/auth/auth.actions';
 
 import { APP_TEST_CONFIG } from '../../config/app.test.config';
 
@@ -15,7 +25,10 @@ import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthProvider } from '../../providers/auth/auth';
-import { TwitterConnect, TwitterConnectResponse } from '@ionic-native/twitter-connect';
+import {
+  TwitterConnect,
+  TwitterConnectResponse
+} from '@ionic-native/twitter-connect';
 
 @IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
@@ -55,7 +68,6 @@ export class LoginPage {
     console.log(this.navParams.get('loginType'));
 
     this.loginType = this.navParams.get('loginType');
-
   }
 
   openResetPassword() {
@@ -79,7 +91,7 @@ export class LoginPage {
         err => {
           loading.dismiss();
           this.invalidLogin = true;
-          this.error = err.message; // This is the Firebase message - too techy?
+          this.error = err.message; // This is the Firebase error - too techy?
           console.error(err.code);
           console.error(err.message);
         }
@@ -102,7 +114,7 @@ export class LoginPage {
           console.error(err);
           loading.dismiss();
           this.invalidLogin = true;
-          this.error = `${err.email} ${err.message}`; // This is the Firebase message - too techy?
+          this.error = `${err.email} ${err.message}`; // This is the Firebase error - too techy?
         });
     });
   }
@@ -139,7 +151,7 @@ export class LoginPage {
         },
         err => {
           loading.dismiss();
-          console.error(err);  // Eg: Failed Login Session
+          console.error(err); // Eg: Failed Login Session
           // We are not setting this.error here as Twitter opens up the native Oauth window so
           // any errors are captured there.
         }
@@ -148,24 +160,26 @@ export class LoginPage {
   }
 
   openRegisterPage() {
-    let regModal = this.modal.create('RegisterPage', {'loginType': this.loginType});
+    let regModal = this.modal.create('RegisterPage', {
+      loginType: this.loginType
+    });
     regModal.present();
   }
-/**
- * Reset boolean for server side error display
- *
- * @memberof LoginPage
- */
-onEmailFocus() {
+  /**
+   * Reset boolean for server side error display
+   *
+   * @memberof LoginPage
+   */
+  onEmailFocus() {
     this.invalidLogin = false;
   }
-/**
- * Toggle password or text input
- *
- * @param {any} input
- * @memberof LoginPage
- */
-showPassword(input) {
+  /**
+   * Toggle password or text input
+   *
+   * @param {any} input
+   * @memberof LoginPage
+   */
+  showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
   }
 }

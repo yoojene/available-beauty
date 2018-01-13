@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Facebook, FacebookLoginResponse} from '@ionic-native/facebook';
-import {TwitterConnect} from '@ionic-native/twitter-connect';
-import {GooglePlus} from '@ionic-native/google-plus';
-import {App, Platform} from 'ionic-angular';
-import {Store} from '@ngrx/store';
+import { Injectable } from '@angular/core';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import { TwitterConnect } from '@ionic-native/twitter-connect';
+import { GooglePlus } from '@ionic-native/google-plus';
+import { App, Platform } from 'ionic-angular';
+import { Store } from '@ngrx/store';
 
 import firebase from 'firebase';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -13,7 +13,6 @@ import { Observable } from 'rxjs/Observable';
 import { StorageProvider } from '../storage/storage';
 
 import { API_CONFIG_VALUES } from '../../config/api.config';
-
 
 @Injectable()
 export class AuthProvider {
@@ -271,8 +270,6 @@ export class AuthProvider {
       });
   }
 
-
-
   // ** Firebase utils ** //
 
   /**
@@ -293,9 +290,6 @@ export class AuthProvider {
     });
   }
 
-
-
-
   // ** Realtime DB ** //
 
   /**
@@ -307,7 +301,6 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private addUserProfile(newUser: any, user?: any) {
-
     // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
     let userParam;
     if (newUser.user) {
@@ -318,11 +311,8 @@ export class AuthProvider {
 
     let userProfile;
     if (!user) {
-    // For Social logins, we need to location from storage
-    this.storage
-      .getStorage('geolocation')
-      .subscribe(res => {
-
+      // For Social logins, we need to location from storage
+      this.storage.getStorage('geolocation').subscribe(res => {
         this.geolocation = res;
 
         let userProfile = {
@@ -337,25 +327,20 @@ export class AuthProvider {
 
         return firebase
           .database()
-          .ref("/userProfile")
+          .ref('/userProfile')
           .child(userParam.uid)
           .set(userProfile);
-
       });
-
     } else {
+      this.createNativeUserProfile(user).then(res => {
+        userProfile = res;
 
-    this.createNativeUserProfile(user)
-    .then(res => {
-
-      userProfile = res;
-
-      return firebase
-        .database()
-        .ref('/userProfile')
-        .child(userParam.uid)
-        .set(userProfile);
-    })
+        return firebase
+          .database()
+          .ref('/userProfile')
+          .child(userParam.uid)
+          .set(userProfile);
+      });
     }
   }
 
@@ -368,22 +353,21 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private createNativeUserProfile(user) {
+    return firebase
+      .storage()
+      .ref()
+      .child('default-images/no-avatar.png')
+      .getDownloadURL()
+      .then(url => {
+        let userProfile = {
+          name: user.displayName,
+          emailAddress: user.emailAddress,
+          avatarImage: url,
+          phoneNumber: null, // dummy
+          homeLocation: user.homeLocation
+        };
 
-    return firebase.storage().ref().child('default-images/no-avatar.png')
-      .getDownloadURL().then(url => {
-
-      let userProfile = {
-        name: user.displayName,
-        emailAddress: user.emailAddress,
-        avatarImage: url,
-        phoneNumber: null, // dummy
-        homeLocation: user.homeLocation
-      }
-
-      return userProfile;
-
+        return userProfile;
       });
-
   }
 }
-

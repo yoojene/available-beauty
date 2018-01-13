@@ -10,72 +10,69 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 @Injectable()
 export class StylistProvider {
+  constructor(
+    public http: HttpClient,
+    public afdb: AngularFireDatabase,
+    @Inject(API_CONFIG) public config: ApiConfig
+  ) {}
 
-  constructor(public http: HttpClient,
-              public afdb: AngularFireDatabase,
-             @Inject(API_CONFIG) public config: ApiConfig) {}
-
-/**
- * Get stylists
- *
- * @returns
- * @memberof StylistProvider
- */
-getStylists() {
+  /**
+   * Get stylists
+   *
+   * @returns
+   * @memberof StylistProvider
+   */
+  getStylists() {
     //  return this.http.get<Stylist>(this.config.endpointURL + this.config.stylistsPath);
     // return Observable.of(MOCK_STYLISTS);
     return this.afdb.list<Stylist>('stylistProfile');
   }
 
+  getStylist(uid) {
+    console.log(uid);
 
-getStylist(uid) {
-
-  console.log(uid);
-
-  return this.afdb.list<Stylist>(`stylistProfile`, ref => ref.orderByChild('userId').equalTo(uid))
-
-
-}
-
-
-/**
- * Create a new stylist
- *
- * @param {any} stylist
- * @returns
- * @memberof StylistProvider
- */
-createStylist(stylist) {
-     return this.http
-      .post(this.config.endpointURL + this.config.stylistPath, stylist)
+    return this.afdb.list<Stylist>(`stylistProfile`, ref =>
+      ref.orderByChild('userId').equalTo(uid)
+    );
   }
 
-/**
- * Update existing an stylist
- *
- * @param {any} stylistId
- * @param {any} stylistDetails
- * @returns
- * @memberof StylistProvider
- */
-updateStylist(stylistId, stylistDetails) {
-     return this.http
-      .put(
-        this.config.endpointURL + this.config.stylistsPath + stylistId,
-        stylistDetails
-      )
+  /**
+   * Create a new stylist
+   *
+   * @param {any} stylist
+   * @returns
+   * @memberof StylistProvider
+   */
+  createStylist(stylist) {
+    return this.http.post(
+      this.config.endpointURL + this.config.stylistPath,
+      stylist
+    );
   }
 
-/**
- * Delete a stylist
- *
- * @returns
- * @memberof StylistProvider
- */
-deleteStylist() {
+  /**
+   * Update existing an stylist
+   *
+   * @param {any} stylistId
+   * @param {any} stylistDetails
+   * @returns
+   * @memberof StylistProvider
+   */
+  updateStylist(stylistId, stylistDetails) {
+    return this.http.put(
+      this.config.endpointURL + this.config.stylistsPath + stylistId,
+      stylistDetails
+    );
+  }
+
+  /**
+   * Delete a stylist
+   *
+   * @returns
+   * @memberof StylistProvider
+   */
+  deleteStylist() {
     // When would we do this?  Account delete only?
-    return this.http
-      .delete(this.config.endpointURL + this.config.stylistsPath)
+    return this.http.delete(this.config.endpointURL + this.config.stylistsPath);
   }
-
 }

@@ -6,20 +6,13 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class StorageProvider {
+  constructor(private storage: Storage) {}
 
-  constructor(private storage: Storage) {
-  }
-
-  getStorage(key){
-
+  getStorage(key) {
     return Observable.fromPromise(this.storage.get(key));
   }
 
   setStorage(key, value) {
-
     return Observable.fromPromise(this.storage.set(key, value));
-
-
   }
-
 }

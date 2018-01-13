@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,9 +11,7 @@ import { Observable } from 'rxjs/Observable';
 */
 @Injectable()
 export class SearchProvider {
-
-  searches$: Observable<any> = this.http
-  .get('http://localhost:3004/search')
+  searches$: Observable<any> = this.http.get('http://localhost:3004/search');
 
   constructor(public http: HttpClient) {
     console.log('Hello SearchProvider Provider');
@@ -22,9 +20,7 @@ export class SearchProvider {
   updateSearch(term) {
     console.log(term);
     this.http
-    .post('http://localhost:3004/search', term)
-    .subscribe(res => console.log(res))
+      .post('http://localhost:3004/search', term)
+      .subscribe(res => console.log(res));
   }
-
-
 }

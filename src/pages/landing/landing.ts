@@ -40,8 +40,7 @@ export class LandingPage {
   lookingTitle = 'Looking for Beauty';
   offeringTitle = 'Offering Beauty';
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
@@ -51,6 +50,6 @@ export class LandingPage {
     console.log(el);
     const type = el._elementRef.nativeElement.name;
 
-    this.navCtrl.push('LoginPage', {'loginType': type});
+    this.navCtrl.push('LoginPage', { loginType: type });
   }
 }

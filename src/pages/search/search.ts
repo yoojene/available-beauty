@@ -13,11 +13,10 @@ import { Observable } from 'rxjs/Observable';
 
 @IonicPage()
 @Component({
-  selector: "page-search",
-  templateUrl: "search.html"
+  selector: 'page-search',
+  templateUrl: 'search.html'
 })
 export class SearchPage {
-
   searchForm: any;
   searchTerm: any;
   counter: number = this.getRandomInt();
@@ -31,7 +30,7 @@ export class SearchPage {
     private search: SearchProvider
   ) {
     this.searchForm = formBuilder.group({
-      search: ["", Validators.required]
+      search: ['', Validators.required]
     });
   }
 
@@ -42,7 +41,7 @@ export class SearchPage {
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad SearchPage");
+    console.log('ionViewDidLoad SearchPage');
     this.previousTerms = this.search.searches$;
   }
 
@@ -52,19 +51,16 @@ export class SearchPage {
   }
 
   onSubmit() {
-
     this.searchTerm = {
       id: this.counter,
-      term: this.searchForm.get("search").value
+      term: this.searchForm.get('search').value
     };
 
-    console.log("this.searchTerm");
+    console.log('this.searchTerm');
     console.log(this.searchTerm);
 
     this.search.updateSearch(this.searchTerm);
 
     this.navCtrl.pop();
-
-
   }
 }

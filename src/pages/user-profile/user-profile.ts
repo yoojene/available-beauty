@@ -17,15 +17,16 @@ import firebase from 'firebase';
   templateUrl: 'user-profile.html'
 })
 export class UserProfilePage {
-
   name: string;
   email: string;
 
   user: any;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private afauth: AngularFireAuth) {}
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private afauth: AngularFireAuth
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserProfilePage');
@@ -33,27 +34,20 @@ export class UserProfilePage {
     this.getUserProfile();
   }
 
-
-
-
   getUserProfile() {
-
     console.log(this.afauth.auth.currentUser.uid);
 
-       firebase
-         .database()
-         .ref('/userProfile')
-         .child(this.afauth.auth.currentUser.uid)
-         .once('value')
-         .then(res => {
-            console.log(res.val());
+    firebase
+      .database()
+      .ref('/userProfile')
+      .child(this.afauth.auth.currentUser.uid)
+      .once('value')
+      .then(res => {
+        console.log(res.val());
 
-            this.user = res.val();
-
-         });
+        this.user = res.val();
+      });
   }
-
-
 
   doLogOut() {
     this.afauth.auth.signOut();

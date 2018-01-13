@@ -7,7 +7,14 @@ import { BookingsPage } from '../bookings/bookings';
 import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { UserProfilePage } from '../user-profile/user-profile';
 
-import { NavParams, NavController, Platform, IonicPage, Events, Tabs } from 'ionic-angular';
+import {
+  NavParams,
+  NavController,
+  Platform,
+  IonicPage,
+  Events,
+  Tabs
+} from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -24,10 +31,10 @@ export class TabsPage {
   tab2Root: any = BookingsPage;
   tab3Root: any = StylistProfilePage;
   tab4Root: any = UserProfilePage;
-  tab1Params = {id: 0};
-  tab2Params = {id: 1};
-  tab3Params = {id: 2, user: ''};
-  tab4Params = {id: 3};
+  tab1Params = { id: 0 };
+  tab2Params = { id: 1 };
+  tab3Params = { id: 2, user: '' };
+  tab4Params = { id: 3 };
 
   constructor(
     private _platform: Platform,
@@ -38,7 +45,7 @@ export class TabsPage {
   ) {
     events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
       this.tab3Params.id = id;
-      this.tab3Params.user = param
+      this.tab3Params.user = param;
       this.tabs.select(tab);
     });
   }

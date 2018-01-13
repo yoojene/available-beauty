@@ -8,8 +8,6 @@ import { User } from '../../model/users/user.model';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 
-
-
 @Injectable()
 export class UserProvider {
   constructor(
@@ -25,8 +23,7 @@ export class UserProvider {
    */
   public getUsers() {
     // return this.http.get<User>(this.config.endpointURL + this.config.usersPath);
-    return this.afdb.list<User>('userProfile')
-
+    return this.afdb.list<User>('userProfile');
   }
   /**
    * Add a new user
@@ -51,23 +48,20 @@ export class UserProvider {
    * @memberof UserProvider
    */
   public updateUser(userId, userDetails) {
-    return this.http
-      .put(
-        this.config.endpointURL + this.config.usersPath + userId,
-        userDetails
-      );
+    return this.http.put(
+      this.config.endpointURL + this.config.usersPath + userId,
+      userDetails
+    );
   }
-/**
- * Delete a user
- *
- * @param {any} userId
- * @returns
- * @memberof UserProvider
- */
-public deleteUser(userId) {
+  /**
+   * Delete a user
+   *
+   * @param {any} userId
+   * @returns
+   * @memberof UserProvider
+   */
+  public deleteUser(userId) {
     // When would we do this?  Account delete only?
-    return this.http
-      .delete(this.config.endpointURL + this.config.usersPath);
-
+    return this.http.delete(this.config.endpointURL + this.config.usersPath);
   }
 }
