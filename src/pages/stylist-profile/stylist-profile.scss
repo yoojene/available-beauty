@@ -1,8 +1,5 @@
 page-stylist-profile {
-
   .page-stylist-profile {
-
-
     &--stylist-profile-card-button {
       position: absolute;
       padding: 2vw;
@@ -14,7 +11,19 @@ page-stylist-profile {
       color: lightgrey;
     }
 
-
+    &--slide-background {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-color: transparent;
+    }
   }
 
+  .slide-zoom {
+    height: 100%;
+  }
+
+  ion-slides {
+    height: 70vh;
+  }
 }

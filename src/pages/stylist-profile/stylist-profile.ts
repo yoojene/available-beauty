@@ -44,8 +44,8 @@ export class StylistProfilePage {
     console.log(this.user);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter ProfilePage');
 
     this.getStylistDetails(this.user.key);
   }

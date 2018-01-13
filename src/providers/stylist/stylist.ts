@@ -31,9 +31,10 @@ export class StylistProvider {
   getStylist(uid) {
     console.log(uid);
 
-    return this.afdb.list<Stylist>(`stylistProfile`, ref =>
-      ref.orderByChild('userId').equalTo(uid)
-    );
+    return this.afdb.list<Stylist>(`stylistProfile`, ref => {
+      console.log(ref);
+      return ref.orderByChild('userId').equalTo(uid);
+    });
   }
 
   /**
