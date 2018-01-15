@@ -12,6 +12,7 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
 import { User } from '../../model/users/user.model';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 @IonicPage()
 @Component({
@@ -33,7 +34,8 @@ export class HomePage {
     private stylist: StylistProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
-    private events: Events
+    private events: Events,
+    private utils: UtilsProvider
   ) {}
 
   ionViewDidLoad() {
@@ -66,29 +68,12 @@ export class HomePage {
   }
 
   getUsers() {
-    // this.users$ = this.user.getUsers().valueChanges();
-
     this.user
       .getUsers()
       .snapshotChanges()
       .subscribe(actions => {
-        let users = [];
-
-        // console.log(actions);
-        actions.forEach(act => {
-          let item = act.payload.val();
-          item.key = act.key;
-          // console.log(act.type)
-
-          return users.push(item);
-        });
-
-        console.log(users);
-
-        this.users = users;
+        this.users = this.utils.generateFirebaseKeyedValues(actions);
       });
-
-    // this.users$.subscribe(res => console.log(res));
   }
 
   showSearch() {

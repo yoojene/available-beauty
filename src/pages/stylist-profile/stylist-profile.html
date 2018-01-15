@@ -63,6 +63,33 @@
           </ion-icon>
         </ion-row>
       </ion-item>
+
+
+
+      <ion-list-header>
+        <h2>{{availabilityHeader}}</h2>
+      </ion-list-header>
+      <!-- <ion-grid>
+        <ion-row>
+          <ion-col> -->
+      <ion-list radio-group>
+        <ion-item *ngFor="let avail of availabilities">
+          <ion-label>
+            {{avail.datetime}}
+          </ion-label>
+          <ion-radio value="{{avail.datetime}}">
+          </ion-radio>
+        </ion-item>
+      </ion-list>
+      <!-- </ion-col>
+        </ion-row>
+      </ion-grid> -->
+      <ion-item>
+        <button ion-button>
+          {{bookText}}
+        </button>
+      </ion-item>
+
     </ion-card-content>
   </ion-card>
 </ion-content>

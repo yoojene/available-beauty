@@ -42,6 +42,8 @@ import { StorageProvider } from '../providers/storage/storage';
 import { SearchProvider } from '../providers/search/search';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { AvailabilityProvider } from '../providers/availability/availability';
+import { UtilsProvider } from '../providers/utils/utils';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     StylistProvider,
     LocationProvider,
     StorageProvider,
-    SearchProvider
+    SearchProvider,
+    AvailabilityProvider,
+    UtilsProvider,
+    UtilsProvider
   ]
 })
 export class AppModule {}
