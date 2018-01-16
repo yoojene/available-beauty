@@ -88,6 +88,7 @@ export class HomePage {
   }
 
   openProfile(user) {
+    console.log(user);
     this.events.publish('change-stylist-profile-tab', 2, 2, user);
   }
 }

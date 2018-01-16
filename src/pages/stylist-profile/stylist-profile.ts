@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { UtilsProvider } from '../../providers/utils/utils';
+import { BookingProvider } from '../../providers/booking/booking';
 /**
  * Generated class for the StylistProfilePage page.
  *
@@ -34,6 +35,8 @@ export class StylistProfilePage {
 
   stylistId: any;
 
+  selectedAvailability: any;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -41,7 +44,8 @@ export class StylistProfilePage {
     private stylist: StylistProvider,
     private afdb: AngularFireDatabase,
     private avail: AvailabilityProvider,
-    private utils: UtilsProvider
+    private utils: UtilsProvider,
+    private booking: BookingProvider
   ) {
     this.id = navParams.get('id');
     this.user = navParams.get('user');
@@ -57,7 +61,13 @@ export class StylistProfilePage {
 
     this.getStylistDetails(this.user.key);
   }
-
+  /**
+   * Get the stylist related to the user selected and the stylistId
+   * Then get the availabilities for that StylistId
+   *
+   * @param {any} key
+   * @memberof StylistProfilePage
+   */
   getStylistDetails(key) {
     console.log(key);
 
@@ -69,17 +79,6 @@ export class StylistProfilePage {
       .getStylist(key)
       .snapshotChanges()
       .subscribe(actions => {
-        // let stylists = [];
-
-        // // console.log(actions);
-        // actions.forEach(act => {
-        //   let item = act.payload.val();
-        //   item.key = act.key;
-        //   // console.log(act.type)
-
-        //   return stylists.push(item);
-        // });
-
         let stylists = this.utils.generateFirebaseKeyedValues(actions);
 
         console.log(stylists);
@@ -88,45 +87,21 @@ export class StylistProfilePage {
         this.stylistId = stylists[0].key;
         console.log(this.stylistId);
 
-        this.availability$ = this.avail
-          .getAvailability(this.stylistId)
-          .valueChanges();
-
         this.avail
           .getAvailability(this.stylistId)
-          .valueChanges()
-          .subscribe(res => {
-            this.availabilities = res;
+          .snapshotChanges()
+          .subscribe(actions => {
+            let avails = this.utils.generateFirebaseKeyedValues(actions);
+
+            console.log(avails);
+            this.availabilities = avails;
             this.availabilities.forEach(el => {
               return (el.datetime = moment
                 .unix(el.datetime)
                 .format('ddd Do h:mm'));
             });
-            // this.availabilityDate = res[0].datetime;
           });
       });
-
-    // this.stylist.getStylist(key).once('value', res => {
-    //   console.log(res.val());
-    // });
-
-    // this.stylist$ = this.stylist.getStylist(key);
-
-    // this.stylist$.subscribe(res => console.log(res));
-
-    // this.stylist.getStylist()
-
-    // const stylist$ = new Subject<string>();
-
-    // const queryObs = stylist$.switchMap(style =>
-    //   this.afdb.list<Stylist>('/stylistProfile', ref => ref.equalTo('userId')).valueChanges()
-    // );
-
-    // queryObs.subscribe(queriedItems => {
-    //   console.log(queriedItems);
-    // });
-
-    // stylist$.next('userId');
   }
 
   toggleHeart() {
@@ -135,5 +110,21 @@ export class StylistProfilePage {
       return;
     }
     this.toggled = false;
+  }
+
+  public doBooking() {
+    /***Make booking
+      1.) create /booking entry
+      2.) mark given /availability booked = true
+    ****/
+    this.booking.makeBooking(this.selectedAvailability);
+  }
+
+  // Events
+
+  public onAvailSelected(ev) {
+    console.log(ev);
+
+    this.selectedAvailability = ev;
   }
 }

@@ -44,6 +44,7 @@ import { SearchProvider } from '../providers/search/search';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AvailabilityProvider } from '../providers/availability/availability';
 import { UtilsProvider } from '../providers/utils/utils';
+import { BookingProvider } from '../providers/booking/booking';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { UtilsProvider } from '../providers/utils/utils';
     SearchProvider,
     AvailabilityProvider,
     UtilsProvider,
-    UtilsProvider
+    UtilsProvider,
+    BookingProvider
   ]
 })
 export class AppModule {}
