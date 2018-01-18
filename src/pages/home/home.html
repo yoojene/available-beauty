@@ -35,7 +35,7 @@
     <br>
     <div>
       <ion-list>
-          <ion-card *ngFor="let user of users" (click)="openProfile(user)">
+          <!-- <ion-card *ngFor="let user of users" (click)="openProfile(user)">
             <ion-card-content>
             <ion-item no-padding no-border>
             <ion-avatar item-start>
@@ -43,6 +43,21 @@
             </ion-avatar>
             {{user.name}}
             </ion-item>
+            </ion-card-content>
+          </ion-card> -->
+          <ion-card *ngFor="let user of users" (click)="expandCard(user)">
+            <ion-card-content>
+              <ion-item no-padding no-border>
+                <ion-avatar item-start>
+                  <img src="{{user.avatarImage}}">
+                </ion-avatar>
+                {{user.name}}
+              </ion-item>
+              <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
+                <br>
+                <br>
+                 <div> Hello people</div>
+              </expandable-item>
             </ion-card-content>
           </ion-card>
       </ion-list>

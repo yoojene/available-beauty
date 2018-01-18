@@ -6,4 +6,5 @@ export interface User {
   homeLocation: number[];
   averageStarRating: number;
   isStylist: boolean;
+  expanded: boolean;
 }

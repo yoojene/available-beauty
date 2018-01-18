@@ -25,6 +25,8 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
+  itemExpandHeight: number = 100;
+
   public stylists$: Observable<Stylist[]>;
   public users: User[];
 
@@ -72,7 +74,9 @@ export class HomePage {
       .getStylistUsers()
       .snapshotChanges()
       .subscribe(actions => {
-        this.users = this.utils.generateFirebaseKeyedValues(actions);
+        let values = this.utils.generateFirebaseKeyedValues(actions);
+        this.users = this.utils.addExpandedProperty(values);
+        console.log(this.users);
       });
   }
 
@@ -90,5 +94,17 @@ export class HomePage {
   openProfile(user) {
     console.log(user);
     this.events.publish('change-stylist-profile-tab', 1, 1, user);
+  }
+
+  expandCard(user) {
+    this.users.map(listItem => {
+      if (user == listItem) {
+        listItem.expanded = !listItem.expanded;
+      } else {
+        listItem.expanded = false;
+      }
+
+      return listItem;
+    });
   }
 }

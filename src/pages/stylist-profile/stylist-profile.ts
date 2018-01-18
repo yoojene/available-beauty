@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { AvailabilityProvider } from '../../providers/availability/availability';
@@ -21,7 +21,7 @@ import { BookingProvider } from '../../providers/booking/booking';
   selector: 'page-stylist-profile',
   templateUrl: 'stylist-profile.html'
 })
-export class StylistProfilePage {
+export class StylistProfilePage implements OnDestroy {
   availabilityHeader: string = 'Availability';
   bookText: string = 'Book';
   id: number;
@@ -36,6 +36,7 @@ export class StylistProfilePage {
   stylistId: any;
 
   selectedAvailability: any;
+  destroy$: Subject<any> = new Subject();
 
   constructor(
     public navCtrl: NavController,
@@ -63,6 +64,13 @@ export class StylistProfilePage {
       this.getStylistDetails(this.user.key);
     }
   }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
+
   /**
    * Get the stylist related to the user selected and the stylistId
    * Then get the availabilities for that StylistId
@@ -80,6 +88,7 @@ export class StylistProfilePage {
     this.stylist
       .getStylist(key)
       .snapshotChanges()
+      .takeUntil(this.destroy$)
       .subscribe(actions => {
         let stylists = this.utils.generateFirebaseKeyedValues(actions);
 
@@ -92,6 +101,7 @@ export class StylistProfilePage {
         this.avail
           .getStylistAvailability(this.stylistId)
           .snapshotChanges()
+          .takeUntil(this.destroy$)
           .subscribe(actions => {
             let avails = this.utils.generateFirebaseKeyedValues(actions);
 

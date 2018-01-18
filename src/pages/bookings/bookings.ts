@@ -31,6 +31,7 @@ export class BookingsPage {
   bookedavailabilty: any;
   bookedstylist: any;
   bookeduser: any;
+  mybookings = [];
 
   bookingTitle = 'Booking';
   stylistTitle = 'Stylist';
@@ -79,6 +80,8 @@ export class BookingsPage {
       })
       .subscribe(res => console.log(res));
 */
+
+    this.mybookings;
     this.book
       .getUserBookings(uid)
       .valueChanges()
@@ -93,7 +96,7 @@ export class BookingsPage {
         // Ugh - iterate over the availabiltyIds and get the availabilites
         // Then for each of those, returned those that booked === true
         // Then return the stylistProfile for these
-        // Got to be a better way!
+        // ....Got to be a better way!
         availIds.forEach(el => {
           return this.afdb
             .list<Availability>(`availability`, ref => {
@@ -101,28 +104,35 @@ export class BookingsPage {
             })
             .valueChanges()
             .subscribe(res => {
+              console.log(res);
               res.forEach(el => {
+                console.log(el);
                 if (el.booked === true) {
                   console.log('found booked');
                   this.bookedavailabilty = el;
-                  return this.stylist
-                    .getStylistById(el)
-                    .valueChanges()
-                    .subscribe(res => {
-                      this.bookedstylist = res;
-
-                      return this.user
-                        .getUserById(res.userId)
-                        .valueChanges()
-                        .subscribe(res => {
-                          console.log(res);
-                          this.bookeduser = res;
-                        });
-                    });
+                  return true;
                 }
               });
+              return this.stylist
+                .getStylistById(this.bookedavailabilty)
+                .valueChanges()
+                .subscribe(res => {
+                  this.bookedstylist = res;
+                  // this.mybookings.push(this.bookedstylist);
+
+                  return this.user
+                    .getUserById(res.userId)
+                    .valueChanges()
+                    .subscribe(res => {
+                      console.log(res);
+                      this.bookeduser = res;
+                      // this.mybookings.push(this.bookeduser);
+                    });
+                });
             });
         });
       });
   }
 }
+
+// this.mybookings.push(this.bookedavailabilty);

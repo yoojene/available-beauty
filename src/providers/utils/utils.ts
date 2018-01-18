@@ -26,4 +26,17 @@ export class UtilsProvider {
 
     return returnArr;
   }
+  /**
+   * Controls expanded-item component
+   *
+   * @param {any} keyedVals
+   * @returns
+   * @memberof UtilsProvider
+   */
+  public addExpandedProperty(keyedVals) {
+    keyedVals.forEach(val => {
+      val.expanded = false;
+    });
+    return keyedVals;
+  }
 }
