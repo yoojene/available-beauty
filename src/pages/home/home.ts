@@ -69,7 +69,7 @@ export class HomePage {
 
   getUsers() {
     this.user
-      .getUsers()
+      .getStylistUsers()
       .snapshotChanges()
       .subscribe(actions => {
         this.users = this.utils.generateFirebaseKeyedValues(actions);
@@ -89,6 +89,6 @@ export class HomePage {
 
   openProfile(user) {
     console.log(user);
-    this.events.publish('change-stylist-profile-tab', 2, 2, user);
+    this.events.publish('change-stylist-profile-tab', 1, 1, user);
   }
 }

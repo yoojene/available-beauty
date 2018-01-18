@@ -34,6 +34,7 @@
     "@ngrx/store": "^4.1.0",
     "@ngrx/store-devtools": "^4.1.1",
     "@types/googlemaps": "^3.30.0",
+    "angular2-moment": "1.7.1",
     "angularfire2": "^5.0.0-rc.4",
     "firebase": "^4.7.0",
     "ionic-angular": "3.8.0",

@@ -9,5 +9,5 @@ export interface Stylist {
   avatarImage?: string;
   bannerImage?: string;
   galleryImages?: string[];
-
+  userId: string;
 }

@@ -5,4 +5,5 @@ export interface User {
   avatarImage?: string;
   homeLocation: number[];
   averageStarRating: number;
+  isStylist: boolean;
 }

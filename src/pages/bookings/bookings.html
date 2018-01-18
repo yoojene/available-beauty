@@ -14,8 +14,31 @@
 
 
 <ion-content padding>
-  <ion-item *ngFor="let book of bookings$ | async">
-      {{book.availabilityId}}
-  </ion-item>
+  <!-- <ion-item *ngIf="bookedavailbility$ | async as book">
+      {{book.datetime | amFromUnix | amDateFormat:'ddd Do h:mm'}}
+  </ion-item> -->
+  <ion-list>
+    <ion-list-header>
+      {{bookingTitle}}
+    </ion-list-header>
+    <ion-item *ngIf="bookedavailabilty as book">
+      {{book.datetime | amFromUnix | amDateFormat:'ddd Do h:mm'}}
+    </ion-item>
+    <!-- <ion-item *ngIf="bookedStylist$ | async as style">
+          {{style}}
+      </ion-item> -->
+    <ion-list-header>
+      {{stylistTitle}}
+    </ion-list-header>
+    <ion-item *ngIf="bookeduser as user">
+          {{user.name}}
+    </ion-item>
+    <ion-item *ngIf="bookedstylist as style" text-wrap>
+      {{style.bio}}
+    </ion-item>
+
+
+  </ion-list>
+
 
 </ion-content>

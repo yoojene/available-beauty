@@ -37,6 +37,11 @@ export class StylistProvider {
     });
   }
 
+  getStylistById(stylist) {
+    console.log(stylist);
+    return this.afdb.object<Stylist>(`stylistProfile/${stylist.stylistId}`);
+  }
+
   /**
    * Create a new stylist
    *

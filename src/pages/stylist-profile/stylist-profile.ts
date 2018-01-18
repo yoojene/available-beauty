@@ -59,7 +59,9 @@ export class StylistProfilePage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter ProfilePage');
 
-    this.getStylistDetails(this.user.key);
+    if (this.user) {
+      this.getStylistDetails(this.user.key);
+    }
   }
   /**
    * Get the stylist related to the user selected and the stylistId
@@ -88,7 +90,7 @@ export class StylistProfilePage {
         console.log(this.stylistId);
 
         this.avail
-          .getAvailability(this.stylistId)
+          .getStylistAvailability(this.stylistId)
           .snapshotChanges()
           .subscribe(actions => {
             let avails = this.utils.generateFirebaseKeyedValues(actions);

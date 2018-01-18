@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
+import { Booking } from '../../model/booking/booking.model';
 
 @Injectable()
 export class BookingProvider {
@@ -18,6 +19,13 @@ export class BookingProvider {
 
   public getBookings() {
     return this.afdb.list('booking');
+  }
+
+  public getUserBookings(uid) {
+    return this.afdb.list<Booking>(`booking`, ref => {
+      console.log(ref);
+      return ref.orderByChild('userId').equalTo(uid);
+    });
   }
   /**
    * Create /booking and update /availability booked to true

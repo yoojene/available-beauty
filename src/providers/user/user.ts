@@ -21,9 +21,15 @@ export class UserProvider {
    * @returns {Observable<User>}
    * @memberof UserProvider
    */
-  public getUsers() {
+  public getStylistUsers() {
     // return this.http.get<User>(this.config.endpointURL + this.config.usersPath);
-    return this.afdb.list<User>('userProfile');
+    return this.afdb.list<User>('userProfile', ref => {
+      return ref.orderByChild('isStylist').equalTo(true);
+    });
+  }
+
+  public getUserById(id) {
+    return this.afdb.object<User>(`userProfile/${id}`);
   }
   /**
    * Add a new user
