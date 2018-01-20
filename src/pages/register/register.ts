@@ -70,7 +70,7 @@ export class RegisterPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
-    console.log(this.navParams.get('loginType'));
+    console.log(this.navParams.get('isStylist'));
 
     this.storage
       .getStorage('geolocation')
@@ -84,6 +84,7 @@ export class RegisterPage {
       console.log(this.coords);
       let user = this.registerForm.value;
       user.homeLocation = this.coords;
+      user.isStylist = this.navParams.get('isStylist');
       console.log(user);
       console.log(JSON.stringify(user));
 
@@ -93,7 +94,7 @@ export class RegisterPage {
         .doRegister(user)
         .then(res => {
           console.log('User Registered : ' + JSON.stringify(res));
-          this.navCtrl.push('TabsPage');
+          this.navCtrl.push('TabsPage'); // TODO nav to profile page to finish registration if a Stylist
         })
         .catch(err => {
           this.invalidReg = true;

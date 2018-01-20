@@ -40,6 +40,7 @@ export class LoginPage {
   public invalidLogin: boolean = false;
   public error: string;
   private loginType: string;
+  private isStylist: boolean;
 
   constructor(
     public store: Store<AppState>,
@@ -68,6 +69,17 @@ export class LoginPage {
     console.log(this.navParams.get('loginType'));
 
     this.loginType = this.navParams.get('loginType');
+
+    switch (this.loginType) {
+      case 'Looking':
+        this.isStylist = false;
+        break;
+      case 'Offering':
+        this.isStylist = true;
+        break;
+    }
+
+    console.log(this.isStylist);
   }
 
   openResetPassword() {
@@ -161,7 +173,7 @@ export class LoginPage {
 
   openRegisterPage() {
     let regModal = this.modal.create('RegisterPage', {
-      loginType: this.loginType
+      isStylist: this.isStylist
     });
     regModal.present();
   }
