@@ -94,7 +94,13 @@ export class RegisterPage {
         .doRegister(user)
         .then(res => {
           console.log('User Registered : ' + JSON.stringify(res));
-          this.navCtrl.push('TabsPage'); // TODO nav to profile page to finish registration if a Stylist
+          this.storage.getStorage('isStylist').subscribe(res => {
+            if (res) {
+              this.navCtrl.push('StylistRegisterPage');
+            } else {
+              this.navCtrl.push('TabsPage');
+            }
+          });
         })
         .catch(err => {
           this.invalidReg = true;

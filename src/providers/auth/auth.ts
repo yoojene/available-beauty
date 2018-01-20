@@ -46,28 +46,30 @@ export class AuthProvider {
   /**
    * Facebook login wrapper method
    *
+   * @param {boolean} stylist
    * @returns {Promise<any>}
    * @memberof AuthProvider
    */
-  public doFacebookLogin(): Promise<any> {
+  public doFacebookLogin(stylist): Promise<any> {
     console.log('doFacebookLogin()');
 
     if (this.plt.is('cordova')) {
       console.log('in cordova');
-      return this.doFacebookCordovaLogin();
+      return this.doFacebookCordovaLogin(stylist);
     } else {
       this.socialProvider = 'Facebook';
-      return this.doSocialWebLogin(this.socialProvider);
+      return this.doSocialWebLogin(stylist, this.socialProvider);
     }
   }
   /**
    * Facebook login on device
    *
+   * @param {boolean} stylist
    * @private
    * @returns
    * @memberof AuthProvider
    */
-  private doFacebookCordovaLogin(): Promise<any> {
+  private doFacebookCordovaLogin(stylist): Promise<any> {
     return this.fb
       .login(['email'])
       .then((res: FacebookLoginResponse) => {
@@ -79,7 +81,7 @@ export class AuthProvider {
 
         return this.callSignInWithCredentials(facebookCredential).then(
           newUser => {
-            this.addUserProfile(newUser);
+            this.addUserProfile(stylist, newUser);
           }
         );
       })
@@ -92,11 +94,12 @@ export class AuthProvider {
    * Wrapper method for Firebase.auth.signInWithPopup()
    *
    * @private
+   * @param {boolean} stylist
    * @param {any} providerId
    * @returns
    * @memberof AuthProvider
    */
-  private doSocialWebLogin(providerId): Promise<any> {
+  private doSocialWebLogin(stylist, providerId): Promise<any> {
     let socialProvider;
 
     switch (providerId) {
@@ -117,7 +120,7 @@ export class AuthProvider {
         return res;
       })
       .then(newUser => {
-        this.addUserProfile(newUser);
+        this.addUserProfile(stylist, newUser);
       })
       .catch(err => {
         return Promise.reject(err);
@@ -130,26 +133,28 @@ export class AuthProvider {
   /**
    * Google login wrapper method
    *
+   * @param {boolean} stylist
    * @returns {Promise<any>}
    * @memberof AuthProvider
    */
-  public doGoogleLogin(): Promise<any> {
+  public doGoogleLogin(stylist): Promise<any> {
     if (this.plt.is('cordova')) {
       console.log('in cordova');
-      return this.doGoogleCordovaLogin();
+      return this.doGoogleCordovaLogin(stylist);
     } else {
       this.socialProvider = 'Google';
-      return this.doSocialWebLogin(this.socialProvider);
+      return this.doSocialWebLogin(stylist, this.socialProvider);
     }
   }
 
   /**
    * Google OAuth login on device
    *
+   * @param {boolean} stylist
    * @returns
    * @memberof AuthProvider
    */
-  private doGoogleCordovaLogin(): Promise<any> {
+  private doGoogleCordovaLogin(stylist): Promise<any> {
     console.log('doCordovaLogin');
     return this.google
       .login({
@@ -162,7 +167,7 @@ export class AuthProvider {
             res.idToken
           );
           return this.callSignInWithCredentials(googleCred).then(newUser => {
-            this.addUserProfile(newUser);
+            this.addUserProfile(stylist, newUser);
           });
         },
         err => {
@@ -174,26 +179,28 @@ export class AuthProvider {
   /**
    * Twitter login wrapper method
    *
+   * @param {boolean} stylist
    * @returns
    * @memberof AuthProvider
    */
-  public doTwitterLogin(): Promise<any> {
+  public doTwitterLogin(stylist): Promise<any> {
     if (this.plt.is('cordova')) {
       //On device
-      return this.doTwitterCordovaLogin();
+      return this.doTwitterCordovaLogin(stylist);
     } else {
       this.socialProvider = 'Twitter';
-      return this.doSocialWebLogin(this.socialProvider);
+      return this.doSocialWebLogin(stylist, this.socialProvider);
     }
   }
   /**
    * Twitter login on device
    *
+   * @param {boolean} stylist
    * @private
    * @returns
    * @memberof AuthProvider
    */
-  private doTwitterCordovaLogin(): Promise<any> {
+  private doTwitterCordovaLogin(stylist): Promise<any> {
     return this.twitter.login().then(
       res => {
         const twitterCred = firebase.auth.TwitterAuthProvider.credential(
@@ -202,7 +209,7 @@ export class AuthProvider {
         );
 
         return this.callSignInWithCredentials(twitterCred).then(newUser => {
-          this.addUserProfile(newUser);
+          this.addUserProfile(stylist, newUser);
         });
       },
       err => {
@@ -227,7 +234,7 @@ export class AuthProvider {
       .then(newUser => {
         return Promise.all([
           this.updateUserProfile(newUser, user),
-          this.addUserProfile(newUser, user)
+          this.addUserProfile(user.isStylist, newUser, user)
         ]);
       });
   }
@@ -295,12 +302,13 @@ export class AuthProvider {
   /**
    * Creates userProfile record in realtime DB
    *
+   * @param {boolean} stylist Flag to denote whether user is stylist or not
    * @param {any} newUser FirebaseUser returned from native createUserWithEmailAndPassword()
    * @param {any} user user details from RegisterPage component
    * @returns
    * @memberof AuthProvider
    */
-  private addUserProfile(newUser: any, user?: any) {
+  private addUserProfile(stylist: boolean, newUser: any, user?: any) {
     // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
     let userParam;
     if (newUser.user) {
@@ -320,7 +328,8 @@ export class AuthProvider {
           emailAddress: userParam.email,
           avatarImage: userParam.photoURL,
           phoneNumber: null, // dummy
-          homeLocation: this.geolocation
+          homeLocation: this.geolocation,
+          isStylist: stylist
         };
 
         console.log(userProfile);

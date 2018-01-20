@@ -9,17 +9,15 @@ import { LoginBackgroundSliderPage } from '../pages/login-background-slider/logi
 import { LandingPage } from '../pages/landing/landing';
 import { LocationProvider } from '../providers/location/location';
 
-import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAction } from 'angularfire2/database/interfaces';
-
-
+import { StorageProvider } from '../providers/storage/storage';
 
 @Component({
-  templateUrl: "app.html"
+  templateUrl: 'app.html'
 })
 export class AvailableBeautyApp {
-  // rootPage: string = 'TabsPage'; // This needs to be updated once logged in / registered to be TabsPage
-  rootPage: string = "LandingPage"; // This needs to be updated once logged in / registered to be TabsPage
+  rootPage: string = 'LandingPage'; // This needs to be updated once logged in / registered to be TabsPage
 
   lat: number;
   long: number;
@@ -29,7 +27,8 @@ export class AvailableBeautyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     private location: LocationProvider,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private storage: StorageProvider
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -41,25 +40,26 @@ export class AvailableBeautyApp {
     });
   }
 
-  watchGeoLocation(){
-    this.location.watchGeoLocation()
+  watchGeoLocation() {
+    this.location.watchGeoLocation();
   }
 
   checkAuthState() {
-    console.log('checking auth state....')
-    this.afAuth.authState
-    .subscribe(res => {
-
-      console.log(res);
-      if (res) {
-        // Nav to homepage
-        this.rootPage = 'LookingPage';
+    console.log('checking auth state....');
+    this.afAuth.authState.subscribe(res => {
+      if (!res) {
+        // Unauthenticated state
+        this.rootPage = 'LandingPage';
       } else {
-        // Login page
-        this.rootPage = 'LandingPage'
+        // Check if is Stylist or User
+        this.storage.getStorage('isStylist').subscribe(res => {
+          if (res) {
+            this.rootPage = 'StylistRegisterPage';
+          } else {
+            this.rootPage = 'LookingPage';
+          }
+        });
       }
-
     });
-
   }
 }

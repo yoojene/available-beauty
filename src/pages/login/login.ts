@@ -29,6 +29,7 @@ import {
   TwitterConnect,
   TwitterConnectResponse
 } from '@ionic-native/twitter-connect';
+import { StorageProvider } from '../../providers/storage/storage';
 
 @IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
@@ -50,7 +51,8 @@ export class LoginPage {
     private modal: ModalController,
     public afAuth: AngularFireAuth,
     public auth: AuthProvider,
-    private loading: LoadingController
+    private loading: LoadingController,
+    private storage: StorageProvider
   ) {
     this.loginForm = formBuilder.group({
       email: [
@@ -73,9 +75,11 @@ export class LoginPage {
     switch (this.loginType) {
       case 'Looking':
         this.isStylist = false;
+        this.storage.setStorage('isStylist', this.isStylist);
         break;
       case 'Offering':
         this.isStylist = true;
+        this.storage.setStorage('isStylist', this.isStylist);
         break;
     }
 
@@ -116,7 +120,7 @@ export class LoginPage {
 
     loading.present().then(() => {
       this.auth
-        .doFacebookLogin()
+        .doFacebookLogin(this.isStylist)
         .then(res => {
           console.log(res);
           loading.dismiss();
@@ -136,11 +140,12 @@ export class LoginPage {
 
     loading.present().then(() => {
       this.auth
-        .doGoogleLogin()
+        .doGoogleLogin(this.isStylist)
         .then(res => {
           loading.dismiss();
           console.log(res);
-          this.navCtrl.push('LookingPage');
+          // this.navCtrl.push('LookingPage');
+          this.setNavigationPage(this.isStylist);
         })
         .catch(err => {
           loading.dismiss();
@@ -155,7 +160,7 @@ export class LoginPage {
     let loading = this.loading.create();
 
     loading.present().then(() => {
-      this.auth.doTwitterLogin().then(
+      this.auth.doTwitterLogin(this.isStylist).then(
         (res: TwitterConnectResponse) => {
           console.log(res);
           loading.dismiss();
@@ -193,5 +198,13 @@ export class LoginPage {
    */
   showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  private setNavigationPage(stylist) {
+    if (!stylist) {
+      return this.navCtrl.push('LookingPage');
+    } else {
+      return this.navCtrl.push('StylistRegisterPage');
+    }
   }
 }
