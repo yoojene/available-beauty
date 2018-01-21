@@ -6,6 +6,7 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { MOCK_STYLISTS } from '../../mocks/stylist.mocks';
 import { Observable } from 'rxjs/Observable';
 
+import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 
 @Injectable()
@@ -40,6 +41,33 @@ export class StylistProvider {
   getStylistById(stylist) {
     console.log(stylist);
     return this.afdb.object<Stylist>(`stylistProfile/${stylist.stylistId}`);
+  }
+
+  addStylistProfile(stylist) {
+    console.log('addStylistProfile');
+    console.log(stylist);
+
+    let stylistProfile = {
+      userId: firebase.auth().currentUser.uid,
+      stylistName: stylist.stylistName,
+      mobile: stylist.mobile,
+      mobileRange: stylist.mobileRange,
+      bio: stylist.bio,
+      galleryImages: stylist.galleryImages
+    };
+
+    let stylistKey = this.afdb.database
+      .ref()
+      .child('stylistProfile')
+      .push().key;
+
+    let stylistPayload = {};
+    stylistPayload[`stylistProfile/${stylistKey}`] = stylistProfile;
+
+    return this.afdb.database
+      .ref()
+      .update(stylistPayload)
+      .then(res => console.log(res));
   }
 
   /**
