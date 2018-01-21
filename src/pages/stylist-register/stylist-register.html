@@ -14,7 +14,42 @@
 
 
 <ion-content padding>
-  Complete the stylist registration here...
+
+
+  <!-- Sign up your Salon or business here -->
+  <form
+  [formGroup]="stylistRegForm"
+  (submit)="completeStylistReg()">
+
+  <div>Enter details for you Salon or business here</div>
+
+  <ion-item>
+    <ion-label floating>{{stylistNameLabel}}</ion-label>
+    <ion-input formControlName="stylistName" type="text">
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label floating>{{bioLabel}}</ion-label>
+    <ion-textarea formControlName="bio" type="text">
+    </ion-textarea>
+  </ion-item>
+ <ion-item>
+    <ion-label>{{mobileLabel}}</ion-label>
+    <ion-toggle formControlName="mobile">
+    </ion-toggle>
+  </ion-item>
+  <ion-item *ngIf="showMobileRange">
+    <ion-label floating>{{mobileRangeLabel}}</ion-label>
+    <ion-input formControlName="mobileRange" type="number">
+    </ion-input>
+  </ion-item>
+<ion-item>
+  <ion-label>{{loadImagesLabel}}</ion-label>
+  <ion-toggle formControlName="loadImages">
+  </ion-toggle>
+</ion-item>
+  </form>
+
 
   <button ion-button (click)="goToHome()">
     Home
