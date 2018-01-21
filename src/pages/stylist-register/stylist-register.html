@@ -21,7 +21,7 @@
   [formGroup]="stylistRegForm"
   (submit)="completeStylistReg()">
 
-  <div>Enter details for you Salon or business here</div>
+  <div>{{pageSubheader}}</div>
 
   <ion-item>
     <ion-label floating>{{stylistNameLabel}}</ion-label>
@@ -33,14 +33,20 @@
     <ion-textarea formControlName="bio" type="text">
     </ion-textarea>
   </ion-item>
+ <ion-item icon-start>
+
+    <ion-label> <ion-icon name="call"></ion-icon></ion-label>
+    <ion-input formControlName="phoneNumber" type="number" placeholder="{{phoneNumberLabel}}">
+    </ion-input>
+  </ion-item>
  <ion-item>
     <ion-label>{{mobileLabel}}</ion-label>
-    <ion-toggle formControlName="mobile">
+    <ion-toggle item-end formControlName="mobile">
     </ion-toggle>
   </ion-item>
   <ion-item *ngIf="showMobileRange">
     <ion-label floating>{{mobileRangeLabel}}</ion-label>
-    <ion-input formControlName="mobileRange" type="number">
+    <ion-input formControlName="mobileRange" type="number" placeholder="{{mobileRangePlaceholder}}">
     </ion-input>
   </ion-item>
 <ion-item>
@@ -48,6 +54,14 @@
   <ion-toggle formControlName="loadImages">
   </ion-toggle>
 </ion-item>
+
+<button
+ion-button
+[disabled]="!stylistRegForm.valid"
+color="tonal">
+Register
+</button>
+
   </form>
 
 
