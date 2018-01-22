@@ -1,6 +1,11 @@
 export interface Stylist {
-  name: string;
-  baseLocation: number[];
+  stylistName: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  addressTownCity?: string;
+  addressCounty?: string;
+  addressPostcode?: string;
+  baseLocation?: number[];
   mobile: boolean;
   mobileRange?: number;
   bio?: string;
@@ -9,5 +14,7 @@ export interface Stylist {
   avatarImage?: string;
   bannerImage?: string;
   galleryImages?: string[];
+
   userId: string;
+  loadImages: boolean;
 }

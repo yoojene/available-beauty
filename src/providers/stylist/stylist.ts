@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, style } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { API_CONFIG, ApiConfig } from '../../model/api.config';
@@ -43,7 +43,7 @@ export class StylistProvider {
     return this.afdb.object<Stylist>(`stylistProfile/${stylist.stylistId}`);
   }
 
-  addStylistProfile(stylist) {
+  addStylistProfile(stylist: Stylist) {
     console.log('addStylistProfile');
     console.log(stylist);
 
@@ -53,8 +53,18 @@ export class StylistProvider {
       mobile: stylist.mobile,
       mobileRange: stylist.mobileRange,
       bio: stylist.bio,
-      galleryImages: stylist.galleryImages
+      baseLocation: stylist.baseLocation,
+      addressLine1: stylist.addressLine1,
+      addressLine2: stylist.addressLine2,
+      addressTownCity: stylist.addressTownCity,
+      addressCounty: stylist.addressCounty,
+      addressPostcode: stylist.addressPostcode,
+      galleryImages: null
     };
+
+    if (stylist.loadImages) {
+      stylistProfile.galleryImages = stylist.galleryImages;
+    }
 
     let stylistKey = this.afdb.database
       .ref()

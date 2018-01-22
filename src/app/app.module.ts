@@ -18,6 +18,7 @@ import { APP_REDUCER } from '../model/app.reducer';
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -81,6 +82,7 @@ import { BookingProvider } from '../providers/booking/booking';
     SplashScreen,
     Facebook,
     Geolocation,
+    NativeGeocoder,
     GoogleMaps,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     UserProvider,

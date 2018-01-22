@@ -5,6 +5,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import { Geolocation } from '@ionic-native/geolocation';
 import { StorageProvider } from '../storage/storage';
+import {
+  NativeGeocoder,
+  NativeGeocoderReverseResult,
+  NativeGeocoderForwardResult
+} from '@ionic-native/native-geocoder';
 
 /*
   Generated class for the LocationProvider provider.
@@ -16,7 +21,8 @@ import { StorageProvider } from '../storage/storage';
 export class LocationProvider {
   constructor(
     private geolocation: Geolocation,
-    private storage: StorageProvider
+    private storage: StorageProvider,
+    private nativeGeocoder: NativeGeocoder
   ) {
     console.log('Hello LocationProvider Provider');
   }
@@ -47,5 +53,26 @@ export class LocationProvider {
         return [resp.coords.latitude, resp.coords.longitude];
       })
       .catch(err => console.error('Error getting location', err));
+  }
+
+  getAddressFromCoordinates(lat, long) {
+    console.log('getAddressFromCoordinates');
+    return this.nativeGeocoder
+      .reverseGeocode(lat, long)
+      .then((result: NativeGeocoderReverseResult) => {
+        console.log(JSON.stringify(result));
+        return result;
+      })
+      .catch((error: any) => console.error(error));
+  }
+
+  getCoordinatesFromAddress(address) {
+    console.log('getCoordinatesFromAddress');
+    return this.nativeGeocoder
+      .forwardGeocode(address)
+      .then((coordinates: NativeGeocoderForwardResult) => {
+        return coordinates;
+      })
+      .catch((error: any) => console.error(error));
   }
 }

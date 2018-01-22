@@ -19,7 +19,7 @@
   <!-- Sign up your Salon or business here -->
   <form
   [formGroup]="stylistRegForm"
-  (submit)="completeStylistReg()">
+  (submit)="onSubmitStylistRegForm()">
 
   <div>{{pageSubheader}}</div>
 
@@ -34,11 +34,53 @@
     </ion-textarea>
   </ion-item>
  <ion-item icon-start>
-
     <ion-label> <ion-icon name="call"></ion-icon></ion-label>
     <ion-input formControlName="phoneNumber" type="number" placeholder="{{phoneNumberLabel}}">
     </ion-input>
   </ion-item>
+  <ion-item-divider>
+     {{locationLabel}}
+  </ion-item-divider>
+  <button text-center ion-item icon-start detail-none (click)="useCurrentAddress()" type="button">
+    <ion-icon name="locate"></ion-icon> {{useMyCurrentLocationLabel}}
+  </button>
+  <div text-center> {{orLabel}} </div>
+  <ion-item>
+    <ion-label text-center floating>{{enterLocationLabel}}</ion-label>
+      <ion-input formControlName="locationLookup" type="text">
+      </ion-input>
+      <button ion-button item-end type="button" (click)="findAddress()"> {{findAddressLabel}}</button>
+  </ion-item>
+
+  <div *ngIf="showAddressForm">
+      <ion-item>
+        <ion-label floating>{{addressLine1Label}}</ion-label>
+        <ion-input formControlName="addressLine1" type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{addressLine2Label}}</ion-label>
+        <ion-input formControlName="addressLine2" type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{addressTownCityLabel}}</ion-label>
+        <ion-input formControlName="addressTownCity" type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{addressCountyLabel}}</ion-label>
+        <ion-input formControlName="addressCounty" type="text">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>{{addressPostcodeLabel}}</ion-label>
+        <ion-input formControlName="addressPostcode" type="text">
+        </ion-input>
+      </ion-item>
+  </div>
+
+
  <ion-item>
     <ion-label>{{mobileLabel}}</ion-label>
     <ion-toggle item-end formControlName="mobile">
@@ -57,6 +99,7 @@
 
 <button
 ion-button
+block
 [disabled]="!stylistRegForm.valid"
 color="tonal">
 Register
@@ -65,8 +108,5 @@ Register
   </form>
 
 
-  <button ion-button (click)="goToHome()">
-    Home
-  </button>
 
 </ion-content>
