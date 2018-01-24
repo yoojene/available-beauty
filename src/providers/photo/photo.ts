@@ -41,29 +41,29 @@ export class PhotoProvider {
         for (let i = 0; i < res.length; i++) {
           console.log('Image URI: ' + res[i]);
 
-          this.file.createFile(res[i], 'test.jpg', false).then(
-            fileEntry => {
-              console.log(fileEntry);
-            },
-            err => {
-              console.error(err);
-            }
-          );
-
-          // this.file.resolveLocalFilesystemUrl(res[i]).then(
+          // this.file.createFile(res[i], 'test.jpg', false).then(
           //   fileEntry => {
           //     console.log(fileEntry);
-          //     console.log(fileEntry.isFile);
-          //     // this.file
-          //     //   .getFile(res, 'image.jpg', { create: false })
-          //     //   .then(fileEntry => {
-          //     //     console.log(fileEntry.file);
-          //     //   });
           //   },
           //   err => {
           //     console.error(err);
           //   }
           // );
+
+          this.file.resolveLocalFilesystemUrl(res[i]).then(
+            fileEntry => {
+              console.log(fileEntry);
+              console.log(fileEntry.isFile);
+              // this.file
+              //   .getFile(res, 'image.jpg', { create: false })
+              //   .then(fileEntry => {
+              //     console.log(fileEntry.file);
+              //   });
+            },
+            err => {
+              console.error(err);
+            }
+          );
         }
       },
       err => {
