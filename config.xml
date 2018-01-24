@@ -128,5 +128,8 @@
         <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
+    <plugin name="com.synconset.imagepicker" spec="~2.1.8">
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To allow image picker to select photos from library" />
+    </plugin>
     <plugin name="cordova-plugin-file" spec="~4.3.3" />
 </widget>

@@ -21,6 +21,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -87,6 +88,7 @@ import { PhotoProvider } from '../providers/photo/photo';
     Geolocation,
     File,
     Camera,
+    ImagePicker,
     NativeGeocoder,
     GoogleMaps,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
