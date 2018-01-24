@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ActionSheetController
+} from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
 import { StylistProvider } from '../../providers/stylist/stylist';
@@ -8,8 +13,10 @@ import {
   NativeGeocoderReverseResult,
   NativeGeocoderForwardResult
 } from '@ionic-native/native-geocoder';
+import { Camera } from '@ionic-native/camera';
 
 import { LocationProvider } from '../../providers/location/location';
+import { PhotoProvider } from '../../providers/photo/photo';
 
 /**
  * Generated class for the StylistRegisterPage page.
@@ -55,7 +62,10 @@ export class StylistRegisterPage {
     public formBuilder: FormBuilder,
     public storage: StorageProvider,
     public stylist: StylistProvider,
-    public location: LocationProvider
+    public location: LocationProvider,
+    public camera: Camera,
+    public actionSheetCtrl: ActionSheetController,
+    public photo: PhotoProvider
   ) {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: ['', Validators.required],
@@ -80,6 +90,12 @@ export class StylistRegisterPage {
     this.showAddressForm = false;
     this.stylistRegForm.get('mobile').valueChanges.subscribe(val => {
       this.showMobileRange = val;
+    });
+
+    this.stylistRegForm.get('loadImages').valueChanges.subscribe(val => {
+      if (val) {
+        this.showImageActionSheet();
+      }
     });
 
     this.storage.getStorage('geolocation').subscribe(res => {
@@ -182,5 +198,30 @@ export class StylistRegisterPage {
       console.log('Registered stylist!', res);
       this.navCtrl.push('TabsPage');
     });
+  }
+
+  public showImageActionSheet() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Select Image Source',
+      buttons: [
+        {
+          text: 'Load from Library',
+          handler: () => {
+            this.photo.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
+          }
+        },
+        {
+          text: 'Use Camera',
+          handler: () => {
+            this.photo.takePhoto(this.camera.PictureSourceType.CAMERA);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    actionSheet.present();
   }
 }

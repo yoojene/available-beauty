@@ -19,6 +19,8 @@ import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -46,6 +48,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AvailabilityProvider } from '../providers/availability/availability';
 import { UtilsProvider } from '../providers/utils/utils';
 import { BookingProvider } from '../providers/booking/booking';
+import { PhotoProvider } from '../providers/photo/photo';
 
 @NgModule({
   declarations: [
@@ -82,6 +85,8 @@ import { BookingProvider } from '../providers/booking/booking';
     SplashScreen,
     Facebook,
     Geolocation,
+    File,
+    Camera,
     NativeGeocoder,
     GoogleMaps,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -97,7 +102,8 @@ import { BookingProvider } from '../providers/booking/booking';
     AvailabilityProvider,
     UtilsProvider,
     UtilsProvider,
-    BookingProvider
+    BookingProvider,
+    PhotoProvider
   ]
 })
 export class AppModule {}
