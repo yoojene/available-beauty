@@ -207,7 +207,8 @@ export class StylistRegisterPage {
         {
           text: 'Load from Library',
           handler: () => {
-            this.photo.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
+            // this.photo.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
+            // TODO Use Image Picker plugin here to allow multi select?
           }
         },
         {
