@@ -80,6 +80,7 @@ export class StylistProvider {
       .then(res => console.log(res));
   }
 
+
   /**
    * Create a new stylist
    *

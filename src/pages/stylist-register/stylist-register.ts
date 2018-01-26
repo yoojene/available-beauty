@@ -209,7 +209,9 @@ export class StylistRegisterPage {
           handler: () => {
             // this.photo.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
             // TODO Use Image Picker plugin here to allow multi select?
-            this.photo.getPictures();
+            this.photo.getLibraryPictures().then(res => {
+              console.log(res);
+            });
           }
         },
         {
@@ -225,5 +227,9 @@ export class StylistRegisterPage {
       ]
     });
     actionSheet.present();
+  }
+
+  goBack() {
+    this.navCtrl.push('LoginPage');
   }
 }

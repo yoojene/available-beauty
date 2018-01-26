@@ -87,7 +87,7 @@
     </ion-toggle>
   </ion-item>
   <ion-item *ngIf="showMobileRange">
-    <ion-label floating>{{mobileRangeLabel}}</ion-label>
+    <ion-label stacked>{{mobileRangeLabel}}</ion-label>
     <ion-input formControlName="mobileRange" type="number" placeholder="{{mobileRangePlaceholder}}">
     </ion-input>
   </ion-item>
@@ -106,6 +106,10 @@ Register
 </button>
 
   </form>
+
+  <button ion-button (click)="goBack()">
+    Go back
+  </button>
 
 
 
