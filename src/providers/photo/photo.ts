@@ -59,7 +59,7 @@ export class PhotoProvider {
 
             this.file.resolveLocalFilesystemUrl(fullPath).then(res => {
               this.file.readAsDataURL(path, res.name).then(data => {
-                this.photos.push({
+                return this.photos.push({
                   photoFullPath: fullPath,
                   photoBase64Data: data
                 });
