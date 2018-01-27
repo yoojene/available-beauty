@@ -25,7 +25,13 @@ export class PhotoProvider {
   ) {
     console.log('Hello PhotoProvider Provider');
   }
-
+  /**
+   * Cordova camera, take photo
+   *
+   * @param {any} sourceType
+   * @returns
+   * @memberof PhotoProvider
+   */
   public takePhoto(sourceType) {
     let options = {
       quality: 100,
@@ -34,11 +40,23 @@ export class PhotoProvider {
       correctOrientation: true
     };
 
-    this.camera.getPicture(options).then(imagePath => {
+    return this.camera.getPicture(options).then(imagePath => {
       console.log(imagePath);
+      let fullPath;
+      if (this.plt.is('ios')) {
+        fullPath = 'file://' + imagePath;
+      } else {
+        fullPath = imagePath;
+      }
+      return fullPath;
     });
   }
-
+  /**
+   * Cordova image picker, select image from library
+   *
+   * @returns
+   * @memberof PhotoProvider
+   */
   public getLibraryPictures() {
     let options = {};
     let photos = [];
@@ -46,149 +64,84 @@ export class PhotoProvider {
       res => {
         console.log(res);
         for (let i = 0; i < res.length; i++) {
-          (i => {
-            // Call in anon function to ensure photos is populated
-            console.log('Image URI: ' + res[i]);
+          let fullPath;
+          if (this.plt.is('ios')) {
+            fullPath = 'file://' + res[i];
+          } else {
+            fullPath = res[i];
+          }
+          let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
 
-            let fullPath;
-            if (this.plt.is('ios')) {
-              fullPath = 'file://' + res[i];
-            } else {
-              fullPath = res[i];
-            }
-            let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
-
-            this.file.resolveLocalFilesystemUrl(fullPath).then(
-              res => {
-                this.file.readAsDataURL(path, res.name).then(
-                  data => {
-                    this.photos.push({
-                      photoFullPath: fullPath,
-                      photoFileName: res.name,
-                      photoBase64Data: data
-                    });
-                    return this.photos;
-                  },
-                  err => console.error(err)
-                );
-              },
-              err => console.error(err)
-            );
-          })(i);
+          photos.push({ photoFullPath: fullPath, path: path });
         }
-
-        // console.log(this.photos);
-        return this.photos;
-
-        // console.log(fullPath);
-        // console.log('resolveLocaLFSURL window');
-
-        // let reader = new FileReader()
-
-        // resolveLocalFileSystemURL(
-        //   fullPath,
-        //   res => {
-        //     console.log(res);
-        //     console.log('read as data URL');
-        //     this.file.readAsDataURL(path, res.name).then(data => {
-        //       // console.log(data);
-        //       this.photosBase64.push(data);
-        //     });
-        //   },
-        //   err => {
-        //     console.error(err);
-        //   }
-        // );
-        // this.file.resolve;
-        // this.file.readAsDataURL(path, name).then(
-        //   res => {
-        //     console.log(res);
-        //   },
-        //   err => {
-        //     console.error(err);
-        //   }
-        // );
-
-        // this.file.createFile(res[i], 'test.jpg', false).then(
-        //   fileEntry => {
-        //     console.log(fileEntry);
-        //   },
-        //   err => {
-        //     console.error(err);
-        //   }
-        // );
-
-        // this.file.resolveLocalFilesystemUrl(res[i]).then(
-        //   fileEntry => {
-        //     console.log(fileEntry);
-        //     console.log(fileEntry.isFile);
-        //     // this.file
-        //     //   .getFile(res, 'image.jpg', { create: false })
-        //     //   .then(fileEntry => {
-        //     //     console.log(fileEntry.file);
-        //     //   });
-        //   },
-        //   err => {
-        //     console.error(err);
-        //   }
-        // );
-
-        // return this.photosBase64;
-
-        // console.log(this.photosBase64);
+        return Promise.resolve(photos);
       },
       err => {
         console.error(err);
       }
     );
   }
-
-  public pushPhotoToStorage(photo) {
-    console.log(photo);
-    setTimeout(() => {
-      console.log(photo);
-    }, 0);
-    // console.log(JSON.stringify(photo));
-    // console.log(photo.length);
+  /**
+   * Add photo to Firebase Storage as base64 string
+   * TODO: create filename convention?  Using default
+   * @param {*} photo
+   * @returns
+   * @memberof PhotoProvider
+   */
+  public pushPhotoToStorage(photo: any) {
     let storageRef = firebase.storage().ref();
 
     let photoPromises = [];
 
-    // for (let x = 0; x < photo.length; x++) {
-    //   console.log(photo[x]);
-    // }
     photo.forEach(el => {
       console.log(el);
       let promise = storageRef
         .child(`stylistGalleryImages/${el.photoFileName}`)
         .putString(el.photoBase64Data, 'data_url');
-      photoPromises.push(promise);
 
-      // .then(
-      //   res => {
-      //     return console.log(res);
-      //   },
-      //   err => {
-      //     return console.error(err);
-      //   }
-      // );
+      photoPromises.push(promise);
     });
 
     console.log(photoPromises);
 
     return Promise.all([photoPromises]);
+  }
+  /**
+   * Util method to get base64 data for image
+   *
+   * @param {string} fullPath
+   * @param {string} [path]
+   * @returns
+   * @memberof PhotoProvider
+   */
+  public getBase64Data(fullPath: string, path?: string) {
+    console.log('getBase64Data');
+    console.log(fullPath);
+    console.log(path);
 
-    // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
-    //     // upload in progress
-    //     fir.progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-    //   }, error => {
-    //     // upload failed
-    //     console.log(error);
-    //   }, () => {
-    //     // upload success
-    //     upload.url = uploadTask.snapshot.downloadURL;
-    //     upload.name = upload.file.name;
-    //     this.saveFileData(upload);
-    //   });
+    let shortPath;
+    if (!path) {
+      shortPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+    } else {
+      shortPath = path;
+    }
+
+    return this.file.resolveLocalFilesystemUrl(fullPath).then(
+      res => {
+        return this.file.readAsDataURL(shortPath, res.name).then(
+          data => {
+            this.photos.push({
+              photoFullPath: fullPath,
+              photoFileName: res.name,
+              photoBase64Data: data
+            });
+            console.log(this.photos);
+            return this.photos;
+          },
+          err => console.error(err)
+        );
+      },
+      err => console.error(err)
+    );
   }
 }

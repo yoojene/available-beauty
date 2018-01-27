@@ -96,6 +96,8 @@
   <ion-toggle formControlName="loadImages">
   </ion-toggle>
 </ion-item>
+  <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
+  </progress-bar>
 
 <button
 ion-button

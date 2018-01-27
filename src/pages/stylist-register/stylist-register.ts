@@ -17,7 +17,7 @@ import { Camera } from '@ionic-native/camera';
 
 import { LocationProvider } from '../../providers/location/location';
 import { PhotoProvider } from '../../providers/photo/photo';
-
+import * as firebase from 'firebase';
 /**
  * Generated class for the StylistRegisterPage page.
  *
@@ -55,6 +55,7 @@ export class StylistRegisterPage {
   public showMobileRange: boolean;
   public showAddressForm: boolean;
   private coords: any;
+  public loadProgress: any = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -94,6 +95,7 @@ export class StylistRegisterPage {
 
     this.stylistRegForm.get('loadImages').valueChanges.subscribe(val => {
       if (val) {
+        console.log(val);
         this.showImageActionSheet();
       }
     });
@@ -199,7 +201,11 @@ export class StylistRegisterPage {
       this.navCtrl.push('TabsPage');
     });
   }
-
+  /**
+   * Camera / Library action sheet
+   *
+   * @memberof StylistRegisterPage
+   */
   public showImageActionSheet() {
     let actionSheet = this.actionSheetCtrl.create({
       title: 'Select Image Source',
@@ -207,26 +213,36 @@ export class StylistRegisterPage {
         {
           text: 'Load from Library',
           handler: () => {
-            // this.photo.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
-            // TODO Use Image Picker plugin here to allow multi select?
             this.photo.getLibraryPictures().then(res => {
-              // console.log(res);
-
-              this.photo.pushPhotoToStorage(res).then(
-                photores => {
-                  console.log(photores);
-                },
-                err => {
-                  console.error(err);
-                }
-              );
+              let photos: any = res;
+              photos.forEach(el => {
+                this.photo
+                  .getBase64Data(el.photoFullPath, el.path)
+                  .then(baseress => {
+                    console.log(baseress);
+                    this.photo.pushPhotoToStorage(baseress).then(stores => {
+                      console.log(stores[0]);
+                      this.monitorUploadProgress(stores[0]);
+                    });
+                  });
+              });
             });
           }
         },
         {
           text: 'Use Camera',
           handler: () => {
-            this.photo.takePhoto(this.camera.PictureSourceType.CAMERA);
+            this.photo
+              .takePhoto(this.camera.PictureSourceType.CAMERA)
+              .then(res => {
+                console.log(res);
+                this.photo.getBase64Data(res).then(baseres => {
+                  this.photo.pushPhotoToStorage(baseres).then(stores => {
+                    console.log(stores[0]);
+                    this.monitorUploadProgress(stores[0]);
+                  });
+                });
+              });
           }
         },
         {
@@ -236,6 +252,39 @@ export class StylistRegisterPage {
       ]
     });
     actionSheet.present();
+  }
+
+  public monitorUploadProgress(tasks) {
+    console.log('monitorUploadProgress');
+
+    tasks.forEach(task => {
+      console.log(task);
+      task.on(
+        'state_changed',
+        (snapshot: any) => {
+          this.loadProgress = (
+            snapshot.bytesTransferred /
+            snapshot.totalBytes *
+            100
+          ).toFixed(2);
+          // this.loadProgress.push(prog);
+          // console.log(this.loadProgress);
+          console.log('Upload is ' + this.loadProgress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+          // return progress;
+        },
+        err => {
+          console.error(err);
+        }
+      );
+    });
   }
 
   goBack() {
