@@ -41,9 +41,10 @@ export class PhotoProvider {
 
   public getLibraryPictures() {
     let options = {};
-
+    let photos = [];
     return this.imagePicker.getPictures(options).then(
       res => {
+        console.log(res);
         for (let i = 0; i < res.length; i++) {
           (i => {
             // Call in anon function to ensure photos is populated
@@ -57,18 +58,26 @@ export class PhotoProvider {
             }
             let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
 
-            this.file.resolveLocalFilesystemUrl(fullPath).then(res => {
-              this.file.readAsDataURL(path, res.name).then(data => {
-                return this.photos.push({
-                  photoFullPath: fullPath,
-                  photoBase64Data: data
-                });
-              });
-            });
+            this.file.resolveLocalFilesystemUrl(fullPath).then(
+              res => {
+                this.file.readAsDataURL(path, res.name).then(
+                  data => {
+                    this.photos.push({
+                      photoFullPath: fullPath,
+                      photoFileName: res.name,
+                      photoBase64Data: data
+                    });
+                    return this.photos;
+                  },
+                  err => console.error(err)
+                );
+              },
+              err => console.error(err)
+            );
           })(i);
         }
 
-        console.log(this.photos);
+        // console.log(this.photos);
         return this.photos;
 
         // console.log(fullPath);
@@ -134,13 +143,40 @@ export class PhotoProvider {
     );
   }
 
-  public pushPhotoToStorage(filename) {
-    console.log(filename);
+  public pushPhotoToStorage(photo) {
+    console.log(photo);
+    setTimeout(() => {
+      console.log(photo);
+    }, 0);
+    // console.log(JSON.stringify(photo));
+    // console.log(photo.length);
     let storageRef = firebase.storage().ref();
 
-    let uploadTask = storageRef
-      .child(`stylistAvatarImages/${filename}`)
-      .put(filename);
+    let photoPromises = [];
+
+    // for (let x = 0; x < photo.length; x++) {
+    //   console.log(photo[x]);
+    // }
+    photo.forEach(el => {
+      console.log(el);
+      let promise = storageRef
+        .child(`stylistGalleryImages/${el.photoFileName}`)
+        .putString(el.photoBase64Data, 'data_url');
+      photoPromises.push(promise);
+
+      // .then(
+      //   res => {
+      //     return console.log(res);
+      //   },
+      //   err => {
+      //     return console.error(err);
+      //   }
+      // );
+    });
+
+    console.log(photoPromises);
+
+    return Promise.all([photoPromises]);
 
     // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
     //     // upload in progress
