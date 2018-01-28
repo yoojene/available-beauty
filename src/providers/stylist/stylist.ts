@@ -80,6 +80,18 @@ export class StylistProvider {
       .then(res => console.log(res));
   }
 
+  updateStylistProfile(key, value) {
+    console.log(key);
+    console.log(value);
+
+    if (value instanceof Array) {
+      value.forEach(el => {
+        console.log(el);
+      });
+    }
+
+    return this.afdb.database.ref().update({ key: value });
+  }
 
   /**
    * Create a new stylist

@@ -18,6 +18,9 @@ import { Camera } from '@ionic-native/camera';
 import { LocationProvider } from '../../providers/location/location';
 import { PhotoProvider } from '../../providers/photo/photo';
 import * as firebase from 'firebase';
+import { AngularFireDatabase } from 'angularfire2/database';
+import 'rxjs/add/operator/takeLast';
+
 /**
  * Generated class for the StylistRegisterPage page.
  *
@@ -56,6 +59,8 @@ export class StylistRegisterPage {
   public showAddressForm: boolean;
   private coords: any;
   public loadProgress: any = 0;
+  public downloadUrls: Array<any> = [];
+  public stylistKey: any;
 
   constructor(
     public navCtrl: NavController,
@@ -66,7 +71,8 @@ export class StylistRegisterPage {
     public location: LocationProvider,
     public camera: Camera,
     public actionSheetCtrl: ActionSheetController,
-    public photo: PhotoProvider
+    public photo: PhotoProvider,
+    public afdb: AngularFireDatabase
   ) {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: ['', Validators.required],
@@ -103,6 +109,17 @@ export class StylistRegisterPage {
     this.storage.getStorage('geolocation').subscribe(res => {
       this.coords = res;
     });
+
+    this.stylistKey = this.afdb.list('stylistProfile');
+    this.stylistKey
+      // .last()
+      .snapshotChanges()
+      // .takeLast(10)
+      .subscribe(action => {
+        console.log(action.type);
+        console.log(action.key);
+        console.log(action.payload.val());
+      });
   }
   /**
    * Use current coordinates to lookup address and populate form
@@ -198,7 +215,12 @@ export class StylistRegisterPage {
 
     this.stylist.addStylistProfile(this.stylistRegForm.value).then(res => {
       console.log('Registered stylist!', res);
+      // this.stylist
+      //   .updateStylistProfile('galleryImages', this.downloadUrls)
+      //   .then(res => {
+      console.log('updated image refs');
       this.navCtrl.push('TabsPage');
+      // });
     });
   }
   /**
@@ -282,6 +304,11 @@ export class StylistRegisterPage {
         },
         err => {
           console.error(err);
+        },
+        () => {
+          console.log('success!');
+          // Need the URLs for RTDB update
+          this.downloadUrls.push(task.snapshot.downloadURL);
         }
       );
     });
