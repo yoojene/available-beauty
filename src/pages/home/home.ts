@@ -13,6 +13,8 @@ import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
 import { User } from '../../model/users/user.model';
 import { UtilsProvider } from '../../providers/utils/utils';
+import * as moment from 'moment';
+import { Subject } from 'rxjs/Subject';
 
 @IonicPage()
 @Component({
@@ -25,10 +27,16 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
-  itemExpandHeight: number = 100;
+  itemExpandHeight: number = 150;
 
   public stylists$: Observable<Stylist[]>;
+  public stylist$: Observable<any>;
+  public stylistAvail$: Observable<any>; // TODO define interface for Availbility
+  public availabilities: any;
+
   public users: User[];
+
+  public destroy$: Subject<any> = new Subject();
 
   constructor(
     public navCtrl: NavController,
@@ -42,6 +50,12 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.getGeoLocation();
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 
   toggleMap() {
@@ -100,6 +114,29 @@ export class HomePage {
     this.users.map(listItem => {
       if (user == listItem) {
         listItem.expanded = !listItem.expanded;
+        console.log(user.key);
+
+        this.stylist$ = this.stylist.getStylist(user.key).snapshotChanges();
+
+        this.stylist$.subscribe(res => {
+          console.log(res);
+          console.log(res[0].key);
+          this.stylistAvail$ = this.stylist
+            .getStylistAvailability(res[0].key)
+            .snapshotChanges();
+
+          this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
+            console.log(actions);
+            let avails = this.utils.generateFirebaseKeyedValues(actions);
+
+            this.availabilities = avails;
+            this.availabilities.forEach(el => {
+              return (el.datetime = moment
+                .unix(el.datetime)
+                .format('ddd Do h:mm'));
+            });
+          });
+        });
       } else {
         listItem.expanded = false;
       }

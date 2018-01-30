@@ -35,7 +35,7 @@
     <br>
     <div>
       <ion-list>
-          <!-- <ion-card *ngFor="let user of users" (click)="openProfile(user)">
+          <!-- <ion-card *ngFor="let user of users" click)="openProfile(user)">
             <ion-card-content>
             <ion-item no-padding no-border>
             <ion-avatar item-start>
@@ -55,8 +55,18 @@
               </ion-item>
               <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
                 <br>
-                <br>
-                 <div> Hello people</div>
+                <ion-item>
+                  <button ion-button item-end (click)="openProfile(user)"> Stylist</button>
+                </ion-item>
+                <div *ngIf="stylist$ | async; let stylists">
+                  <div *ngFor="let style of stylists">
+                     {{style.payload.val().bio}}
+                  </div>
+                  <div *ngFor="let avail of availabilities">
+                     {{avail.datetime}}
+                     {{avail.booked}}
+                  </div>
+                </div>
               </expandable-item>
             </ion-card-content>
           </ion-card>

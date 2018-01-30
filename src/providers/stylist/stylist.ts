@@ -38,6 +38,12 @@ export class StylistProvider {
     });
   }
 
+  getStylistAvailability(stylistId) {
+    console.log(stylistId);
+
+    return this.afdb.list<Stylist>(`stylistProfile/${stylistId}/availability`);
+  }
+
   getStylistById(stylist) {
     console.log(stylist);
     return this.afdb.object<Stylist>(`stylistProfile/${stylist.stylistId}`);
