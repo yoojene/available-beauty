@@ -1,4 +1,12 @@
 page-home {
+  .page-home {
+    &--slide-background {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-color: transparent;
+    }
+  }
   .search-item {
     border: 2px solid #dedede;
     padding: 15px;
@@ -7,5 +15,9 @@ page-home {
   ion-scroll {
     white-space: nowrap;
     height: 250px;
+  }
+
+  ion-slides {
+    height: 20vh; // iPhone8;
   }
 }

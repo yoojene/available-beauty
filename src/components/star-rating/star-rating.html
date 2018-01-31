@@ -1,0 +1,15 @@
+<!-- Generated template for the StarRatingComponent component -->
+<div>
+<ion-grid>
+  <ion-row>
+      <ion-col *ngFor="let rate of starRating">
+        <ion-icon class="icon icon-ios ion-ios-star" aria-label="star">
+        </ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon *ngIf="remainder" class="icon icon-ios ion-ios-star-half" aria-label="star">
+        </ion-icon>
+      </ion-col>
+  </ion-row>
+</ion-grid>
+</div>

@@ -48,13 +48,13 @@ export class StylistProfilePage implements OnDestroy {
     private utils: UtilsProvider,
     private booking: BookingProvider
   ) {
-    this.id = navParams.get('id');
+    // this.id = navParams.get('id');
     this.user = navParams.get('user');
 
-    events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
-      this.id = id;
-      this.user = param;
-    });
+    // events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
+    //   this.id = id;
+    //   this.user = param;
+    // });
   }
 
   ionViewDidEnter() {

@@ -28,11 +28,11 @@ export class TabsPage {
   showkeyboard: boolean;
 
   tab1Root: any = HomePage;
-  tab2Root: any = StylistProfilePage;
+  // tab2Root: any = StylistProfilePage;
   tab3Root: any = BookingsPage;
   tab4Root: any = UserProfilePage;
   tab1Params = { id: 0 };
-  tab2Params = { id: 1, user: '' };
+  // tab2Params = { id: 1, user: '' };
   tab3Params = { id: 2 };
   tab4Params = { id: 3 };
 
@@ -43,11 +43,11 @@ export class TabsPage {
     private navCtrl: NavController,
     private events: Events
   ) {
-    events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
-      this.tab2Params.id = id;
-      this.tab2Params.user = param;
-      this.tabs.select(tab);
-    });
+    // events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
+    //   this.tab2Params.id = id;
+    //   this.tab2Params.user = param;
+    //   this.tabs.select(tab);
+    // });
   }
 
   ionViewWillEnter() {

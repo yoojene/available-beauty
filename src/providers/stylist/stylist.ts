@@ -41,7 +41,12 @@ export class StylistProvider {
   getStylistAvailability(stylistId) {
     console.log(stylistId);
 
-    return this.afdb.list<Stylist>(`stylistProfile/${stylistId}/availability`);
+    return this.afdb.list<Stylist>(
+      `stylistProfile/${stylistId}/availability`,
+      ref => {
+        return ref.orderByChild('datetime');
+      }
+    );
   }
 
   getStylistById(stylist) {

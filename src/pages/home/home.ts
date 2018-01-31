@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  NavController,
-  IonicPage,
-  ModalController,
-  Events
-} from 'ionic-angular';
+import { NavController, IonicPage, ModalController } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +10,7 @@ import { User } from '../../model/users/user.model';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
+import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 
 @IonicPage()
 @Component({
@@ -27,7 +23,7 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
-  itemExpandHeight: number = 150;
+  itemExpandHeight: number = 300; // TODO: this needs to be dynamic based on device size
 
   public stylists$: Observable<Stylist[]>;
   public stylist$: Observable<any>;
@@ -38,34 +34,12 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
-  // Testing
-
-  mockAvailabilities: any = [
-    {
-      booked: false,
-      datetime: '1518604200'
-    },
-    {
-      booked: false,
-      datetime: '1518606000'
-    },
-    {
-      booked: false,
-      datetime: '1518607800'
-    },
-    {
-      booked: false,
-      datetime: 1518609600
-    }
-  ];
-
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
     private stylist: StylistProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
-    private events: Events,
     private utils: UtilsProvider
   ) {}
 
@@ -128,7 +102,17 @@ export class HomePage {
 
   openProfile(user) {
     console.log(user);
-    this.events.publish('change-stylist-profile-tab', 1, 1, user);
+    console.log('opent da modal');
+    // this.events.publish('change-stylist-profile-tab', 1, 1, user);
+    let profileModal = this.modalCtrl.create(StylistProfilePage, {
+      user: user
+    });
+
+    profileModal.onDidDismiss(data => {
+      console.log('dismissed stylistProfileModal', data);
+    });
+
+    profileModal.present();
   }
 
   expandCard(user) {
@@ -150,8 +134,10 @@ export class HomePage {
             let avails = this.utils.generateFirebaseKeyedValues(actions);
 
             this.availabilities = avails.filter(res => res.booked === false);
-            this.mockAvailabilities.forEach(el => {
-              // let dateasint = parseInt(el.datetime);
+
+            console.log(this.availabilities);
+
+            this.availabilities.forEach(el => {
               return (el.datetime = moment
                 .unix(el.datetime)
                 .format('ddd Do h:mm'));

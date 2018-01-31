@@ -45,36 +45,47 @@
             </ion-item>
             </ion-card-content>
           </ion-card> -->
-          <ion-card *ngFor="let user of users" (click)="expandCard(user)">
+          <ion-card *ngFor="let user of users" >
             <ion-card-content>
-              <ion-item no-padding no-border>
+              <ion-item no-padding no-border (click)="expandCard(user)">
                 <ion-avatar item-start>
                   <img src="{{user.avatarImage}}">
                 </ion-avatar>
                 {{user.name}}
-                  <!-- <button ion-button item-end (click)="openProfile(user)"> Stylist</button> -->
+              <button *ngIf="user.expanded" ion-button item-end (click)="openProfile(user)"> Stylist</button>
               </ion-item>
               <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
-                <!-- <ion-scroll scrollY="true"> -->
                 <br>
                 <div *ngIf="stylist$ | async; let stylists">
                     <div *ngFor="let style of stylists" text-wrap>
-                      {{style.payload.val().bio}}
+                      <ion-slides pager autoplay="3000" speed="500" loop>
+                        <ion-slide *ngFor="let img of style.payload.val().galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
+                          <!-- <ion-row>
+                            {{img}}
+                            <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button"
+                              name="heart" (click)="toggleHeart()">
+                            </ion-icon>
+                          </ion-row> -->
+                        </ion-slide>
+                      </ion-slides>
+                      <div *ngIf="style.payload.val().stylistRating; let starRating">
+                        {{starRating}}
+                            <star-rating [rating]="starRating"></star-rating>
+                      </div>
+
                     </div>
-                    <!-- <br/> -->
+                </div>
+                <div>
+
+
                 </div>
                 <ion-scroll scrollX="true">
-                <ion-col *ngFor="let avail of mockAvailabilities">
+                <ion-col *ngFor="let avail of availabilities">
                     <button ion-button outline small>
                        {{avail.datetime}}
                     </button>
                 </ion-col>
                 </ion-scroll>
-<!--
-                <ion-item>
-
-                </ion-item> -->
-                <!-- </ion-scroll> -->
               </expandable-item>
             </ion-card-content>
           </ion-card>
