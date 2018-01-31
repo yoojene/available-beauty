@@ -18,6 +18,7 @@ import { StylistProfilePage } from '../stylist-profile/stylist-profile';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  public availabilityHeader = 'Availability';
   public lat: number;
   public long: number;
   private showMap: boolean = false;

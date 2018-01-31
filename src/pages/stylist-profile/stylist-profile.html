@@ -41,30 +41,18 @@
       </ion-item>
     </ion-card-title>
     <ion-card-content no-padding>
-      <div *ngFor="let stylist of stylist$ | async">
+      <div *ngFor="let style of stylist$ | async">
         <ion-item text-wrap>
-          {{stylist.bio}}
+          {{style.bio}}
         </ion-item>
-      </div>
+
       <ion-item>
         {{user.emailAddress}}
       </ion-item>
       <ion-item>
-        <ion-row>
-          <ion-icon name="star">
-          </ion-icon>
-          <ion-icon name="star">
-          </ion-icon>
-          <ion-icon name="star">
-          </ion-icon>
-          <ion-icon class="page-stylist-profile--selected-star-icon" name="star">
-          </ion-icon>
-          <ion-icon class="page-stylist-profile--selected-star-icon" name="star">
-          </ion-icon>
-        </ion-row>
+        <star-rating [rating]="style.stylistRating"></star-rating>
       </ion-item>
-
-
+        </div>
 
       <ion-list-header>
         <h2>{{availabilityHeader}}</h2>

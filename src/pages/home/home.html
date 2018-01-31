@@ -52,7 +52,7 @@
                   <img src="{{user.avatarImage}}">
                 </ion-avatar>
                 {{user.name}}
-              <button *ngIf="user.expanded" ion-button item-end (click)="openProfile(user)"> Stylist</button>
+              <button *ngIf="user.expanded" ion-button item-end color="aubergine" (click)="openProfile(user)"> Stylist</button>
               </ion-item>
               <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
                 <br>
@@ -70,18 +70,23 @@
                       </ion-slides>
                       <div *ngIf="style.payload.val().stylistRating; let starRating">
                         {{starRating}}
-                            <star-rating [rating]="starRating"></star-rating>
+                        <ion-item>
+                          <star-rating [rating]="starRating"></star-rating>
+                          <button ion-button item-end color="aubergine">
+                            Reviews
+                          </button>
+                        </ion-item>
                       </div>
-
                     </div>
                 </div>
-                <div>
-
-
-                </div>
+                <!-- <div> -->
+                  <ion-list-header>
+                    {{availabilityHeader}}
+                  </ion-list-header>
+                <!-- </div> -->
                 <ion-scroll scrollX="true">
                 <ion-col *ngFor="let avail of availabilities">
-                    <button ion-button outline small>
+                    <button ion-button outline small color="aubergine">
                        {{avail.datetime}}
                     </button>
                 </ion-col>
@@ -92,7 +97,7 @@
       </ion-list>
     </div>
     <ion-fab right bottom>
-      <button ion-fab [disabled]="!mapButton" (click)="toggleMap()">
+      <button ion-fab [disabled]="!mapButton" (click)="toggleMap()" color="aubergine">
         <ion-icon name="pin"></ion-icon>
       </button>
     </ion-fab>
