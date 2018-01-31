@@ -38,6 +38,27 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
+  // Testing
+
+  mockAvailabilities: any = [
+    {
+      booked: false,
+      datetime: '1518604200'
+    },
+    {
+      booked: false,
+      datetime: '1518606000'
+    },
+    {
+      booked: false,
+      datetime: '1518607800'
+    },
+    {
+      booked: false,
+      datetime: 1518609600
+    }
+  ];
+
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
@@ -126,11 +147,11 @@ export class HomePage {
             .snapshotChanges();
 
           this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
-            console.log(actions);
             let avails = this.utils.generateFirebaseKeyedValues(actions);
 
-            this.availabilities = avails;
-            this.availabilities.forEach(el => {
+            this.availabilities = avails.filter(res => res.booked === false);
+            this.mockAvailabilities.forEach(el => {
+              // let dateasint = parseInt(el.datetime);
               return (el.datetime = moment
                 .unix(el.datetime)
                 .format('ddd Do h:mm'));
@@ -139,6 +160,7 @@ export class HomePage {
         });
       } else {
         listItem.expanded = false;
+        this.availabilities = null;
       }
 
       return listItem;
