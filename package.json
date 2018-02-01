@@ -1,6 +1,6 @@
 {
   "name": "available-beauty",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Ionic Framework",
   "homepage": "http://ionicframework.com/",
   "private": true,
@@ -46,12 +46,20 @@
     "moment": "2.20.1",
     "rxjs": "5.4.3",
     "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.18"
+    "zone.js": "0.8.18",
+    "cordova-android": "~6.1.2",
+    "cordova-ios": "~4.3.1"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.0.1",
     "ionic": "3.19.1",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
 }

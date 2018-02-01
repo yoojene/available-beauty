@@ -69,12 +69,12 @@
                       </div>
                     </div>
                 </div>
-                <ion-list-header>
+                <ion-list-header no-padding>
                   {{availabilityHeader}}
                 </ion-list-header>
                 <ion-scroll scrollX="true">
                 <ion-col *ngFor="let avail of availabilities">
-                    <button ion-button outline small color="aubergine">
+                    <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
                       {{avail.datetime}}
                     </button>
                 </ion-col>

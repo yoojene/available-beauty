@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage, ModalController } from 'ionic-angular';
+import {
+  NavController,
+  IonicPage,
+  ModalController,
+  AlertController
+} from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
@@ -12,6 +17,7 @@ import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
+import { BookingProvider } from '../../providers/booking/booking';
 
 @IonicPage()
 @Component({
@@ -25,7 +31,7 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
-  itemExpandHeight: number = 300; // TODO: this needs to be dynamic based on device size
+  itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
 
   public stylists$: Observable<Stylist[]>;
   public stylist$: Observable<any>;
@@ -42,7 +48,9 @@ export class HomePage {
     private stylist: StylistProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
-    private utils: UtilsProvider
+    private utils: UtilsProvider,
+    private alertCtrl: AlertController,
+    private booking: BookingProvider
   ) {}
 
   ionViewDidLoad() {
@@ -167,5 +175,32 @@ export class HomePage {
 
       return listItem;
     });
+  }
+
+  public bookAvailability(avail) {
+    console.log(avail);
+
+    let bookingAlert = this.alertCtrl.create({
+      title: `Confirm Booking for ${avail.datetime}`,
+      message: 'Do you want to book this slot?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            console.log('Confirm booking clicked');
+            this.booking.makeBooking(avail.key); // TODO what should happen here MVP 1 are we actually booking
+          }
+        }
+      ]
+    });
+
+    bookingAlert.present();
   }
 }
