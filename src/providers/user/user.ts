@@ -31,6 +31,8 @@ export class UserProvider {
   public getUserById(id) {
     return this.afdb.object<User>(`userProfile/${id}`);
   }
+
+  // OLD *****
   /**
    * Add a new user
    *

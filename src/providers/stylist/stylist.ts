@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 
 import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { Review } from '../../model/review/review.model';
 
 @Injectable()
 export class StylistProvider {
@@ -104,6 +105,12 @@ export class StylistProvider {
     return this.afdb.database.ref().update({ key: value });
   }
 
+  getStylistReview(stylistId: any) {
+    console.log(stylistId);
+    return this.afdb.list<Review>(`stylistProfile/${stylistId}/reviews`);
+  }
+
+  // OLD *****
   /**
    * Create a new stylist
    *

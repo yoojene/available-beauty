@@ -11,6 +11,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { StylistProfilePage } from '../stylist-profile/stylist-profile';
+import { StylistReviewPage } from '../stylist-review/stylist-review';
 
 @IonicPage()
 @Component({
@@ -104,7 +105,6 @@ export class HomePage {
   openProfile(user) {
     console.log(user);
     console.log('opent da modal');
-    // this.events.publish('change-stylist-profile-tab', 1, 1, user);
     let profileModal = this.modalCtrl.create(StylistProfilePage, {
       user: user
     });
@@ -116,7 +116,19 @@ export class HomePage {
     profileModal.present();
   }
 
-  expandCard(user) {
+  openReviews(stylistId: any) {
+    let reviewModal = this.modalCtrl.create(StylistReviewPage, {
+      stylistId: stylistId
+    });
+
+    reviewModal.onDidDismiss(data => {
+      console.log('dismissed stylistReviewModal', data);
+    });
+
+    reviewModal.present();
+  }
+
+  expandCard(user: any) {
     this.users.map(listItem => {
       if (user == listItem) {
         listItem.expanded = !listItem.expanded;
@@ -139,9 +151,12 @@ export class HomePage {
             console.log(this.availabilities);
 
             this.availabilities.forEach(el => {
-              return (el.datetime = moment
-                .unix(el.datetime)
-                .format('ddd Do h:mm'));
+              // TODO group availabilities by day / month and display
+              return (
+                (el.day = moment.unix(el.datetime).format('ddd Do')) &&
+                (el.month = moment.unix(el.datetime).format('MMM')) &&
+                (el.datetime = moment.unix(el.datetime).format('ddd Do HH:mm'))
+              );
             });
           });
         });

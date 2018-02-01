@@ -19,11 +19,9 @@ export class StarRatingComponent implements AfterContentInit {
 
   constructor() {
     console.log('Hello StarRatingComponent Component');
-    this.text = 'Hello World';
   }
 
   ngAfterContentInit() {
-    console.log(this.rating);
     this.generateStarList(this.rating);
   }
 
@@ -31,10 +29,6 @@ export class StarRatingComponent implements AfterContentInit {
     let remainder = rating - Math.floor(rating);
 
     let whole = Math.floor(rating);
-
-    console.log(remainder);
-
-    console.log(whole);
 
     this.remainder = remainder;
 
