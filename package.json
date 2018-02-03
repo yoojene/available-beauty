@@ -1,8 +1,9 @@
 {
   "name": "available-beauty",
   "version": "0.0.3",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Eugene Cross",
+  "homepage": "http://availablebeauty.com/",
+  "email": "siteadmin@availablebeauty.com",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -55,11 +56,9 @@
     "ionic": "3.19.1",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project",
+  "description":
+    "An app to find salons, stylists and hairdressers available now and close to you",
   "cordova": {
-    "platforms": [
-      "android",
-      "ios"
-    ]
+    "platforms": ["android", "ios"]
   }
 }
