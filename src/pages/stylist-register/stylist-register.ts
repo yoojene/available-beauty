@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   IonicPage,
   NavController,
@@ -20,6 +20,7 @@ import { PhotoProvider } from '../../providers/photo/photo';
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
+import { Slides } from 'ionic-angular';
 
 /**
  * Generated class for the StylistRegisterPage page.
@@ -34,8 +35,10 @@ import 'rxjs/add/operator/takeLast';
   templateUrl: 'stylist-register.html'
 })
 export class StylistRegisterPage {
+  @ViewChild(Slides) slides: Slides;
   public pageSubheader = 'Enter details for your Salon or business here';
   public stylistNameLabel = 'Stylist Name';
+  public stylistHeaderLabel = 'Enter a Salon or Stylist name';
   public bioLabel = 'Write a few details here about your salon';
   public phoneNumberLabel = 'Telephone Number';
   public locationLabel = 'Where are you located?';
@@ -94,6 +97,9 @@ export class StylistRegisterPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StylistRegisterPage');
+
+    this.slides.lockSwipeToNext(true);
+    this.slides.lockSwipeToPrev(true);
     this.showAddressForm = false;
     this.stylistRegForm.get('mobile').valueChanges.subscribe(val => {
       this.showMobileRange = val;
@@ -316,5 +322,50 @@ export class StylistRegisterPage {
 
   goBack() {
     this.navCtrl.push('LoginPage');
+  }
+
+  // Slides
+
+  next() {
+    this.slides.lockSwipeToNext(false);
+    this.slides.slideNext();
+    this.slides.lockSwipeToNext(true);
+  }
+
+  back() {
+    this.slides.lockSwipeToPrev(false);
+    this.slides.slidePrev();
+    this.slides.lockSwipeToPrev(true);
+  }
+
+  setMobile(value) {
+    this.stylistRegForm.controls['mobile'].setValue(value);
+  }
+
+  takePhoto() {
+    this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
+      console.log(res);
+      this.photo.getBase64Data(res).then(baseres => {
+        this.photo.pushPhotoToStorage(baseres).then(stores => {
+          console.log(stores[0]);
+          this.monitorUploadProgress(stores[0]);
+        });
+      });
+    });
+  }
+
+  selectPhoto() {
+    this.photo.getLibraryPictures().then(res => {
+      let photos: any = res;
+      photos.forEach(el => {
+        this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
+          console.log(baseress);
+          this.photo.pushPhotoToStorage(baseress).then(stores => {
+            console.log(stores[0]);
+            this.monitorUploadProgress(stores[0]);
+          });
+        });
+      });
+    });
   }
 }

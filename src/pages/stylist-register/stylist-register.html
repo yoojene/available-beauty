@@ -7,17 +7,132 @@
 <ion-header>
 
   <ion-navbar hideBackButton="true">
-    <ion-title> Stylist Profile </ion-title>
+    <ion-title> {{pageSubheader}} </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <button ion-button clear color="aubergine" (click)="back()"> Back</button>
 
+  <form [formGroup]="stylistRegForm" (submit)="onSubmitStylistRegForm()">
+<!-- <h2>{{pageSubheader}}</h2> -->
+  <ion-slides>
+    <ion-slide class="stylist-reg-slide">
+      <h3> {{stylistHeaderLabel}} </h3>
+      <ion-item>
+        <ion-input formControlName="stylistName" type="text" placeholder="{{stylistNameLabel}}">
+        </ion-input>
+      </ion-item>
+    </ion-slide>
+    <ion-slide class="stylist-reg-slide">
+      <h3> {{bioLabel}} </h3>
+      <ion-textarea formControlName="bio" type="text" placeholder="war and peace goes here">
+      </ion-textarea>
+    </ion-slide>
+    <ion-slide class="stylist-reg-slide">
+      <h3> {{phoneNumberLabel}} </h3>
+      <ion-label>
+        <ion-icon name="call"></ion-icon>
+      </ion-label>
+      <ion-input formControlName="phoneNumber" type="number" placeholder="{{phoneNumberLabel}}">
+      </ion-input>
+    </ion-slide>
+    <ion-slide  class="stylist-reg-slide">
+      <!-- <ion-item-divider> -->
+       <h3> {{locationLabel}}</h3>
+      <!-- </ion-item-divider> -->
+      <button text-center ion-item icon-start detail-none (click)="useCurrentAddress()" type="button">
+        <ion-icon name="locate"></ion-icon> {{useMyCurrentLocationLabel}}
+      </button>
+      <div text-center> {{orLabel}} </div>
+      <ion-item>
+        <ion-label text-center floating>{{enterLocationLabel}}</ion-label>
+        <ion-input formControlName="locationLookup" type="text">
+        </ion-input>
+        <button ion-button icon-only small item-end type="button" (click)="findAddress()" color="aubergine">
+          <ion-icon name="search">
+          </ion-icon>
+          </button>
+      </ion-item>
+      <div *ngIf="showAddressForm">
+        <ion-item>
+          <ion-label floating>{{addressLine1Label}}</ion-label>
+          <ion-input formControlName="addressLine1" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressLine2Label}}</ion-label>
+          <ion-input formControlName="addressLine2" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressTownCityLabel}}</ion-label>
+          <ion-input formControlName="addressTownCity" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressCountyLabel}}</ion-label>
+          <ion-input formControlName="addressCounty" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressPostcodeLabel}}</ion-label>
+          <ion-input formControlName="addressPostcode" type="text">
+          </ion-input>
+        </ion-item>
+      </div>
+
+    </ion-slide>
+    <ion-slide class="stylist-reg-slide">
+      <h2>{{mobileLabel}}</h2>
+      <!-- <ion-item> -->
+        <!-- <ion-label>{{mobileLabel}}</ion-label> -->
+        <!-- <ion-toggle formControlName="mobile">
+        </ion-toggle> -->
+
+        <ion-buttons>
+  <button round ion-button outline type="button" (click)="setMobile(true)" color="aubergine">
+    Yes
+  </button>
+  <button round ion-button outline type="button"(click)="setMobile(false)" color="aubergine">
+    No
+  </button>
+        </ion-buttons>
+
+      <!-- </ion-item> -->
+      <ion-item *ngIf="showMobileRange">
+        <ion-label stacked>{{mobileRangeLabel}}</ion-label>
+        <ion-input formControlName="mobileRange" type="number" placeholder="{{mobileRangePlaceholder}}">
+        </ion-input>
+      </ion-item>
+    </ion-slide>
+    <ion-slide>
+      <img src="assets/img/390.jpg">
+      <!-- <ion-item>
+        <ion-label>{{loadImagesLabel}}</ion-label>
+        <ion-toggle formControlName="loadImages">
+        </ion-toggle>
+
+      </ion-item> -->
+      <h2>{{loadImagesLabel}}</h2>
+
+      <button block round ion-button outline type="button" (click)="selectPhoto()" color="aubergine">
+        Choose Photo
+      </button>
+      <button block round ion-button outline type="button" (click)="takePhoto()" color="aubergine">
+        Take Photo
+      </button>
+      <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
+      </progress-bar>
+
+    </ion-slide>
+  </ion-slides>
+</form>
 
   <!-- Sign up your Salon or business here -->
-  <form
+  <!-- <form
   [formGroup]="stylistRegForm"
   (submit)="onSubmitStylistRegForm()">
 
@@ -107,10 +222,14 @@ color="tonal">
 Register
 </button>
 
-  </form>
+  </form> -->
 
-  <button ion-button (click)="goBack()">
+  <!-- <button ion-button (click)="goBack()">
     Go back
+  </button> -->
+
+  <button block round ion-button (click)="next()" color="aubergine">
+   Next
   </button>
 
 
