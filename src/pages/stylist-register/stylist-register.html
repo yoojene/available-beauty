@@ -7,17 +7,20 @@
 <ion-header>
 
   <ion-navbar hideBackButton="true">
+        <ion-buttons start *ngIf=!slides.isBeginning()>
+<button ion-button clear color="aubergine" (click)="back()"> Back</button>
+        </ion-buttons>
     <ion-title> {{pageSubheader}} </ion-title>
+    <ion-buttons end>
+          <button ion-button clear color="aubergine" (click)="next()">Skip</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <button ion-button clear color="aubergine" (click)="back()"> Back</button>
-
   <form [formGroup]="stylistRegForm" (submit)="onSubmitStylistRegForm()">
-<!-- <h2>{{pageSubheader}}</h2> -->
   <ion-slides>
     <ion-slide class="stylist-reg-slide">
       <h3> {{stylistHeaderLabel}} </h3>
@@ -36,8 +39,9 @@
       <ion-label>
         <ion-icon name="call"></ion-icon>
       </ion-label>
-      <ion-input formControlName="phoneNumber" type="number" placeholder="{{phoneNumberLabel}}">
+      <ion-input formControlName="phoneNumber" type="text" placeholder="{{phoneNumberLabel}}">
       </ion-input>
+      <!-- <div *ngIf="stylistRegForm.get('phoneNumber').hasError('invalidPhone')"> Invalid phone number</div> -->
     </ion-slide>
     <ion-slide  class="stylist-reg-slide">
       <!-- <ion-item-divider> -->

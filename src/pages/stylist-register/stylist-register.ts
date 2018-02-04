@@ -9,6 +9,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
 import { StylistProvider } from '../../providers/stylist/stylist';
 
+import { PhoneNumberValidator } from '../../validators/phone-number.validators';
+
 import {
   NativeGeocoderReverseResult,
   NativeGeocoderForwardResult
@@ -78,7 +80,10 @@ export class StylistRegisterPage {
     public afdb: AngularFireDatabase
   ) {
     this.stylistRegForm = formBuilder.group({
-      phoneNumber: ['', Validators.required],
+      phoneNumber: [
+        '',
+        [Validators.required, PhoneNumberValidator.isPhoneNumber]
+      ],
       stylistName: ['', Validators.required],
       isMyLocation: [true, Validators.required],
       locationLookup: [''],
