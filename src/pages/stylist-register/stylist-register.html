@@ -21,7 +21,7 @@
 
 <ion-content padding>
   <form [formGroup]="stylistRegForm" (submit)="onSubmitStylistRegForm()">
-  <ion-slides>
+  <ion-slides (ionSlideDidChange)="onSlideChange($event)">
     <ion-slide class="stylist-reg-slide">
       <h3> {{stylistHeaderLabel}} </h3>
       <ion-item>
@@ -232,7 +232,7 @@ Register
     Go back
   </button> -->
 
-  <button block round ion-button (click)="next()" color="aubergine">
+  <button block round ion-button (click)="next()" color="aubergine" [disabled]="checkDisabled()">
    Next
   </button>
 

@@ -67,6 +67,8 @@ export class StylistRegisterPage {
   public downloadUrls: Array<any> = [];
   public stylistKey: any;
 
+  private activeSlideIdx: any = 0;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -93,7 +95,7 @@ export class StylistRegisterPage {
       addressTownCity: ['', Validators.required],
       addressCounty: ['', Validators.required],
       addressPostcode: ['', Validators.required],
-      bio: [''],
+      bio: ['', Validators.required],
       mobile: [false, Validators.required],
       mobileRange: [''],
       loadImages: [false, Validators.required]
@@ -343,6 +345,14 @@ export class StylistRegisterPage {
     this.slides.lockSwipeToPrev(true);
   }
 
+  onSlideChange(e) {
+    // console.log(e);
+
+    console.log(this.slides.getActiveIndex());
+
+    this.activeSlideIdx = this.slides.getActiveIndex();
+  }
+
   setMobile(value) {
     this.stylistRegForm.controls['mobile'].setValue(value);
   }
@@ -372,5 +382,44 @@ export class StylistRegisterPage {
         });
       });
     });
+  }
+
+  checkDisabled() {
+    let required = false;
+
+    switch (this.activeSlideIdx) {
+      case 0:
+        if (this.stylistRegForm.get('stylistName').errors) {
+          required = this.stylistRegForm.get('stylistName').errors.required
+            ? true
+            : false;
+        }
+        break;
+      case 1:
+        if (this.stylistRegForm.get('bio').errors) {
+          required = this.stylistRegForm.get('bio').errors.required
+            ? true
+            : false;
+        }
+        break;
+      case 2:
+        if (this.stylistRegForm.get('phoneNumber').errors) {
+          required = this.stylistRegForm.get('phoneNumber').errors
+            ? true
+            : false;
+        }
+        break;
+      case 3: // Location
+        break;
+      case 4: // Mobile Stylist
+        break;
+      case 5: // Gallery Images
+        break;
+    }
+    // console.log(this.stylistRegForm.get('stylistName').errors);
+
+    // console.log(this.stylistRegForm.get('stylistName').errors);
+    return required;
+    // return false;
   }
 }
