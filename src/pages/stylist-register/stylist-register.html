@@ -5,19 +5,137 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar hideBackButton="true">
-    <ion-title> Stylist Profile </ion-title>
+      <ion-buttons start *ngIf=!slides.isBeginning()>
+        <button ion-button clear color="aubergine" (click)="back()"> Back</button>
+      </ion-buttons>
+      <ion-title>
+      </ion-title>
+  <!-- <ion-buttons end>
+        <button ion-button clear color="aubergine" (click)="next()">Skip</button>
+  </ion-buttons> -->
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
+  <form [formGroup]="stylistRegForm" (submit)="onSubmitStylistRegForm()">
+  <ion-slides (ionSlideDidChange)="onSlideChange($event)">
+    <ion-slide class="page-stylist-register--stylist-reg-slide">
+      <h3> {{pageSubheader}} </h3>
+    </ion-slide>
+    <ion-slide class="page-stylist-register--stylist-reg-slide">
+      <h3> {{stylistHeaderLabel}} </h3>
+      <ion-item>
+        <ion-input formControlName="stylistName" type="text" placeholder="{{stylistNameLabel}}">
+        </ion-input>
+      </ion-item>
+    </ion-slide>
+    <ion-slide class="page-stylist-register--stylist-reg-slide">
+      <h3> {{bioLabel}} </h3>
+      <ion-textarea formControlName="bio" type="text" placeholder="{{bioPlaceholder}}">
+      </ion-textarea>
+    </ion-slide>
+    <ion-slide class="page-stylist-register--stylist-reg-slide">
+      <h3> {{phoneNumberLabel}} </h3>
+      <ion-label>
+        <ion-icon name="call"></ion-icon>
+      </ion-label>
+      <ion-input formControlName="phoneNumber" type="text" placeholder="{{phoneNumberLabel}}">
+      </ion-input>
+      <!-- <div *ngIf="stylistRegForm.get('phoneNumber').hasError('invalidPhone')"> Invalid phone number</div> -->
+    </ion-slide>
+    <ion-slide  class="page-stylist-register--stylist-reg-slide">
+       <h3> {{locationLabel}}</h3>
+      <button text-center ion-item icon-start detail-none (click)="useCurrentAddress()" type="button">
+        <ion-icon class="page-stylist-register--locate" name="locate"></ion-icon> {{useMyCurrentLocationLabel}}
+      </button>
+      <div text-center> {{orLabel}} </div>
+      <ion-item>
+        <ion-label text-center floating>{{enterLocationLabel}}</ion-label>
+        <ion-input formControlName="locationLookup" type="text">
+        </ion-input>
+        <button ion-button icon-only small item-end type="button" (click)="findAddress()" color="aubergine">
+          <ion-icon name="search">
+          </ion-icon>
+          </button>
+      </ion-item>
+      <div *ngIf="showAddressForm">
+        <ion-item>
+          <ion-label floating>{{addressLine1Label}}</ion-label>
+          <ion-input formControlName="addressLine1" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressLine2Label}}</ion-label>
+          <ion-input formControlName="addressLine2" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressTownCityLabel}}</ion-label>
+          <ion-input formControlName="addressTownCity" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressCountyLabel}}</ion-label>
+          <ion-input formControlName="addressCounty" type="text">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>{{addressPostcodeLabel}}</ion-label>
+          <ion-input formControlName="addressPostcode" type="text">
+          </ion-input>
+        </ion-item>
+      </div>
+    </ion-slide>
+    <ion-slide class="page-stylist-register--stylist-reg-slide">
+      <h2>{{mobileLabel}}</h2>
+        <ion-buttons>
+          <button round ion-button outline type="button" (click)="setMobile(true)" [class.activated]="stylistRegForm.get('mobile').value === true" color="aubergine">
+            {{yesButtonText}}
+          </button>
+          <button round ion-button outline type="button"(click)="setMobile(false)" color="aubergine">
+            {{noButtonText}}
+          </button>
+        </ion-buttons>
+        <br>
+        <div *ngIf="showMobileRange">
+          <h5> {{mobileRangeLabel}}</h5>
+          <ion-item>
+            <ion-input formControlName="mobileRange" type="number" placeholder="{{mobileRangePlaceholder}}">
+            </ion-input>
+          </ion-item>
+        </div>
 
+    </ion-slide>
+    <ion-slide>
+      <img src="assets/img/390.jpg">
+      <!-- <ion-item>
+        <ion-label>{{loadImagesLabel}}</ion-label>
+        <ion-toggle formControlName="loadImages">
+        </ion-toggle>
+
+      </ion-item> -->
+      <h2>{{loadImagesLabel}}</h2>
+
+      <button block round ion-button outline type="button" (click)="selectPhoto()" color="aubergine">
+        {{choosePhotoButtonText}}
+      </button>
+      <button block round ion-button outline type="button" (click)="takePhoto()" color="aubergine">
+        {{useCameraButtonText}}
+      </button>
+      <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
+      </progress-bar>
+
+    </ion-slide>
+  </ion-slides>
+
+  <button *ngIf="activeSlideIdx === 6" ion-button block round color="aubergine">
+     {{nextButtonText}} - Actuall submit
+  </button>
+</form>
 
   <!-- Sign up your Salon or business here -->
-  <form
+  <!-- <form
   [formGroup]="stylistRegForm"
   (submit)="onSubmitStylistRegForm()">
 
@@ -38,9 +156,7 @@
     <ion-input formControlName="phoneNumber" type="number" placeholder="{{phoneNumberLabel}}">
     </ion-input>
   </ion-item>
-  <ion-item-divider>
      {{locationLabel}}
-  </ion-item-divider>
   <button text-center ion-item icon-start detail-none (click)="useCurrentAddress()" type="button">
     <ion-icon name="locate"></ion-icon> {{useMyCurrentLocationLabel}}
   </button>
@@ -106,10 +222,14 @@ color="tonal">
 Register
 </button>
 
-  </form>
+  </form> -->
 
-  <button ion-button (click)="goBack()">
+  <!-- <button ion-button (click)="goBack()">
     Go back
+  </button> -->
+
+  <button *ngIf="activeSlideIdx !== 6" block round ion-button (click)="next()" color="aubergine" [disabled]="checkDisabled()">
+   {{nextButtonText}}
   </button>
 
 

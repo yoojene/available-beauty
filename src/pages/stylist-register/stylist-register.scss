@@ -1,3 +1,26 @@
 page-stylist-register {
+  .page-stylist-register {
+    &--stylist-reg-slide {
+      padding-top: 50%;
+      text-align: center;
+    }
 
+    &--locate {
+      padding-top: 5px;
+    }
+  }
+
+  ion-item.item-md.item-block > .item-inner {
+    border-bottom: none;
+  }
+  ion-item.item-ios.item-block > .item-inner {
+    border-bottom: none;
+  }
+
+  ion-input > input {
+    text-align: center;
+  }
+  ion-textarea > textarea {
+    text-align: center;
+  }
 }

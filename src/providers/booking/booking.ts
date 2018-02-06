@@ -47,7 +47,7 @@ export class BookingProvider {
 
     let bookingPayload = {};
     bookingPayload[`/booking/${bookingKey}`] = bookingData;
-    bookingPayload[`/availability/${availId}/booked`] = true;
+    // bookingPayload[`/availability/${availId}/booked`] = true;
 
     return this.afdb.database
       .ref()

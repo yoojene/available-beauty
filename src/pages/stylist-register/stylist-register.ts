@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   IonicPage,
   NavController,
@@ -8,6 +8,8 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
 import { StylistProvider } from '../../providers/stylist/stylist';
+
+import { PhoneNumberValidator } from '../../validators/phone-number.validators';
 
 import {
   NativeGeocoderReverseResult,
@@ -20,6 +22,7 @@ import { PhotoProvider } from '../../providers/photo/photo';
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
+import { Slides } from 'ionic-angular';
 
 /**
  * Generated class for the StylistRegisterPage page.
@@ -34,9 +37,12 @@ import 'rxjs/add/operator/takeLast';
   templateUrl: 'stylist-register.html'
 })
 export class StylistRegisterPage {
-  public pageSubheader = 'Enter details for your Salon or business here';
+  @ViewChild(Slides) slides: Slides;
+  public pageSubheader = 'OK, please now enter some details to set up your profile..';
   public stylistNameLabel = 'Stylist Name';
-  public bioLabel = 'Write a few details here about your salon';
+  public stylistHeaderLabel = 'Enter a Salon or Stylist name';
+  public bioLabel = 'A short description of your business and what you offer';
+  public bioPlaceholder = 'Write a few details here';
   public phoneNumberLabel = 'Telephone Number';
   public locationLabel = 'Where are you located?';
   public useMyCurrentLocationLabel = 'Use My Current';
@@ -54,6 +60,12 @@ export class StylistRegisterPage {
   public mobileRangePlaceholder = 'Enter in miles';
   public loadImagesLabel = 'Upload gallery images now?';
   public orLabel = 'Or';
+  public nextButtonText = 'Next';
+  public yesButtonText = 'Yes';
+  public noButtonText = 'No';
+  public choosePhotoButtonText = 'Choose Photo';
+  public useCameraButtonText = 'Take Photo';
+  public finishButtonText = 'Finish';
   public stylistRegForm: any;
   public showMobileRange: boolean;
   public showAddressForm: boolean;
@@ -61,6 +73,8 @@ export class StylistRegisterPage {
   public loadProgress: any = 0;
   public downloadUrls: Array<any> = [];
   public stylistKey: any;
+
+  public activeSlideIdx: any = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -75,7 +89,10 @@ export class StylistRegisterPage {
     public afdb: AngularFireDatabase
   ) {
     this.stylistRegForm = formBuilder.group({
-      phoneNumber: ['', Validators.required],
+      phoneNumber: [
+        '',
+        [Validators.required, PhoneNumberValidator.isPhoneNumber]
+      ],
       stylistName: ['', Validators.required],
       isMyLocation: [true, Validators.required],
       locationLookup: [''],
@@ -85,7 +102,7 @@ export class StylistRegisterPage {
       addressTownCity: ['', Validators.required],
       addressCounty: ['', Validators.required],
       addressPostcode: ['', Validators.required],
-      bio: [''],
+      bio: ['', Validators.required],
       mobile: [false, Validators.required],
       mobileRange: [''],
       loadImages: [false, Validators.required]
@@ -94,6 +111,9 @@ export class StylistRegisterPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad StylistRegisterPage');
+
+    this.slides.lockSwipeToNext(true);
+    this.slides.lockSwipeToPrev(true);
     this.showAddressForm = false;
     this.stylistRegForm.get('mobile').valueChanges.subscribe(val => {
       this.showMobileRange = val;
@@ -316,5 +336,96 @@ export class StylistRegisterPage {
 
   goBack() {
     this.navCtrl.push('LoginPage');
+  }
+
+  // Slides
+
+  next() {
+    this.slides.lockSwipeToNext(false);
+    this.slides.slideNext();
+    this.slides.lockSwipeToNext(true);
+  }
+
+  back() {
+    this.slides.lockSwipeToPrev(false);
+    this.slides.slidePrev();
+    this.slides.lockSwipeToPrev(true);
+  }
+
+  onSlideChange(e) {
+    // console.log(e);
+
+    console.log(this.slides.getActiveIndex());
+
+    this.activeSlideIdx = this.slides.getActiveIndex();
+  }
+
+  setMobile(value) {
+    this.stylistRegForm.controls['mobile'].setValue(value);
+  }
+
+  takePhoto() {
+    this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
+      console.log(res);
+      this.photo.getBase64Data(res).then(baseres => {
+        this.photo.pushPhotoToStorage(baseres).then(stores => {
+          console.log(stores[0]);
+          this.monitorUploadProgress(stores[0]);
+        });
+      });
+    });
+  }
+
+  selectPhoto() {
+    this.photo.getLibraryPictures().then(res => {
+      let photos: any = res;
+      photos.forEach(el => {
+        this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
+          console.log(baseress);
+          this.photo.pushPhotoToStorage(baseress).then(stores => {
+            console.log(stores[0]);
+            this.monitorUploadProgress(stores[0]);
+          });
+        });
+      });
+    });
+  }
+
+  checkDisabled() {
+    let required = false;
+
+    switch (this.activeSlideIdx) {
+      case 0:
+        break;
+      case 1:
+        if (this.stylistRegForm.get('stylistName').errors) {
+          required = this.stylistRegForm.get('stylistName').errors.required
+            ? true
+            : false;
+        }
+        break;
+      case 2:
+        if (this.stylistRegForm.get('bio').errors) {
+          required = this.stylistRegForm.get('bio').errors.required
+            ? true
+            : false;
+        }
+        break;
+      case 3:
+        if (this.stylistRegForm.get('phoneNumber').errors) {
+          required = this.stylistRegForm.get('phoneNumber').errors
+            ? true
+            : false;
+        }
+        break;
+      case 4: // Location
+        break;
+      case 5: // Mobile Stylist
+        break;
+      case 6: // Gallery Images
+        break;
+    }
+
+    return required;
   }
 }
