@@ -38,10 +38,11 @@ import { Slides } from 'ionic-angular';
 })
 export class StylistRegisterPage {
   @ViewChild(Slides) slides: Slides;
-  public pageSubheader = 'Enter details for your Salon or business here';
+  public pageSubheader = 'OK, please now enter some details to set up your profile..';
   public stylistNameLabel = 'Stylist Name';
   public stylistHeaderLabel = 'Enter a Salon or Stylist name';
-  public bioLabel = 'Write a few details here about your salon';
+  public bioLabel = 'A short description of your business and what you offer';
+  public bioPlaceholder = 'Write a few details here';
   public phoneNumberLabel = 'Telephone Number';
   public locationLabel = 'Where are you located?';
   public useMyCurrentLocationLabel = 'Use My Current';
@@ -59,6 +60,12 @@ export class StylistRegisterPage {
   public mobileRangePlaceholder = 'Enter in miles';
   public loadImagesLabel = 'Upload gallery images now?';
   public orLabel = 'Or';
+  public nextButtonText = 'Next';
+  public yesButtonText = 'Yes';
+  public noButtonText = 'No';
+  public choosePhotoButtonText = 'Choose Photo';
+  public useCameraButtonText = 'Take Photo';
+  public finishButtonText = 'Finish';
   public stylistRegForm: any;
   public showMobileRange: boolean;
   public showAddressForm: boolean;
@@ -67,7 +74,7 @@ export class StylistRegisterPage {
   public downloadUrls: Array<any> = [];
   public stylistKey: any;
 
-  private activeSlideIdx: any = 0;
+  public activeSlideIdx: any = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -389,37 +396,36 @@ export class StylistRegisterPage {
 
     switch (this.activeSlideIdx) {
       case 0:
+        break;
+      case 1:
         if (this.stylistRegForm.get('stylistName').errors) {
           required = this.stylistRegForm.get('stylistName').errors.required
             ? true
             : false;
         }
         break;
-      case 1:
+      case 2:
         if (this.stylistRegForm.get('bio').errors) {
           required = this.stylistRegForm.get('bio').errors.required
             ? true
             : false;
         }
         break;
-      case 2:
+      case 3:
         if (this.stylistRegForm.get('phoneNumber').errors) {
           required = this.stylistRegForm.get('phoneNumber').errors
             ? true
             : false;
         }
         break;
-      case 3: // Location
+      case 4: // Location
         break;
-      case 4: // Mobile Stylist
+      case 5: // Mobile Stylist
         break;
-      case 5: // Gallery Images
+      case 6: // Gallery Images
         break;
     }
-    // console.log(this.stylistRegForm.get('stylistName').errors);
 
-    // console.log(this.stylistRegForm.get('stylistName').errors);
     return required;
-    // return false;
   }
 }

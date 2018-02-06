@@ -1,7 +1,13 @@
 page-stylist-register {
-  .stylist-reg-slide {
-    padding-top: 50%;
-    text-align: center;
+  .page-stylist-register {
+    &--stylist-reg-slide {
+      padding-top: 50%;
+      text-align: center;
+    }
+
+    &--locate {
+      padding-top: 5px;
+    }
   }
 
   ion-item.item-md.item-block > .item-inner {
