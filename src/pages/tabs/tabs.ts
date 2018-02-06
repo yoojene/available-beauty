@@ -15,6 +15,8 @@ import {
   Events,
   Tabs
 } from 'ionic-angular';
+import { StorageProvider } from '../../providers/storage/storage';
+import { AvailabilityPage } from '../availability/availability';
 
 @IonicPage()
 @Component({
@@ -27,8 +29,12 @@ export class TabsPage {
   showTabs: boolean;
   showkeyboard: boolean;
 
-  tab1Root: any = HomePage;
-  // tab2Root: any = StylistProfilePage;
+  tab1Root: any;
+  tab1Title: any;
+  tabTitle: any;
+  tabIcon: any;
+  tab1Icon: any;
+
   tab3Root: any = BookingsPage;
   tab4Root: any = UserProfilePage;
   tab1Params = { id: 0 };
@@ -41,8 +47,25 @@ export class TabsPage {
     private navParams: NavParams,
     // private keyboard: Keyboard,
     private navCtrl: NavController,
-    private events: Events
+    private events: Events,
+    private storage: StorageProvider
   ) {
+    let param = navParams.get('isStylist');
+    console.log(param);
+    if (param) {
+      this.tab1Root = AvailabilityPage;
+      this.tab1Title = 'Availability';
+      this.tabTitle = this.tab1Title;
+      this.tab1Icon = 'calendar';
+      this.tabIcon = this.tab1Icon;
+    } else {
+      this.tab1Root = HomePage;
+      this.tab1Title = 'Search';
+      this.tabTitle = this.tab1Title;
+      this.tab1Icon = 'search';
+      this.tabIcon = this.tab1Icon;
+    }
+
     // events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
     //   this.tab2Params.id = id;
     //   this.tab2Params.user = param;

@@ -219,7 +219,7 @@ export class StylistRegisterPage {
       //   .updateStylistProfile('galleryImages', this.downloadUrls)
       //   .then(res => {
       console.log('updated image refs');
-      this.navCtrl.push('TabsPage');
+      this.navCtrl.push('TabsPage', { isStylist: true });
       // });
     });
   }
