@@ -89,7 +89,7 @@ export class BookingsPage {
         let availIds = [];
 
         // Parse out the availabilityIds from the bookings
-        res.forEach(el => {
+        res.forEach((el: any) => {
           return availIds.push(el.availabilityId);
         });
 
@@ -105,7 +105,8 @@ export class BookingsPage {
             .valueChanges()
             .subscribe(res => {
               console.log(res);
-              res.forEach(el => {
+              res.forEach((el: any) => {
+                // let res: any = el;
                 console.log(el);
                 if (el.booked === true) {
                   console.log('found booked');
@@ -116,7 +117,7 @@ export class BookingsPage {
               return this.stylist
                 .getStylistById(this.bookedavailabilty)
                 .valueChanges()
-                .subscribe(res => {
+                .subscribe((res: any) => {
                   this.bookedstylist = res;
                   // this.mybookings.push(this.bookedstylist);
 

@@ -52,7 +52,7 @@ export class AvailabilityProvider {
         .valueChanges()
         .subscribe(res => {
           console.log(res);
-          res.forEach(el => {
+          res.forEach((el: any) => {
             console.log(el);
             console.log(el.booked);
             if (el.booked === true) {

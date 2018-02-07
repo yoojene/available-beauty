@@ -5,7 +5,7 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "assets/imgs/AB_logo.png",
+      "src": "assets/img/AB_logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }
