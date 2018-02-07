@@ -50,6 +50,7 @@ export class UserProfilePage {
   }
 
   doLogOut() {
+    console.log('sign out valled');
     this.afauth.auth.signOut();
   }
 }

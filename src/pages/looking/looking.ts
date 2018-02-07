@@ -85,7 +85,7 @@ export class LookingPage {
   }
 
   goToHome() {
-    this.navCtrl.push('TabsPage', { isStylist: false });
+    this.navCtrl.push('TabsPage', { isStylist: true });
   }
 
   setDisabled(option, optionobj) {

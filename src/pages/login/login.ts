@@ -42,6 +42,7 @@ export class LoginPage {
   public error: string;
   private loginType: string;
   private isStylist: boolean;
+  private stylistRegistered: boolean = false;
 
   constructor(
     public store: Store<AppState>,
@@ -71,6 +72,9 @@ export class LoginPage {
     console.log(this.navParams.get('loginType'));
 
     this.loginType = this.navParams.get('loginType');
+    this.storage
+      .getStorage('stylistRegistered')
+      .subscribe(res => (this.stylistRegistered = res));
 
     switch (this.loginType) {
       case 'Looking':
@@ -102,7 +106,8 @@ export class LoginPage {
         res => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('LookingPage');
+          // this.navCtrl.push('LookingPage');
+          this.navCtrl.push('TabsPage', { isStylist: true });
         },
         err => {
           loading.dismiss();
@@ -124,7 +129,8 @@ export class LoginPage {
         .then(res => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('LookingPage');
+          // this.navCtrl.push('LookingPage');
+          this.setNavigationPage(this.isStylist);
         })
         .catch(err => {
           console.error(err);
@@ -144,7 +150,6 @@ export class LoginPage {
         .then(res => {
           loading.dismiss();
           console.log(res);
-          // this.navCtrl.push('LookingPage');
           this.setNavigationPage(this.isStylist);
         })
         .catch(err => {
@@ -164,7 +169,7 @@ export class LoginPage {
         (res: TwitterConnectResponse) => {
           console.log(res);
           loading.dismiss();
-          this.navCtrl.push('LookingPage');
+          this.setNavigationPage(this.isStylist);
         },
         err => {
           loading.dismiss();
@@ -202,9 +207,16 @@ export class LoginPage {
 
   private setNavigationPage(stylist) {
     if (!stylist) {
+      // A regular user
       return this.navCtrl.push('LookingPage');
     } else {
-      return this.navCtrl.push('StylistRegisterPage');
+      // A first time stylist login
+      if (this.stylistRegistered) {
+        this.navCtrl.push('TabsPage', { isStylist: true });
+      } else {
+        // subsequent stylist logins
+        return this.navCtrl.push('StylistRegisterPage');
+      }
     }
   }
 }

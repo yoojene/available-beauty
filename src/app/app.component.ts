@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Platform, NavController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -17,7 +17,9 @@ import { StorageProvider } from '../providers/storage/storage';
   templateUrl: 'app.html'
 })
 export class AvailableBeautyApp {
+  @ViewChild('#myNav') nav: NavController;
   rootPage: string = 'LandingPage'; // This needs to be updated once logged in / registered to be TabsPage
+  stylistParam: any;
 
   lat: number;
   long: number;
@@ -51,12 +53,31 @@ export class AvailableBeautyApp {
         // Unauthenticated state
         this.rootPage = 'LandingPage';
       } else {
+        // let stylistObs = this.storage.getStorage('isStylist');
+
+        // let stylistRegObs = this.storage.getStorage('stylistRegistered');
+
+        // stylistObs.flatMap(res => stylistRegObs).subscribe(res => {
+        //   console.log(res);
+        // }
         // Check if is Stylist or User
         this.storage.getStorage('isStylist').subscribe(res => {
-          if (res) {
-            this.rootPage = 'StylistRegisterPage';
-          } else {
+          console.log(res);
+          if (!res) {
+            console.log(res);
             this.rootPage = 'LookingPage';
+          } else {
+            this.storage.getStorage('stylistRegistered').subscribe(reg => {
+              console.log(reg);
+              if (reg) {
+                this.rootPage = 'TabsPage';
+                // this.nav.setRoot('TabsPage', {
+                //   isStylist: true
+                // });
+              } else {
+                this.rootPage = 'StylistRegisterPage';
+              }
+            });
           }
         });
       }

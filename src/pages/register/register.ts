@@ -98,7 +98,7 @@ export class RegisterPage {
             if (res) {
               this.navCtrl.push('StylistRegisterPage');
             } else {
-              this.navCtrl.push('TabsPage');
+              this.navCtrl.push('TabsPage', { isStylist: user.isStylist });
             }
           });
         })

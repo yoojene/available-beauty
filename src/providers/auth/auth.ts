@@ -327,10 +327,10 @@ export class AuthProvider {
           name: userParam.displayName,
           emailAddress: userParam.email,
           avatarImage: userParam.photoURL,
-          phoneNumber: null, // dummy
+          phoneNumber: null,
           homeLocation: this.geolocation,
           isStylist: stylist
-        };
+        }; // dummy
 
         console.log(userProfile);
 
