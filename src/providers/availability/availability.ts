@@ -5,6 +5,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { StylistProvider } from '../stylist/stylist';
 import { Observable } from 'rxjs/Observable';
+import * as moment from 'moment';
 
 @Injectable()
 export class AvailabilityProvider {
@@ -88,5 +89,30 @@ export class AvailabilityProvider {
     });
 
     console.log(result);
+  }
+  /**
+   * Create stylist availability slots
+   *
+   * @param {any} startTime - 8:30
+   * @param {any} format - HH:mm
+   * @param {any} interval - 30
+   * @param {any} unit -  m
+   * @param {any} slot number of slots (6) - 6 slots of 30m intervals
+   * @memberof AvailabilityProvider
+   */
+  generateAvailabilitySlots(startTime, format, interval, unit, slot) {
+    let slots = [{ day: startTime.format(format), disabled: false }];
+    let loopInt = interval;
+    for (let x = 0; x < slot; x++) {
+      slots.push({
+        day: moment(startTime)
+          .add(loopInt, unit)
+          .format(format),
+        disabled: false
+      });
+      loopInt = loopInt + interval;
+    }
+    console.log(slots);
+    return slots;
   }
 }
