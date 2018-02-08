@@ -131,6 +131,7 @@ export class StylistRegisterPage {
     });
 
     this.stylistKey = this.afdb.list('stylistProfile');
+
     this.stylistKey
       // .last()
       .snapshotChanges()

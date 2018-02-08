@@ -19,4 +19,60 @@
 
   Availability page
 
+
+<ion-grid>
+  <ion-row>
+    <button text-right ion-button round color="aubergine">{{today}}</button>
+  </ion-row>
+  <ion-row>
+    <ion-col col-8>
+    </ion-col>
+    <ion-col col-4>
+<button text-right ion-button round color="primary">Morning</button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+<ion-buttons text-center>
+  <button *ngFor="let date of availableAMDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
+    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+    {{date.day}}
+  </button>
+</ion-buttons>
+  <ion-row>
+    <ion-col col-8>
+    </ion-col>
+    <ion-col col-4>
+      <button text-right ion-button round color="primary">Afternoon</button>
+    </ion-col>
+  </ion-row>
+<ion-buttons text-center>
+  <button *ngFor="let date of availablePMDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
+    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+    {{date.day}}
+  </button>
+</ion-buttons>
+  <ion-row>
+    <ion-col col-8>
+    </ion-col>
+    <ion-col col-4>
+      <button text-right ion-button round color="primary">Evening</button>
+    </ion-col>
+  </ion-row>
+<ion-buttons text-center>
+  <button *ngFor="let date of availableEveDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
+    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+    {{date.day}}
+  </button>
+</ion-buttons>
+
+  <!-- <button *ngIf="showNext" ion-button block color="aubergine" (click)="goToHome()">
+    Next
+  </button> -->
+    <ion-fab right bottom>
+      <button ion-fab (click)="goToHome()" color="tonal">
+        <!-- <ion-icon name="pin"></ion-icon> -->
+        Submit
+      </button>
+    </ion-fab>
+
 </ion-content>

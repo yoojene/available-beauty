@@ -70,7 +70,7 @@ export class AvailableBeautyApp {
             this.storage.getStorage('stylistRegistered').subscribe(reg => {
               console.log(reg);
               if (reg) {
-                this.rootPage = 'TabsPage';
+                this.rootPage = 'AvailabilityPage'; // Might need to set another root here which then navs to TabsPage
                 // this.nav.setRoot('TabsPage', {
                 //   isStylist: true
                 // });
