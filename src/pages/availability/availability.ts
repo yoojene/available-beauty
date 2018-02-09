@@ -27,135 +27,17 @@ export class AvailabilityPage {
     .seconds(0);
 
   availableAMDates: any;
-  //  = [
-  //   {
-  //     // Morning
-  //     day: this.morningStart.format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(30, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(60, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(90, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(120, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(150, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 08:30:00')
-  //       .add(180, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   }
-  // ];
-
   availablePMDates: any;
-  // = [
-  //   {
-  //     day: moment('2018-02-08 12:00:00').format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(30, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(60, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(90, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(120, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(150, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 12:00:00')
-  //       .add(180, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   }
-  // ];
-
   availableEveDates: any;
+
+  schedule: any;
   //  = [
+  //   { unit: 'day', date: moment().format(this.dayOfWeekFmt) },
   //   {
-  //     day: moment('2018-02-08 16:00:00').format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(30, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(60, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(90, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(120, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(150, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
-  //   },
-  //   {
-  //     day: moment('2018-02-08 16:00:00')
-  //       .add(180, 'm')
-  //       .format(this.availTimeFmt),
-  //     disabled: false
+  //     unit: 'day',
+  //     date: moment()
+  //       .add(1, 'day')
+  //       .format(this.dayOfWeekFmt)
   //   }
   // ];
 
@@ -163,18 +45,21 @@ export class AvailabilityPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public avail: AvailabilityProvider
-  ) {
-    this.today = moment().format(this.dayOfWeekFmt);
-    // this.morningStart = moment()
-    //   .hour(8)
-    //   .minutes(30)
-    //   .seconds(0);
-    // console.log(this.morningStart);
-  }
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AvailabilityPage');
 
+    console.log(this.schedule);
+    // this.today = moment().format(this.dayOfWeekFmt);
+
+    this.schedule = this.generateSchedule(
+      moment(),
+      this.dayOfWeekFmt,
+      1,
+      'day',
+      7
+    );
     this.availableAMDates = this.avail.generateAvailabilitySlots(
       moment()
         .hour(8)
@@ -207,14 +92,6 @@ export class AvailabilityPage {
     );
   }
 
-  // doCheckShowNext() {
-  //   if (this.navCtrl.length() === 2) {
-  //     this.showNext = true;
-  //   } else {
-  //     this.showNext = false;
-  //   }
-  // }
-
   goToHome() {
     console.log('go to home');
     console.log(this.navCtrl.length());
@@ -223,6 +100,33 @@ export class AvailabilityPage {
         isStylist: true
       });
     }
+  }
+
+  /**
+   *
+   *
+   * @param {any} startDate
+   * @param {any} dateFmt
+   * @param {any} interval 1
+   * @param {any} dateUnit
+   * @param {any} runsFor
+   * @returns
+   * @memberof AvailabilityPage
+   */
+  generateSchedule(startDate, dateFmt, interval, dateUnit, runsFor) {
+    let schedule = [{ date: startDate.format(dateFmt), unit: dateUnit }];
+    let loopInt = interval;
+    for (let x = 0; x < runsFor; x++) {
+      schedule.push({
+        date: moment(startDate)
+          .add(loopInt, dateUnit)
+          .format(dateFmt),
+        unit: dateUnit
+      });
+      loopInt = loopInt + interval;
+    }
+    console.log(schedule);
+    return schedule;
   }
 
   setSlotTaken(option, optionobj) {
