@@ -1,7 +1,5 @@
 page-landing {
-
   .landing-page {
-
     &--tour-slides {
       // position: absolute;
       // top: 30vh;
@@ -10,21 +8,18 @@ page-landing {
     }
 
     &--login-container {
-    color: white;
-    position: absolute;
-    top: 0;
-    padding: 10vw;
-    text-align: center;
-    width: 100%;
-    margin: 0 auto;
-    z-index: 2;
-  }
-
-
-
+      color: white;
+      position: absolute;
+      top: 0;
+      padding: 10vw;
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 2;
+    }
   }
   .scroll-content {
-    margin-top: 0 ;
+    margin-top: 0;
     // overflow: hidden;
   }
 
@@ -47,17 +42,17 @@ page-landing {
     height: 100%;
   }
   ion-slides {
-    height: 100vh;
+    height: 120vh;
   }
   ion-item {
-    color: white ;
-    padding-left: 10px ;
+    color: white;
+    padding-left: 10px;
     margin-bottom: 10px;
-    background-color: transparent ;
+    background-color: transparent;
     font-size: 0.9em;
   }
-   ::-webkit-input-placeholder {
-    color: white ;
+  ::-webkit-input-placeholder {
+    color: white;
   }
   .login-container {
     color: white;
@@ -72,55 +67,51 @@ page-landing {
   ion-button {
     opacity: 0.8;
   }
-
 }
 
 // Logo used on reg pages
+.ab-logo {
+  background: url('../assets/img/AB_logo_main_no_text_white.png') no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 25rem;
+  width: auto;
+}
+
+.ab-text {
+  background: url('../assets/img/AB_logo_text_only_white.png') no-repeat;
+  background-size: contain;
+  background-position: center;
+  height: 10rem;
+}
+
+@media (min-width: 568px) {
   .ab-logo {
-     background: url('../assets/img/AB_logo_main_no_text_white.png') no-repeat;
-     background-size: cover;
-     background-position: center;
-     height: 25rem;
-     width: auto;
-  }
-
-  .ab-text {
-     background: url('../assets/img/AB_logo_text_only_white.png') no-repeat;
-    background-size: contain;
-     background-position: center;
-     height: 10rem;
-  }
-
-
-  @media (min-width: 568px) {
-
-    .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 15rem;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 31rem;
+    height: 26rem;
+    width: 26rem;
+    margin-left: 15rem;
   }
 }
 
-  @media (min-width: 968px) {
-    .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 39rem;
-    }
+@media (min-width: 768px) {
+  .ab-logo {
+    height: 26rem;
+    width: 26rem;
+    margin-left: 31rem;
   }
-  @media (min-width: 1468px) {
+}
 
-    .ab-logo {
-     height: 40rem;
-     width: 40rem;
-     margin-left: 50rem;
-    }
+@media (min-width: 968px) {
+  .ab-logo {
+    height: 26rem;
+    width: 26rem;
+    margin-left: 39rem;
   }
+}
+@media (min-width: 1468px) {
+  .ab-logo {
+    height: 40rem;
+    width: 40rem;
+    margin-left: 50rem;
+  }
+}

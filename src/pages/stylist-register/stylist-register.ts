@@ -38,7 +38,7 @@ import { Slides } from 'ionic-angular';
 })
 export class StylistRegisterPage {
   @ViewChild(Slides) slides: Slides;
-  public pageSubheader = 'OK, please now enter some details to set up your profile..';
+  public pageSubheader = 'OK, now enter some details to set up your profile..';
   public stylistNameLabel = 'Stylist Name';
   public stylistHeaderLabel = 'Enter a Salon or Stylist name';
   public bioLabel = 'A short description of your business and what you offer';

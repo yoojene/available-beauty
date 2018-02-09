@@ -17,9 +17,8 @@
 
 <ion-content padding>
 
-  Availability page
-
-
+  <h3 text-center>{{availabilitySubHeader}}</h3>
+<br>
 <ion-grid>
   <ion-row>
     <button text-right ion-button round color="aubergine">{{today}}</button>
@@ -33,8 +32,8 @@
   </ion-row>
 </ion-grid>
 <ion-buttons text-center>
-  <button *ngFor="let date of availableAMDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
-    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+  <button *ngFor="let date of availableAMDates; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+    (click)="setSlotTaken(date, availableAMDates)">
     {{date.day}}
   </button>
 </ion-buttons>
@@ -46,8 +45,8 @@
     </ion-col>
   </ion-row>
 <ion-buttons text-center>
-  <button *ngFor="let date of availablePMDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
-    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+  <button *ngFor="let date of availablePMDates; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+    (click)="setSlotTaken(date, availablePMDates)">
     {{date.day}}
   </button>
 </ion-buttons>
@@ -59,8 +58,8 @@
     </ion-col>
   </ion-row>
 <ion-buttons text-center>
-  <button *ngFor="let date of availableEveDates; let i = index" ion-button round [color]="date.disabled ? 'primary' : 'aubergine'"
-    (click)="setDisabled(date, availableDates)" [disabled]="date.disabled">
+  <button *ngFor="let date of availableEveDates; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+    (click)="setSlotTaken(date, availableEveDates)">
     {{date.day}}
   </button>
 </ion-buttons>

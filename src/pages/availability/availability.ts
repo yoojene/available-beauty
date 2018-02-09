@@ -16,6 +16,7 @@ import { AvailabilityProvider } from '../../providers/availability/availability'
   templateUrl: 'availability.html'
 })
 export class AvailabilityPage {
+  availabilitySubHeader = 'Mark the times you are available';
   showNext: boolean;
   dayOfWeekFmt: string = 'ddd Do MMM';
   availTimeFmt: string = 'HH:mm';
@@ -222,5 +223,18 @@ export class AvailabilityPage {
         isStylist: true
       });
     }
+  }
+
+  setSlotTaken(option, optionobj) {
+    console.log('setting dis slot');
+    console.log(option);
+    console.log(optionobj);
+
+    optionobj.forEach(el => {
+      console.log(el);
+      if (option.day === el.day) {
+        el.disabled = !option.disabled;
+      }
+    });
   }
 }
