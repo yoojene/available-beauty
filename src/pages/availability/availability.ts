@@ -50,6 +50,53 @@ export class AvailabilityPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad AvailabilityPage');
 
+    this.generateAvailabilitySchedule();
+
+    console.log(this.schedule);
+
+    // this.availableAMDates =
+
+    // this.availableAMDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(8)
+    //     .minutes(30)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6
+    // );
+    // this.availablePMDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(12)
+    //     .minutes(0)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6,
+    //   'afternoon'
+    // );
+    // this.availableEveDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(16)
+    //     .minutes(0)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6,
+    //   'evening'
+    // );
+  }
+  /**
+   * Set up length of schedule on availability page and slot length/duration
+   * Default is 1 day for 7 days ahead and 18 slots of 30m per day
+   * @private
+   * @memberof AvailabilityPage
+   */
+  private generateAvailabilitySchedule() {
+    // Generate the schedule
     this.schedule = this.generateSchedule(
       moment(),
       this.dayOfWeekFmt,
@@ -58,9 +105,9 @@ export class AvailabilityPage {
       7
     );
 
+    // Generate the slots per schedule
     for (let y = 0; y < this.schedule.length; y++) {
       let slots = [];
-      console.log(this.schedule[y]);
       slots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
@@ -100,46 +147,10 @@ export class AvailabilityPage {
           'evening'
         )
       );
+      // Collapse into single array
       let merged = [].concat.apply([], slots);
       this.schedule[y].slots = merged;
     }
-
-    console.log(this.schedule);
-
-    // this.availableAMDates =
-
-    // this.availableAMDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(8)
-    //     .minutes(30)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6
-    // );
-    // this.availablePMDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(12)
-    //     .minutes(0)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6,
-    //   'afternoon'
-    // );
-    // this.availableEveDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(16)
-    //     .minutes(0)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6,
-    //   'evening'
-    // );
   }
 
   goToHome() {
@@ -153,13 +164,13 @@ export class AvailabilityPage {
   }
 
   /**
+   * Create the parent schedule object
    *
-   *
-   * @param {any} startDate
-   * @param {any} dateFmt
+   * @param {any} startDate - Date to start schedule
+   * @param {any} dateFmt - moment date/time format
    * @param {any} interval 1
-   * @param {any} dateUnit
-   * @param {any} runsFor
+   * @param {any} dateUnit - moment date format
+   * @param {any} runsFor - how long the schedule runs for
    * @returns
    * @memberof AvailabilityPage
    */
@@ -177,13 +188,29 @@ export class AvailabilityPage {
     }
     return schedule;
   }
-
+  /**
+   * Mark the given slot taken
+   *
+   * @param {any} option
+   * @param {any} optionobj
+   * @memberof AvailabilityPage
+   */
   setSlotTaken(option, optionobj) {
     optionobj.forEach(el => {
-      console.log(el);
       if (option.day === el.day && option.date === el.date) {
         el.disabled = !option.disabled;
       }
+    });
+  }
+  /**
+   * Mark all slots on the day taken
+   *
+   * @param {any} slot
+   * @memberof AvailabilityPage
+   */
+  setAllSlotsTaken(slot) {
+    slot.slots.forEach(el => {
+      el.disabled = !el.disabled;
     });
   }
 

@@ -16,75 +16,27 @@
 
 
 <ion-content padding>
-
 <h3 text-center>{{availabilitySubHeader}}</h3>
 <div *ngFor="let slot of schedule">
   <br>
   <ion-grid>
     <ion-row>
-      <button text-right ion-button round color="aubergine"> {{slot.date}}</button>
+      <button text-right ion-button round color="aubergine" (click)="setAllSlotsTaken(slot)"> {{slot.date}}</button>
     </ion-row>
     <ion-row>
-      <!-- <ion-col col-8>
-      </ion-col>
-      <ion-col col-4>
-        <button text-right ion-button round color="primary">Morning</button>
-      </ion-col> -->
-      <!-- <ion-col>
-        <button text-right ion-button round color="primary" name="morning" #morning (click)="doShowPeriod(morning)">Morning</button>
-      </ion-col>
-      <ion-col>
-        <button text-right ion-button round color="primary" name="afternoon" #afternoon (click)="doShowPeriod(afternoon)">Afternoon</button>
-      </ion-col>
-      <ion-col>
-        <button text-right ion-button round color="primary" name="evening" #evening (click)="doShowPeriod(evening)">Evening</button>
-      </ion-col> -->
     </ion-row>
   </ion-grid>
   <ion-buttons text-center>
     <button *ngFor="let date of slot.slots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
       (click)="setSlotTaken(date, slot.slots)">
-      <!-- {{date.date}} -->
-      <!-- <br> -->
       {{date.day}}
     </button>
   </ion-buttons>
-  <!-- <ion-row>
-    <ion-col col-8>
-    </ion-col>
-    <ion-col col-4>
-      <button text-right ion-button round color="primary">Afternoon</button>
-    </ion-col>
-  </ion-row>
-  <ion-buttons text-center>
-    <button *ngFor="let date of availablePMDates; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
-      (click)="setSlotTaken(date, availablePMDates)">
-      {{date.day}}
-    </button>
-  </ion-buttons>
-  <ion-row>
-    <ion-col col-8>
-    </ion-col>
-    <ion-col col-4>
-      <button text-right ion-button round color="primary">Evening</button>
-    </ion-col>
-  </ion-row>
-  <ion-buttons text-center>
-    <button *ngFor="let date of availableEveDates; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
-      (click)="setSlotTaken(date, availableEveDates)">
-      {{date.day}}
-    </button>
-  </ion-buttons> -->
   <hr>
-
   </div>
-  <!-- <button *ngIf="showNext" ion-button block color="aubergine" (click)="goToHome()">
-    Next
-  </button> -->
     <ion-fab right bottom>
       <button ion-fab (click)="goToHome()" color="tonal">
-        <!-- <ion-icon name="pin"></ion-icon> -->
-        Submit
+        <ion-icon name="checkmark"></ion-icon>
       </button>
     </ion-fab>
 
