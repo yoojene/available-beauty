@@ -50,9 +50,6 @@ export class AvailabilityPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad AvailabilityPage');
 
-    console.log(this.schedule);
-    // this.today = moment().format(this.dayOfWeekFmt);
-
     this.schedule = this.generateSchedule(
       moment(),
       this.dayOfWeekFmt,
@@ -60,36 +57,89 @@ export class AvailabilityPage {
       'day',
       7
     );
-    this.availableAMDates = this.avail.generateAvailabilitySlots(
-      moment()
-        .hour(8)
-        .minutes(30)
-        .seconds(0),
-      this.availTimeFmt,
-      30,
-      'm',
-      6
-    );
-    this.availablePMDates = this.avail.generateAvailabilitySlots(
-      moment()
-        .hour(12)
-        .minutes(0)
-        .seconds(0),
-      this.availTimeFmt,
-      30,
-      'm',
-      6
-    );
-    this.availableEveDates = this.avail.generateAvailabilitySlots(
-      moment()
-        .hour(16)
-        .minutes(0)
-        .seconds(0),
-      this.availTimeFmt,
-      30,
-      'm',
-      6
-    );
+
+    for (let y = 0; y < this.schedule.length; y++) {
+      let slots = [];
+      console.log(this.schedule[y]);
+      slots.push(
+        this.avail.generateAvailabilitySlots(
+          moment(this.schedule[y].date, this.dayOfWeekFmt)
+            .hour(8)
+            .minutes(30)
+            .seconds(0),
+          this.availTimeFmt,
+          30,
+          'm',
+          6,
+          'morning'
+        )
+      );
+      slots.push(
+        this.avail.generateAvailabilitySlots(
+          moment(this.schedule[y].date, this.dayOfWeekFmt)
+            .hour(12)
+            .minutes(0)
+            .seconds(0),
+          this.availTimeFmt,
+          30,
+          'm',
+          6,
+          'afternoon'
+        )
+      );
+      slots.push(
+        this.avail.generateAvailabilitySlots(
+          moment(this.schedule[y].date, this.dayOfWeekFmt)
+            .hour(16)
+            .minutes(30)
+            .seconds(0),
+          this.availTimeFmt,
+          30,
+          'm',
+          6,
+          'evening'
+        )
+      );
+      let merged = [].concat.apply([], slots);
+      this.schedule[y].slots = merged;
+    }
+
+    console.log(this.schedule);
+
+    // this.availableAMDates =
+
+    // this.availableAMDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(8)
+    //     .minutes(30)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6
+    // );
+    // this.availablePMDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(12)
+    //     .minutes(0)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6,
+    //   'afternoon'
+    // );
+    // this.availableEveDates = this.avail.generateAvailabilitySlots(
+    //   moment()
+    //     .hour(16)
+    //     .minutes(0)
+    //     .seconds(0),
+    //   this.availTimeFmt,
+    //   30,
+    //   'm',
+    //   6,
+    //   'evening'
+    // );
   }
 
   goToHome() {
@@ -125,20 +175,28 @@ export class AvailabilityPage {
       });
       loopInt = loopInt + interval;
     }
-    console.log(schedule);
     return schedule;
   }
 
   setSlotTaken(option, optionobj) {
-    console.log('setting dis slot');
-    console.log(option);
-    console.log(optionobj);
-
     optionobj.forEach(el => {
       console.log(el);
-      if (option.day === el.day) {
+      if (option.day === el.day && option.date === el.date) {
         el.disabled = !option.disabled;
       }
     });
+  }
+
+  doShowPeriod(period) {
+    // For filtering am/pm/eve if required
+    console.log(period);
+
+    console.log(period._elementRef.nativeElement.name);
+    let filtered = this.availableAMDates.filter(el => {
+      return el.period === period._elementRef.nativeElement.name;
+    });
+
+    console.log(filtered);
+    // this.availableAMDates = filtered;
   }
 }

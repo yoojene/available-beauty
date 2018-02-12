@@ -98,21 +98,31 @@ export class AvailabilityProvider {
    * @param {any} interval - 30
    * @param {any} unit -  m
    * @param {any} slot number of slots (6) - 6 slots of 30m intervals
+   * @param {any} period one of morning, afternoon, evening
    * @memberof AvailabilityProvider
    */
-  generateAvailabilitySlots(startTime, format, interval, unit, slot) {
-    let slots = [{ day: startTime.format(format), disabled: false }];
+  generateAvailabilitySlots(startTime, format, interval, unit, slot, period) {
+    let slots = [
+      {
+        date: startTime.format('ddd Do MMM'),
+        day: startTime.format(format),
+        disabled: false,
+        period: period
+      }
+    ];
     let loopInt = interval;
     for (let x = 0; x < slot; x++) {
       slots.push({
+        date: startTime.format('ddd Do MMM'),
         day: moment(startTime)
           .add(loopInt, unit)
           .format(format),
-        disabled: false
+        disabled: false,
+        period: period
       });
       loopInt = loopInt + interval;
     }
-    console.log(slots);
+    // console.log(slots);
     return slots;
   }
 }
