@@ -91,6 +91,36 @@ export class AvailabilityProvider {
     console.log(result);
   }
   /**
+   * Update /availability in realtime DB
+   *
+   * @param {number} slot Unix time
+   * @param {string} stylistId
+   * @returns
+   * @memberof AvailabilityProvider
+   */
+  setAvailabilityTaken(slot: number, stylistId: string) {
+    console.log('setAvailabilityTaken');
+    let availData = {
+      datetime: slot, // need to convert to epoch
+      booked: false
+    };
+
+    let availKey = this.afdb.database
+      .ref()
+      .child(`/stylistProfile/${stylistId}/availability`)
+      .push().key;
+
+    let availPayload = {};
+    availPayload[
+      `/stylistProfile/${stylistId}/availability/${availKey}`
+    ] = availData;
+
+    return this.afdb.database
+      .ref()
+      .update(availPayload)
+      .then(res => console.log(res));
+  }
+  /**
    * Create stylist availability slots
    *
    * @param {any} startTime - 8:30

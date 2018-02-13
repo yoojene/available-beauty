@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import * as moment from 'moment';
 import { AvailabilityProvider } from '../../providers/availability/availability';
+import { Stylist } from '../../model/stylist/stylist.model';
+import * as firebase from 'firebase';
+import { StylistProvider } from '../../providers/stylist/stylist';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -30,6 +33,8 @@ export class AvailabilityPage {
   availablePMDates: any;
   availableEveDates: any;
 
+  stylistId: string;
+
   schedule: any;
   //  = [
   //   { unit: 'day', date: moment().format(this.dayOfWeekFmt) },
@@ -44,13 +49,21 @@ export class AvailabilityPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public avail: AvailabilityProvider
+    public avail: AvailabilityProvider,
+    public stylist: StylistProvider
   ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AvailabilityPage');
 
     this.generateAvailabilitySchedule();
+
+    this.stylist
+      .getStylist(firebase.auth().currentUser.uid)
+      .snapshotChanges()
+      .subscribe(res => {
+        this.stylistId = res[0].key;
+      });
 
     console.log(this.schedule);
 
@@ -199,6 +212,15 @@ export class AvailabilityPage {
     optionobj.forEach(el => {
       if (option.day === el.day && option.date === el.date) {
         el.disabled = !option.disabled;
+        console.log(option.date);
+        console.log(option.day);
+
+        let epoch = moment(
+          option.date + ' ' + option.day,
+          'ddd Do MMM HH:mm'
+        ).unix();
+        console.log(epoch);
+        this.avail.setAvailabilityTaken(epoch, this.stylistId);
       }
     });
   }
