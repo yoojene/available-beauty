@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Availability } from '../../model/availability/availability.model';
+import {
+  Availability,
+  AvailabilitySlot
+} from '../../model/availability/availability.model';
 import { StylistProvider } from '../stylist/stylist';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 
 @Injectable()
 export class AvailabilityProvider {
@@ -120,9 +124,16 @@ export class AvailabilityProvider {
    * @param {any} period one of morning, afternoon, evening
    * @memberof AvailabilityProvider
    */
-  generateAvailabilitySlots(startTime, format, interval, unit, slot, period) {
+  generateAvailabilitySlots(
+    startTime: Moment,
+    format: string,
+    interval: any,
+    unit: string,
+    slot: number,
+    period: string
+  ) {
     // moment(option.date + ' ' + option.time, 'ddd Do MMM HH:mm').unix();
-    let slots = [
+    let slots: AvailabilitySlot[] = [
       {
         date: startTime.format('ddd Do MMM'),
         time: startTime.format(format),
