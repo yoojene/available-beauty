@@ -16,10 +16,11 @@ export class AvailabilityProvider {
     console.log('Hello AvailabilityProvider Provider');
   }
 
+  // Legacy
   getAvailabilities() {
     return this.afdb.list('availability');
   }
-
+  // Legacy
   getStylistAvailability(stylistId) {
     console.log(stylistId);
     return this.afdb.list(`availability`, ref => {
@@ -27,7 +28,7 @@ export class AvailabilityProvider {
       return ref.orderByChild('stylistId').equalTo(stylistId);
     });
   }
-
+  // Legacy
   getAvailabilityById(avail) {
     console.log('calling getAvailabilityById()');
     console.log(avail);
@@ -69,27 +70,13 @@ export class AvailabilityProvider {
     return availList$;
   }
 
-  getBookedAvailability(avail) {
-    console.log(avail);
-    console.log(JSON.stringify(avail));
-
-    let availIds = [];
-
-    avail.forEach(el => {
-      return availIds.push(el.availabilityId);
-    });
-
-    let result;
-    availIds.forEach(el => {
-      console.log(el);
-
-      return (result = this.afdb.list(`availability`, ref => {
-        return ref.orderByKey().equalTo(el);
-      }));
-    });
-
-    console.log(result);
+  // New RTDB format
+  getBookedAvailability(stylistId: any) {
+    console.log(stylistId);
+    console.log(`/stylistProfile/${stylistId}/availability`);
+    return this.afdb.list(`/stylistProfile/${stylistId}/availability`);
   }
+
   /**
    * Update /availability in realtime DB
    *
@@ -101,7 +88,7 @@ export class AvailabilityProvider {
   setAvailabilityTaken(slot: number, stylistId: string) {
     console.log('setAvailabilityTaken');
     let availData = {
-      datetime: slot, // need to convert to epoch
+      datetime: slot,
       booked: false
     };
 
@@ -114,6 +101,8 @@ export class AvailabilityProvider {
     availPayload[
       `/stylistProfile/${stylistId}/availability/${availKey}`
     ] = availData;
+
+    console.log(availPayload);
 
     return this.afdb.database
       .ref()
@@ -132,10 +121,12 @@ export class AvailabilityProvider {
    * @memberof AvailabilityProvider
    */
   generateAvailabilitySlots(startTime, format, interval, unit, slot, period) {
+    // moment(option.date + ' ' + option.time, 'ddd Do MMM HH:mm').unix();
     let slots = [
       {
         date: startTime.format('ddd Do MMM'),
-        day: startTime.format(format),
+        time: startTime.format(format),
+        epoch: startTime.unix(),
         disabled: false,
         period: period
       }
@@ -144,15 +135,17 @@ export class AvailabilityProvider {
     for (let x = 0; x < slot; x++) {
       slots.push({
         date: startTime.format('ddd Do MMM'),
-        day: moment(startTime)
+        time: moment(startTime)
           .add(loopInt, unit)
           .format(format),
+        epoch: moment(startTime)
+          .add(loopInt, unit)
+          .unix(),
         disabled: false,
         period: period
       });
       loopInt = loopInt + interval;
     }
-    // console.log(slots);
     return slots;
   }
 }

@@ -31,6 +31,7 @@ export class StylistProvider {
   }
 
   getStylist(uid) {
+    // TODO should this be .object returned?  Only ever should be 1-1 stylist / user?
     console.log(uid);
 
     return this.afdb.list<Stylist>(`stylistProfile`, ref => {

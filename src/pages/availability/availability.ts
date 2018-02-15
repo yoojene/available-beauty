@@ -1,10 +1,17 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  LoadingController
+} from 'ionic-angular';
 import * as moment from 'moment';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { Stylist } from '../../model/stylist/stylist.model';
 import * as firebase from 'firebase';
 import { StylistProvider } from '../../providers/stylist/stylist';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -36,6 +43,8 @@ export class AvailabilityPage {
   stylistId: string;
 
   schedule: any;
+
+  entryLoader: any;
   //  = [
   //   { unit: 'day', date: moment().format(this.dayOfWeekFmt) },
   //   {
@@ -50,58 +59,29 @@ export class AvailabilityPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public avail: AvailabilityProvider,
-    public stylist: StylistProvider
+    public stylist: StylistProvider,
+    private _afdb: AngularFireDatabase,
+    private _utils: UtilsProvider,
+    private _loading: LoadingController
   ) {}
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AvailabilityPage');
-
-    this.generateAvailabilitySchedule();
-
-    this.stylist
-      .getStylist(firebase.auth().currentUser.uid)
-      .snapshotChanges()
-      .subscribe(res => {
-        this.stylistId = res[0].key;
-      });
-
-    console.log(this.schedule);
-
-    // this.availableAMDates =
-
-    // this.availableAMDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(8)
-    //     .minutes(30)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6
-    // );
-    // this.availablePMDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(12)
-    //     .minutes(0)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6,
-    //   'afternoon'
-    // );
-    // this.availableEveDates = this.avail.generateAvailabilitySlots(
-    //   moment()
-    //     .hour(16)
-    //     .minutes(0)
-    //     .seconds(0),
-    //   this.availTimeFmt,
-    //   30,
-    //   'm',
-    //   6,
-    //   'evening'
-    // );
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter');
+    this.entryLoader = this._loading.create();
+    this.entryLoader.present().then(() => {
+      this.stylist
+        .getStylist(firebase.auth().currentUser.uid)
+        .snapshotChanges()
+        .subscribe(res => {
+          console.log('cmon');
+          this.stylistId = res[0].key;
+          console.log(this.stylistId);
+          this.generateAvailabilitySchedule();
+        });
+    });
   }
+
+  ionViewDidLoad() {}
   /**
    * Set up length of schedule on availability page and slot length/duration
    * Default is 1 day for 7 days ahead and 18 slots of 30m per day
@@ -164,6 +144,28 @@ export class AvailabilityPage {
       let merged = [].concat.apply([], slots);
       this.schedule[y].slots = merged;
     }
+
+    // This is a bit naff, ideally want to seed schedule from what's already taken, and not the otherway around
+    let stylistId = this.stylistId;
+    console.log(stylistId);
+
+    this.avail
+      .getBookedAvailability(stylistId)
+      .snapshotChanges()
+      .subscribe(res => {
+        let results = this._utils.generateFirebaseKeyedValues(res);
+        results.forEach(res => {
+          this.schedule.forEach(sched => {
+            sched.slots.forEach(el => {
+              if (el.epoch === res.datetime) {
+                el.disabled = true;
+              }
+            });
+          });
+        });
+      });
+
+    this.entryLoader.dismiss();
   }
 
   goToHome() {
@@ -210,17 +212,10 @@ export class AvailabilityPage {
    */
   setSlotTaken(option, optionobj) {
     optionobj.forEach(el => {
-      if (option.day === el.day && option.date === el.date) {
+      if (option.time === el.time && option.date === el.date) {
         el.disabled = !option.disabled;
-        console.log(option.date);
-        console.log(option.day);
 
-        let epoch = moment(
-          option.date + ' ' + option.day,
-          'ddd Do MMM HH:mm'
-        ).unix();
-        console.log(epoch);
-        this.avail.setAvailabilityTaken(epoch, this.stylistId);
+        this.avail.setAvailabilityTaken(el.epoch, this.stylistId);
       }
     });
   }
@@ -233,6 +228,15 @@ export class AvailabilityPage {
   setAllSlotsTaken(slot) {
     slot.slots.forEach(el => {
       el.disabled = !el.disabled;
+    });
+  }
+
+  updateTakenSlots(bookedSlots) {
+    console.log(bookedSlots);
+    console.log(this.schedule);
+
+    bookedSlots.forEach(el => {
+      // return momel.datetime;
     });
   }
 

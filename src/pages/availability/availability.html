@@ -29,7 +29,7 @@
   <ion-buttons text-center>
     <button *ngFor="let date of slot.slots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
       (click)="setSlotTaken(date, slot.slots)">
-      {{date.day}}
+      {{date.time}}
     </button>
   </ion-buttons>
   <hr>
