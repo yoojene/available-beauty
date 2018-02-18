@@ -52,7 +52,8 @@ export class BookingsPage {
 
   ionViewDidEnter() {
     console.log('getting bookings');
-    this.getBookings();
+    // this.getBookings();
+    // TODO 16th Feb - This all needs to be rewritten with the new structure
   }
 
   private getBookings() {

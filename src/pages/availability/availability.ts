@@ -79,6 +79,8 @@ export class AvailabilityPage {
           this.generateAvailabilitySchedule();
         });
     });
+
+    this.doCheckShowNext();
   }
 
   ionViewDidLoad() {}
@@ -238,6 +240,16 @@ export class AvailabilityPage {
     bookedSlots.forEach(el => {
       // return momel.datetime;
     });
+  }
+
+  doCheckShowNext() {
+    if (this.navCtrl.length() === 2) {
+      console.log(';showing');
+      this.showNext = true;
+    } else {
+      console.log('not showing');
+      this.showNext = false;
+    }
   }
 
   doShowPeriod(period) {

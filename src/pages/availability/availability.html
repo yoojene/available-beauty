@@ -34,7 +34,7 @@
   </ion-buttons>
   <hr>
   </div>
-    <ion-fab right bottom>
+    <ion-fab *ngIf="showNext" right bottom>
       <button ion-fab (click)="goToHome()" color="tonal">
         <ion-icon name="checkmark"></ion-icon>
       </button>

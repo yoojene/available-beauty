@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  LoadingController
+} from 'ionic-angular';
 import * as moment from 'moment';
 
 @IonicPage()
@@ -17,6 +22,8 @@ export class LookingPage {
   treatmentsText: string = 'Treatments';
 
   dayOfWeekFmt: string = 'ddd Do';
+
+  entryLoader: any;
 
   beautyOptions: any = [
     {
@@ -77,15 +84,20 @@ export class LookingPage {
     }
   ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private loading: LoadingController
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LookingPage');
     console.log(this.availableDates);
+    this.entryLoader;
   }
 
   goToHome() {
-    this.navCtrl.push('TabsPage', { isStylist: true });
+    this.navCtrl.push('TabsPage', { isStylist: false });
   }
 
   setDisabled(option, optionobj) {

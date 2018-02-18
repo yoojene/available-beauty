@@ -107,7 +107,7 @@ export class LoginPage {
           console.log(res);
           loading.dismiss();
           // this.navCtrl.push('LookingPage');
-          this.navCtrl.push('TabsPage', { isStylist: true });
+          this.navCtrl.push('TabsPage', { isStylist: false });
         },
         err => {
           loading.dismiss();
