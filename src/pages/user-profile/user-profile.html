@@ -1,29 +1,31 @@
 
 <ion-header>
-
   <ion-navbar hideBackButton="true">
     <ion-title>Profile</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="tonal" (click)="doOpenSettings()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
 
-  <ion-list>
+  <ion-list no-lines>
     <ion-item>
       <ion-avatar item-start>
         <img src="{{user?.avatarImage}}">
-
       </ion-avatar>
          {{user?.name}}
     </ion-item>
-    <!-- <ion-item>/ion-item> -->
     <ion-item>{{user?.emailAddress}}</ion-item>
-    <!-- <ion-item>{{user.emailAddress}}</ion-item> -->
+    <div *ngIf="isStylist">
+      I am a stylist
+
+    </div>
   </ion-list>
-  <button left bottom ion-button color="danger" (click)="doLogOut()">
-    Log Out
-  </button>
+
 
 </ion-content>

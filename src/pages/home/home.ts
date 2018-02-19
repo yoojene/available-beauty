@@ -99,15 +99,18 @@ export class HomePage {
       });
   }
 
-  showSearch() {
-    let searchModal = this.modalCtrl.create(SearchPage);
+  showSearch(ev: any) {
+    console.log(ev);
 
-    searchModal.onDidDismiss(data => {
-      console.log('dismissed ', data);
-      this.getUsers();
-    });
+    this.getUsers();
+    // let searchModal = this.modalCtrl.create(SearchPage);
 
-    searchModal.present();
+    // searchModal.onDidDismiss(data => {
+    //   console.log('dismissed ', data);
+
+    // });
+
+    // searchModal.present();
   }
 
   openProfile(user) {
@@ -181,8 +184,16 @@ export class HomePage {
     console.log(avail);
 
     let bookingAlert = this.alertCtrl.create({
-      title: `Confirm Booking for ${avail.datetime}`,
-      message: 'Do you want to book this slot?',
+      title: `Request Booking for ${avail.datetime}?`,
+      message:
+        'Do you want to request to book this slot?  <br> <br> Enter any details for the stylist below and they will contact you to confirm the booking',
+      inputs: [
+        {
+          name: 'details',
+          placeholder: 'Details',
+          type: 'text'
+        }
+      ],
       buttons: [
         {
           text: 'Cancel',

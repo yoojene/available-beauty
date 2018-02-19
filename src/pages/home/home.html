@@ -4,12 +4,14 @@
       <!-- Available Beauty -->
       <img src="assets/img/AB_logo_text.png">
     </ion-title>
+
   </ion-navbar>
+  <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
 </ion-header>
 
 <ion-content padding>
-  <div class="search-item" (click)="showSearch()"> Search </div>
-  <br>
+  <!-- <div class="search-item" (click)="showSearch()"> Search </div>
+  <br> -->
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
       <!--Custom HTML marker-->
       <!-- lat="lat" lng="long" -->
@@ -37,25 +39,30 @@
       <ion-list>
           <ion-card *ngFor="let user of users" >
             <ion-card-content>
-              <ion-item no-padding no-border (click)="expandCard(user)">
-                <ion-avatar item-start>
-                  <img src="{{user.avatarImage}}">
-                </ion-avatar>
-                {{user.name}}
-              <button *ngIf="user.expanded" ion-button item-end color="aubergine" (click)="openProfile(user)"> Stylist</button>
-              </ion-item>
+              <ion-grid no-padding>
+                <ion-row>
+                  <ion-col>
+                      <ion-item no-padding no-border (click)="expandCard(user)">
+                        <ion-avatar item-start>
+                          <img src="{{user.avatarImage}}">
+                        </ion-avatar>
+                        {{user.name}}
+                      </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-item class="page-home--stylist-profile" >
+                        <button *ngIf="user.expanded" ion-button item-end color="aubergine" (click)="openProfile(user)"> Stylist</button>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
               <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
                 <br>
                 <div *ngIf="stylist$ | async; let stylists">
                     <div *ngFor="let style of stylists" text-wrap #stylest>
                       <ion-slides pager autoplay="3000" speed="500" loop>
                         <ion-slide *ngFor="let img of style.payload.val().galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
-                          <!-- <ion-row>
-                            {{img}}
-                            <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button"
-                              name="heart" (click)="toggleHeart()">
-                            </ion-icon>
-                          </ion-row> -->
                         </ion-slide>
                       </ion-slides>
                       <div *ngIf="style.payload.val().stylistRating; let starRating;">
@@ -77,6 +84,7 @@
                     <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
                       {{avail.datetime}}
                     </button>
+
                 </ion-col>
                 </ion-scroll>
               </expandable-item>
