@@ -66,12 +66,10 @@
                         </ion-slide>
                       </ion-slides>
                       <div *ngIf="style.payload.val().stylistRating; let starRating;">
-                        {{starRating}}
-                        <ion-item>
+                        <ion-item >
                           <star-rating [rating]="starRating"></star-rating>
-                          <button ion-button item-end color="aubergine" (click)="openReviews(style.payload.key)">
-                            Reviews
-                          </button>
+                         <div (click)="openReviews(style.payload.key)">  {{stylistReviews}} {{reviewsText}} </div>
+                          <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                         </ion-item>
                       </div>
                     </div>

@@ -26,15 +26,17 @@ import { BookingProvider } from '../../providers/booking/booking';
 })
 export class HomePage {
   public availabilityHeader = 'Availability';
+  public reviewsText = 'Reviews >';
   public lat: number;
   public long: number;
+  public toggled: boolean = false;
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
   itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
 
-  public stylists$: Observable<Stylist[]>;
   public stylist$: Observable<any>;
+  public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
 
@@ -63,7 +65,9 @@ export class HomePage {
     this.destroy$.unsubscribe();
   }
 
-  toggleMap() {
+  //-- Public
+
+  public toggleMap() {
     if (!this.showMap) {
       this.showMap = true;
     } else {
@@ -71,35 +75,7 @@ export class HomePage {
     }
   }
 
-  getGeoLocation() {
-    this.storage.getStorage('geolocation').subscribe(res => {
-      console.log(res);
-      if (res) {
-        this.lat = res[0];
-        this.long = res[1];
-        console.log(this.lat);
-        console.log(this.long);
-        this.mapButton = true;
-      }
-    });
-  }
-
-  getStylists() {
-    this.stylists$ = this.stylist.getStylists().valueChanges();
-  }
-
-  getUsers() {
-    this.user
-      .getStylistUsers()
-      .snapshotChanges()
-      .subscribe(actions => {
-        let values = this.utils.generateFirebaseKeyedValues(actions);
-        this.users = this.utils.addExpandedProperty(values);
-        console.log(this.users);
-      });
-  }
-
-  showSearch(ev: any) {
+  public showSearch(ev: any) {
     console.log(ev);
 
     this.getUsers();
@@ -113,7 +89,7 @@ export class HomePage {
     // searchModal.present();
   }
 
-  openProfile(user) {
+  public openProfile(user) {
     console.log(user);
     console.log('opent da modal');
     let profileModal = this.modalCtrl.create(StylistProfilePage, {
@@ -127,7 +103,7 @@ export class HomePage {
     profileModal.present();
   }
 
-  openReviews(stylistId: any) {
+  public openReviews(stylistId: any) {
     let reviewModal = this.modalCtrl.create(StylistReviewPage, {
       stylistId: stylistId
     });
@@ -139,7 +115,7 @@ export class HomePage {
     reviewModal.present();
   }
 
-  expandCard(user: any) {
+  public expandCard(user: any) {
     this.users.map(listItem => {
       if (user == listItem) {
         listItem.expanded = !listItem.expanded;
@@ -153,6 +129,11 @@ export class HomePage {
           this.stylistAvail$ = this.stylist
             .getStylistAvailability(res[0].key)
             .snapshotChanges();
+
+          this.stylist
+            .getStylistReview(res[0].key)
+            .valueChanges()
+            .subscribe(res => (this.stylistReviews = res.length));
 
           this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
             let avails = this.utils.generateFirebaseKeyedValues(actions);
@@ -213,5 +194,39 @@ export class HomePage {
     });
 
     bookingAlert.present();
+  }
+
+  public toggleFavourite() {
+    if (!this.toggled) {
+      this.toggled = true;
+      return;
+    }
+    this.toggled = false;
+  }
+
+  //--- Private
+
+  private getGeoLocation() {
+    this.storage.getStorage('geolocation').subscribe(res => {
+      console.log(res);
+      if (res) {
+        this.lat = res[0];
+        this.long = res[1];
+        console.log(this.lat);
+        console.log(this.long);
+        this.mapButton = true;
+      }
+    });
+  }
+
+  private getUsers() {
+    this.user
+      .getStylistUsers()
+      .snapshotChanges()
+      .subscribe(actions => {
+        let values = this.utils.generateFirebaseKeyedValues(actions);
+        this.users = this.utils.addExpandedProperty(values);
+        console.log(this.users);
+      });
   }
 }
