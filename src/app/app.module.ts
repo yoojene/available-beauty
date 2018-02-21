@@ -53,13 +53,15 @@ import { PhotoProvider } from '../providers/photo/photo';
 
 @NgModule({
   declarations: [
-    AvailableBeautyApp
+    AvailableBeautyApp,
     // TabsPage
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(AvailableBeautyApp),
+    IonicModule.forRoot(AvailableBeautyApp, {
+      backButtonText: '',
+    }),
     IonicStorageModule.forRoot(),
     ReactiveFormsModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG_VALUES),
@@ -74,10 +76,10 @@ import { PhotoProvider } from '../providers/photo/photo';
     StoreModule.forRoot(APP_REDUCER),
     // Note that you must instrument after importing StoreModule
     StoreDevtoolsModule.instrument({
-      maxAge: 25
+      maxAge: 25,
     }),
 
-    EffectsModule.forRoot([AuthEffects])
+    EffectsModule.forRoot([AuthEffects]),
   ],
   bootstrap: [IonicApp],
   entryComponents: [AvailableBeautyApp],
@@ -95,7 +97,7 @@ import { PhotoProvider } from '../providers/photo/photo';
     UserProvider,
     {
       provide: API_CONFIG,
-      useValue: API_CONFIG_VALUES
+      useValue: API_CONFIG_VALUES,
     },
     StylistProvider,
     LocationProvider,
@@ -105,7 +107,7 @@ import { PhotoProvider } from '../providers/photo/photo';
     UtilsProvider,
     UtilsProvider,
     BookingProvider,
-    PhotoProvider
-  ]
+    PhotoProvider,
+  ],
 })
 export class AppModule {}

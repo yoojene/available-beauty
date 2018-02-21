@@ -15,7 +15,7 @@ import { StorageProvider } from '../providers/storage/storage';
 import { StylistProvider } from '../providers/stylist/stylist';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
 })
 export class AvailableBeautyApp {
   @ViewChild('#myNav') nav: NavController;

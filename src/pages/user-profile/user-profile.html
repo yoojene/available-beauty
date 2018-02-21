@@ -24,14 +24,16 @@
         <img src="{{user?.avatarImage}}">
       </ion-avatar>
          {{user?.name}}
+      <ion-icon item-end name="ios-open-outline" (click)="doEditProfile()"></ion-icon>
     </ion-item>
     <ion-item>{{user?.emailAddress}}</ion-item>
-    {{stylist$}}
-
-    <div *ngIf="isStylist">
-      I am a stylist
-
+    <div no-padding *ngFor="let s of style">
+      <ion-item text-wrap>
+        {{s.bio}}
+      </ion-item>
     </div>
+
+
   </ion-list>
 
 

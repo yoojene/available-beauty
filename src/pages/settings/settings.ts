@@ -3,7 +3,7 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  ViewController
+  ViewController,
 } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 
@@ -17,9 +17,10 @@ import { AngularFireAuth } from 'angularfire2/auth';
 @IonicPage()
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings.html'
+  templateUrl: 'settings.html',
 })
 export class SettingsPage {
+  settingsTitle = 'Settings';
   notificationsLabel = 'Notifications';
   termsLabel = 'Terms of Service';
   logOutLabel = 'Log Out';

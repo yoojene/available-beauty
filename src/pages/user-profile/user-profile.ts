@@ -11,6 +11,7 @@ import firebase from 'firebase';
 import { SettingsPage } from '../settings/settings';
 import { StorageProvider } from '../../providers/storage/storage';
 import { StylistProvider } from '../../providers/stylist/stylist';
+import { EditUserProfilePage } from '../edit-user-profile/edit-user-profile';
 
 /**
  * Generated class for the UserProfilePage page.
@@ -25,6 +26,7 @@ import { StylistProvider } from '../../providers/stylist/stylist';
   templateUrl: 'user-profile.html',
 })
 export class UserProfilePage {
+  editProfileText = 'Edit Profile';
   name: string;
   email: string;
 
@@ -57,6 +59,17 @@ export class UserProfilePage {
   }
 
   //-- Public
+
+  public doEditProfile() {
+    console.log('editing PRofile');
+    let editProfileModal = this.modalCtrl.create(EditUserProfilePage);
+
+    editProfileModal.onDidDismiss(data => {
+      console.log('dismissed ', data);
+    });
+
+    editProfileModal.present();
+  }
 
   public doOpenSettings() {
     let settingsModal = this.modalCtrl.create(SettingsPage);
