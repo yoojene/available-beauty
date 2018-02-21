@@ -11,9 +11,14 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+<div no-padding *ngFor="let s of style">
+  <div no-padding>
+    <img src="{{s.bannerImage}}">
+  </div>
+</div>
 
-  <ion-list no-lines>
+<ion-list no-lines padding>
     <ion-item>
       <ion-avatar item-start>
         <img src="{{user?.avatarImage}}">
@@ -21,6 +26,8 @@
          {{user?.name}}
     </ion-item>
     <ion-item>{{user?.emailAddress}}</ion-item>
+    {{stylist$}}
+
     <div *ngIf="isStylist">
       I am a stylist
 

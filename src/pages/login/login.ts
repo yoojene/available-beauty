@@ -4,7 +4,7 @@ import {
   NavController,
   NavParams,
   ModalController,
-  LoadingController
+  LoadingController,
 } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { AppState } from '../../model/app.state';
 import {
   LoginAction,
   UserNotValidatedAction,
-  LoginSuccessAction
+  LoginSuccessAction,
 } from '../../model/auth/auth.actions';
 
 import { APP_TEST_CONFIG } from '../../config/app.test.config';
@@ -27,14 +27,15 @@ import { Observable } from 'rxjs/Observable';
 import { AuthProvider } from '../../providers/auth/auth';
 import {
   TwitterConnect,
-  TwitterConnectResponse
+  TwitterConnectResponse,
 } from '@ionic-native/twitter-connect';
 import { StorageProvider } from '../../providers/storage/storage';
+import { UserProvider } from '../../providers/user/user';
 
 @IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html'
+  templateUrl: 'login.html',
 })
 export class LoginPage {
   public loginForm: any;
@@ -53,17 +54,18 @@ export class LoginPage {
     public afAuth: AngularFireAuth,
     public auth: AuthProvider,
     private loading: LoadingController,
-    private storage: StorageProvider
+    private storage: StorageProvider,
+    private user: UserProvider
   ) {
     this.loginForm = formBuilder.group({
       email: [
         APP_TEST_CONFIG.email,
-        Validators.compose([Validators.required, Validators.email])
+        Validators.compose([Validators.required, Validators.email]),
       ],
       password: [
         APP_TEST_CONFIG.password,
-        Validators.compose([Validators.minLength(6), Validators.required])
-      ]
+        Validators.compose([Validators.minLength(6), Validators.required]),
+      ],
     });
   }
 
@@ -76,14 +78,15 @@ export class LoginPage {
       .getStorage('stylistRegistered')
       .subscribe(res => (this.stylistRegistered = res));
 
+    // TODO this is not good to determine who is a Stylist!
     switch (this.loginType) {
       case 'Looking':
         this.isStylist = false;
-        this.storage.setStorage('isStylist', this.isStylist);
+        // this.storage.setStorage('isStylist', this.isStylist);
         break;
       case 'Offering':
         this.isStylist = true;
-        this.storage.setStorage('isStylist', this.isStylist);
+        // this.storage.setStorage('isStylist', this.isStylist);
         break;
     }
 
@@ -102,21 +105,28 @@ export class LoginPage {
     let loading = this.loading.create();
 
     loading.present().then(() => {
-      this.auth.doNativeLogin(userEmail, userPassword).then(
-        res => {
-          console.log(res);
-          loading.dismiss();
-          // this.navCtrl.push('LookingPage');
-          this.navCtrl.push('TabsPage', { isStylist: false });
-        },
+      this.auth.doNativeLogin(userEmail, userPassword).then(res => {
+        console.log(res);
+
+        let uid = res.uid;
+        this.user
+          .getUserById(uid)
+          .valueChanges()
+          .subscribe((res: any) => {
+            loading.dismiss();
+            this.navCtrl.push('TabsPage', {
+              isStylist: res.isStylist,
+            });
+          });
+      }),
         err => {
           loading.dismiss();
           this.invalidLogin = true;
           this.error = err.message; // This is the Firebase error - too techy?
           console.error(err.code);
           console.error(err.message);
-        }
-      );
+          loading.dismiss();
+        };
     });
   }
 
@@ -183,7 +193,7 @@ export class LoginPage {
 
   openRegisterPage() {
     let regModal = this.modal.create('RegisterPage', {
-      isStylist: this.isStylist
+      isStylist: this.isStylist,
     });
     regModal.present();
   }

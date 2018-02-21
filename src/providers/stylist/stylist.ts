@@ -35,7 +35,6 @@ export class StylistProvider {
     console.log(uid);
 
     return this.afdb.list<Stylist>(`stylistProfile`, ref => {
-      console.log(ref);
       return ref.orderByChild('userId').equalTo(uid);
     });
   }
@@ -72,7 +71,7 @@ export class StylistProvider {
       addressTownCity: stylist.addressTownCity,
       addressCounty: stylist.addressCounty,
       addressPostcode: stylist.addressPostcode,
-      galleryImages: null
+      galleryImages: null,
     };
 
     if (stylist.loadImages) {

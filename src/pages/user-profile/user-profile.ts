@@ -3,13 +3,14 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  ModalController
+  ModalController,
 } from 'ionic-angular';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 import firebase from 'firebase';
 import { SettingsPage } from '../settings/settings';
 import { StorageProvider } from '../../providers/storage/storage';
+import { StylistProvider } from '../../providers/stylist/stylist';
 
 /**
  * Generated class for the UserProfilePage page.
@@ -21,7 +22,7 @@ import { StorageProvider } from '../../providers/storage/storage';
 @IonicPage()
 @Component({
   selector: 'page-user-profile',
-  templateUrl: 'user-profile.html'
+  templateUrl: 'user-profile.html',
 })
 export class UserProfilePage {
   name: string;
@@ -29,19 +30,23 @@ export class UserProfilePage {
 
   user: any;
   isStylist: boolean;
+  stylist$: any;
+  style: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private afauth: AngularFireAuth,
     private modalCtrl: ModalController,
-    private storage: StorageProvider
+    private storage: StorageProvider,
+    private stylist: StylistProvider
   ) {}
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     console.log('ionViewDidLoad UserProfilePage');
 
     this.getUserProfile();
+    this.getStylistProfile();
     this.storage.getStorage('isStylist').subscribe(res => {
       if (res) {
         this.isStylist = true;
@@ -51,7 +56,26 @@ export class UserProfilePage {
     });
   }
 
-  getUserProfile() {
+  //-- Public
+
+  public doOpenSettings() {
+    let settingsModal = this.modalCtrl.create(SettingsPage);
+
+    settingsModal.onDidDismiss(data => {
+      console.log('dismissed ', data);
+    });
+
+    settingsModal.present();
+  }
+
+  public doLogOut() {
+    console.log('sign out valled');
+    this.afauth.auth.signOut();
+  }
+
+  //-- Private
+
+  private getUserProfile() {
     console.log(this.afauth.auth.currentUser.uid);
 
     firebase
@@ -66,18 +90,19 @@ export class UserProfilePage {
       });
   }
 
-  doOpenSettings() {
-    let settingsModal = this.modalCtrl.create(SettingsPage);
+  private getStylistProfile() {
+    console.log('getstylistprofile');
+    this.stylist
+      .getStylist(this.afauth.auth.currentUser.uid)
+      .valueChanges()
+      .subscribe(res => {
+        console.log(res);
+        let obj = { ...res[0] };
+        this.style = res;
 
-    settingsModal.onDidDismiss(data => {
-      console.log('dismissed ', data);
-    });
+        console.log(obj);
+      });
 
-    settingsModal.present();
-  }
-
-  doLogOut() {
-    console.log('sign out valled');
-    this.afauth.auth.signOut();
+    console.log(this.style);
   }
 }
