@@ -1,6 +1,6 @@
 {
   "name": "available-beauty",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "author": "Eugene Cross",
   "homepage": "http://availablebeauty.com/",
   "email": "siteadmin@availablebeauty.com",
@@ -77,11 +77,10 @@
     "ionic": "3.19.1",
     "typescript": "2.3.4"
   },
-  "description": "An app to find salons, stylists and hairdressers available now and close to you",
+  "description":
+    "An app to find salons, stylists and hairdressers available now and close to you",
   "cordova": {
-    "platforms": [
-      "android"
-    ],
+    "platforms": ["android"],
     "plugins": {
       "ionic-plugin-keyboard": {},
       "cordova-plugin-whitelist": {},
@@ -112,7 +111,8 @@
         "TWITTER_SECRET": "OFQrLFimxHyWP9OPN7XotLkDOAtuO5TxB1XWoImPnhSinW7R8y"
       },
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3"
+        "REVERSED_CLIENT_ID":
+          "com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3"
       },
       "cordova-plugin-facebook4": {
         "APP_ID": "125684678101312",
@@ -126,7 +126,8 @@
         "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
       },
       "com.synconset.imagepicker": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "To allow image picker to select photos from library"
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION":
+          "To allow image picker to select photos from library"
       },
       "cordova-plugin-file": {}
     }
