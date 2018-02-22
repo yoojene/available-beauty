@@ -16,6 +16,8 @@ import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
 export class EditUserProfilePage {
   // @ViewChild('navBar') navbar: Navbar;
 
+  editProfileTitle = 'Edit Profile';
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
