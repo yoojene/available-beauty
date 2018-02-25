@@ -50,6 +50,7 @@ import { AvailabilityProvider } from '../providers/availability/availability';
 import { UtilsProvider } from '../providers/utils/utils';
 import { BookingProvider } from '../providers/booking/booking';
 import { PhotoProvider } from '../providers/photo/photo';
+import { MessagesProvider } from '../providers/messages/messages';
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { PhotoProvider } from '../providers/photo/photo';
     UtilsProvider,
     BookingProvider,
     PhotoProvider,
+    MessagesProvider,
   ],
 })
 export class AppModule {}

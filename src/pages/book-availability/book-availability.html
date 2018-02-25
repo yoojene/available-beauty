@@ -19,10 +19,26 @@
   <br>
   <br> Enter any details for the stylist below and they will contact you to confirm the booking</div>
 
-  <form (submit)="onSubmitBookForm()">
-    <textarea required ([ngModel])="bookMessage" name="bookingMessage">
 
-    </textarea>
+  <ion-list no-padding>
+  <!-- {{messages$ | json}} -->
+    <div *ngFor="let msg of messages$ | async">
+    <ion-item text-wrap no-lines>
+      {{msg.message}}
+    </ion-item>
+    <ion-item>
+      {{msg.messageDate}}
+    </ion-item>
+    </div>
+  </ion-list>
+
+  <form (submit)="onSubmitBookForm()">
+    <ion-item-divider></ion-item-divider>
+    <ion-textarea required ([ngModel])="bookMessage" name="bookingMessage" placeholder="Write Message">
+
+    </ion-textarea>
   </form>
+
+
 
 </ion-content>
