@@ -3,7 +3,7 @@ import {
   NavController,
   IonicPage,
   ModalController,
-  AlertController
+  AlertController,
 } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
@@ -18,11 +18,12 @@ import { Subject } from 'rxjs/Subject';
 import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { BookingProvider } from '../../providers/booking/booking';
+import { BookAvailabilityPage } from '../book-availability/book-availability';
 
 @IonicPage()
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
 })
 export class HomePage {
   public availabilityHeader = 'Availability';
@@ -93,7 +94,7 @@ export class HomePage {
     console.log(user);
     console.log('opent da modal');
     let profileModal = this.modalCtrl.create(StylistProfilePage, {
-      user: user
+      user: user,
     });
 
     profileModal.onDidDismiss(data => {
@@ -105,7 +106,7 @@ export class HomePage {
 
   public openReviews(stylistId: any) {
     let reviewModal = this.modalCtrl.create(StylistReviewPage, {
-      stylistId: stylistId
+      stylistId: stylistId,
     });
 
     reviewModal.onDidDismiss(data => {
@@ -164,37 +165,48 @@ export class HomePage {
   public bookAvailability(avail) {
     console.log(avail);
 
-    let bookingAlert = this.alertCtrl.create({
-      title: `Request Booking for ${avail.datetime}?`,
-      message:
-        'Do you want to request to book this slot?  <br> <br> Enter any details for the stylist below and they will contact you to confirm the booking',
-      inputs: [
-        {
-          name: 'details',
-          placeholder: 'Details',
-          type: 'text'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Confirm',
-          handler: () => {
-            console.log('Confirm booking clicked');
-            this.booking.makeBooking(avail.key); // TODO what should happen here MVP 1 are we actually booking
-          }
-        }
-      ]
+    let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
+      avail: avail,
     });
 
-    bookingAlert.present();
+    bookingModal.onDidDismiss(data => {
+      console.log('dismissed bookAvailabilityModal', data);
+    });
+
+    bookingModal.present();
   }
+
+  // let bookingAlert = this.alertCtrl.create({
+  //   title: `Request Booking for ${avail.datetime}?`,
+  //   message:
+  //     'Do you want to request to book this slot?  <br> <br> Enter any details for the stylist below and they will contact you to confirm the booking',
+  //   inputs: [
+  //     {
+  //       name: 'details',
+  //       placeholder: 'Details',
+  //       type: 'text'
+  //     }
+  //   ],
+  //   buttons: [
+  //     {
+  //       text: 'Cancel',
+  //       role: 'cancel',
+  //       handler: () => {
+  //         console.log('Cancel clicked');
+  //       }
+  //     },
+  //     {
+  //       text: 'Confirm',
+  //       handler: () => {
+  //         console.log('Confirm booking clicked');
+  //         this.booking.makeBooking(avail.key); // TODO what should happen here MVP 1 are we actually booking
+  //       }
+  //     }
+  //   ]
+  // });
+
+  // bookingAlert.present();
+  // }
 
   public toggleFavourite() {
     if (!this.toggled) {

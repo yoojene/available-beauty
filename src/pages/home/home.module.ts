@@ -8,6 +8,7 @@ import { StylistProvider } from '../../providers/stylist/stylist';
 import { SearchPageModule } from '../search/search.module';
 // import { SearchPage } from '../search/search';
 import { StylistReviewPageModule } from '../stylist-review/stylist-review.module';
+import { BookAvailabilityPageModule } from '../book-availability/book-availability.module';
 
 @NgModule({
   declarations: [HomePage],
@@ -15,8 +16,9 @@ import { StylistReviewPageModule } from '../stylist-review/stylist-review.module
     ComponentsModule,
     SearchPageModule,
     StylistReviewPageModule,
-    IonicPageModule.forChild(HomePage)
+    BookAvailabilityPageModule,
+    IonicPageModule.forChild(HomePage),
   ],
-  providers: [Geolocation, UserProvider, StylistProvider]
+  providers: [Geolocation, UserProvider, StylistProvider],
 })
 export class HomePageModule {}
