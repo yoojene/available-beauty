@@ -141,6 +141,15 @@ export class HomePage {
 
             this.availabilities = avails.filter(res => res.booked === false);
 
+            this.availabilities.sort((a, b) => {
+              return a.datetime - b.datetime;
+            });
+
+            this.availabilities = this.availabilities.filter(el => {
+              return el.datetime >= moment().unix();
+            });
+
+            console.log('filtered availabilities rrrrr');
             console.log(this.availabilities);
 
             this.availabilities.forEach(el => {
@@ -148,7 +157,9 @@ export class HomePage {
               return (
                 (el.day = moment.unix(el.datetime).format('ddd Do')) &&
                 (el.month = moment.unix(el.datetime).format('MMM')) &&
-                (el.datetime = moment.unix(el.datetime).format('ddd Do HH:mm'))
+                (el.datetime = moment
+                  .unix(el.datetime)
+                  .format('ddd Do MMM HH:mm'))
               );
             });
           });
