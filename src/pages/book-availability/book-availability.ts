@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
+import * as moment from 'moment';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -21,22 +22,42 @@ export class BookAvailabilityPage {
   bookMessage: any;
 
   messages$: Observable<any>;
+  chats: any;
+  chatmsgs: any = [];
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public msg: MessagesProvider
   ) {}
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BookAvailabilityPage');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter BookAvailabilityPage');
     let params = this.navParams.get('avail');
 
     this.availableDate = params.datetime;
 
-    this.messages$ = this.msg
-      .getMessageByRecipientId(firebase.auth().currentUser.uid)
-      .valueChanges();
-    // .subscribe(res => console.log(res));
+    let result = this.msg
+      .getChatsForUser(firebase.auth().currentUser.uid) // TODO Need to account for when there is no /chat existing for user
+      .mergeMap(res => this.msg.getMessagesForChat(res[0].key));
+
+    result.subscribe((res: any) => {
+      // res.sort((a, b) => {
+      //   return a.messageDate - b.messageDate;
+      // });
+      res.forEach((el: any) => {
+        return (el.messageDate = moment
+          .unix(el.messageDate)
+          .format('ddd Do MMM HH:mm'));
+      });
+      this.chatmsgs = res;
+      console.log(this.chatmsgs);
+    });
+
+    // this.chatmsgs.forEach(chat => {
+    //   return (chat.messageDate = moment
+    //     .unix(chat.messageDate)
+    //     .format('ddd Do MMM HH:mm'));
+    // });
   }
 
   onSubmitBookForm() {

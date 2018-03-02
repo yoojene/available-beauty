@@ -14,9 +14,22 @@ export class MessagesProvider {
     console.log('Hello MessagesProvider Provider');
   }
 
-  getMessageByRecipientId(uid) {
-    return this.afdb.list('messages', ref => {
-      return ref.orderByChild('recipientId').equalTo(uid);
-    });
+  getChatsForUser(uid) {
+    return this.afdb
+      .list('chats', ref => {
+        return ref.orderByChild('userId').equalTo(uid);
+      })
+      .snapshotChanges();
+  }
+
+  getMessagesForChat(key) {
+    console.log(key);
+    return this.afdb.list(`chats/${key}/messages`).valueChanges();
+  }
+
+  getMessagesByAvailability(stylistId, availabilityId) {
+    return this.afdb.list(
+      `stylistProfile/${stylistId}/availability/${availabilityId}/messages`
+    );
   }
 }
