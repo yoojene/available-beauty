@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
+import * as moment from 'moment';
+import * as firebase from 'firebase';
 
 /*
   Generated class for the MessagesProvider provider.
@@ -14,7 +16,7 @@ export class MessagesProvider {
     console.log('Hello MessagesProvider Provider');
   }
 
-  getChatsForUser(uid) {
+  public getChatsForUser(uid) {
     return this.afdb
       .list('chats', ref => {
         return ref.orderByChild('userId').equalTo(uid);
@@ -22,14 +24,31 @@ export class MessagesProvider {
       .snapshotChanges();
   }
 
-  getMessagesForChat(key) {
+  public getMessagesForChat(key) {
     console.log(key);
     return this.afdb.list(`chats/${key}/messages`).valueChanges();
   }
 
-  getMessagesByAvailability(stylistId, availabilityId) {
-    return this.afdb.list(
-      `stylistProfile/${stylistId}/availability/${availabilityId}/messages`
-    );
+  public addChat() {}
+
+  public addMessageForUser(chatId, msg) {
+    let messageData = {
+      messageDate: moment().unix(),
+      messageSender: firebase.auth().currentUser.displayName,
+      messageText: msg,
+    };
+
+    let msgKey = this.afdb.database
+      .ref()
+      .child(`chats/${chatId}/messages`)
+      .push().key;
+
+    let messagePayload = {};
+    messagePayload[`chats/${chatId}/messages/${msgKey}`] = messageData;
+
+    return this.afdb.database
+      .ref()
+      .update(messagePayload)
+      .then(res => console.log(res));
   }
 }

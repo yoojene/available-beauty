@@ -19,11 +19,14 @@ import * as moment from 'moment';
 })
 export class BookAvailabilityPage {
   availableDate: any;
-  bookMessage: any;
+  booking: any = {};
+  // bookMessage: any;
 
   messages$: Observable<any>;
   chats: any;
   chatmsgs: any = [];
+  chatId: any;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -38,7 +41,10 @@ export class BookAvailabilityPage {
 
     let result = this.msg
       .getChatsForUser(firebase.auth().currentUser.uid) // TODO Need to account for when there is no /chat existing for user
-      .mergeMap(res => this.msg.getMessagesForChat(res[0].key));
+      .mergeMap(res => {
+        this.chatId = res[0].key;
+        return this.msg.getMessagesForChat(res[0].key);
+      });
 
     result.subscribe((res: any) => {
       // res.sort((a, b) => {
@@ -60,7 +66,9 @@ export class BookAvailabilityPage {
     // });
   }
 
-  onSubmitBookForm() {
-    console.log('submitted', this.bookMessage);
+  onSubmitBookForm(e) {
+    e.preventDefault();
+    console.log('submitted', this.booking.bookMessage);
+    this.msg.addMessageForUser(this.chatId, this.booking.bookMessage);
   }
 }
