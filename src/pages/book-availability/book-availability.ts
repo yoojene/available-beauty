@@ -70,5 +70,6 @@ export class BookAvailabilityPage {
     e.preventDefault();
     console.log('submitted', this.booking.bookMessage);
     this.msg.addMessageForUser(this.chatId, this.booking.bookMessage);
+    this.booking.bookMessage = '';
   }
 }

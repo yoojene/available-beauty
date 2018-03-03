@@ -21,10 +21,11 @@
 
   <form (submit)="onSubmitBookForm($event)">
     <ion-item-divider></ion-item-divider>
-    <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message">
-
-    </ion-textarea>
-    <button ion-button>Send it</button>
+    <ion-item >
+      <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message"></ion-textarea>
+      <button ion-button item-end><ion-icon name="send"></ion-icon>
+      </button>
+    </ion-item>
   </form>
   <ion-list no-padding>
       <div *ngFor="let msg of chatmsgs">
