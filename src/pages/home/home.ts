@@ -27,6 +27,7 @@ import { BookAvailabilityPage } from '../book-availability/book-availability';
 })
 export class HomePage {
   public availabilityHeader = 'Availability';
+  public noAvailabilitiesText = 'No Availability';
   public reviewsText = 'Reviews >';
   public lat: number;
   public long: number;

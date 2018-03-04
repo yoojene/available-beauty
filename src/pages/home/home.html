@@ -77,14 +77,19 @@
                 <ion-list-header no-padding>
                   {{availabilityHeader}}
                 </ion-list-header>
-                <ion-scroll scrollX="true">
-                <ion-col *ngFor="let avail of availabilities">
-                    <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
-                      {{avail.datetime}}
-                    </button>
-
-                </ion-col>
-                </ion-scroll>
+                <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+                <ng-template #no_avail>
+                  <h2>{{noAvailabilitiesText}}</h2>
+                </ng-template>
+                <ng-template #avail>
+                  <ion-scroll scrollX="true">
+                    <ion-col *ngFor="let avail of availabilities">
+                      <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
+                        {{avail.datetime}}
+                      </button>
+                    </ion-col>
+                  </ion-scroll>
+                </ng-template>
               </expandable-item>
             </ion-card-content>
           </ion-card>
