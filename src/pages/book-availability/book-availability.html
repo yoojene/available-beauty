@@ -19,23 +19,26 @@
   <br>
   <br> Enter any details for the stylist below and they will contact you to confirm the booking</div>
 
-  <form (submit)="onSubmitBookForm($event)">
-    <ion-item-divider></ion-item-divider>
-    <ion-item >
-      <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message"></ion-textarea>
-      <button ion-button item-end><ion-icon name="send"></ion-icon>
-      </button>
-    </ion-item>
-  </form>
+
   <ion-list no-padding>
       <div *ngFor="let msg of chatmsgs">
-        <ion-item>
+        <chat-bubble [msg]="msg"></chat-bubble>
+        <!-- <ion-item>
           {{msg.messageSender}} -- {{msg.messageDate}}
         </ion-item>
         <ion-item text-wrap no-lines>
           {{msg.messageText}}
-        </ion-item>
+        </ion-item> -->
     </div>
   </ion-list>
+  <form (submit)="onSubmitBookForm($event)">
+    <ion-item-divider></ion-item-divider>
+    <ion-item>
+      <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message"></ion-textarea>
+      <button ion-button item-end>
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-item>
+  </form>
 
 </ion-content>

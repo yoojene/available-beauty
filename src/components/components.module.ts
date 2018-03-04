@@ -7,7 +7,8 @@ import { IonMarker } from './ion-marker/ion-marker';
 import { ExpandableItemComponent } from './expandable-item/expandable-item';
 import { ProgressBarComponent } from './progress-bar/progress-bar';
 import { StarRatingComponent } from './star-rating/star-rating';
-// import { IonicModule } from 'ionic-angular';
+// import { FavouriteIndicatorComponent } from './favourite-indicator/favourite-indicator';
+import { ChatBubbleComponent } from './chat-bubble/chat-bubble';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { StarRatingComponent } from './star-rating/star-rating';
     IonMarker,
     ExpandableItemComponent,
     ProgressBarComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    // FavouriteIndicatorComponent,
+    ChatBubbleComponent,
   ],
   imports: [MapProvidersModule.forRoot(), CommonModule],
   exports: [
@@ -25,9 +28,11 @@ import { StarRatingComponent } from './star-rating/star-rating';
     IonMarker,
     ExpandableItemComponent,
     ProgressBarComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    // FavouriteIndicatorComponent,
+    ChatBubbleComponent,
   ],
   entryComponents: [StarRatingComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ComponentsModule {}

@@ -36,6 +36,7 @@ export class MessagesProvider {
       messageDate: moment().unix(),
       messageSender: firebase.auth().currentUser.displayName,
       messageText: msg,
+      senderUid: firebase.auth().currentUser.uid,
     };
 
     let msgKey = this.afdb.database
