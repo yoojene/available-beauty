@@ -82,11 +82,9 @@ export class LoginPage {
     switch (this.loginType) {
       case 'Looking':
         this.isStylist = false;
-        // this.storage.setStorage('isStylist', this.isStylist);
         break;
       case 'Offering':
         this.isStylist = true;
-        // this.storage.setStorage('isStylist', this.isStylist);
         break;
     }
 

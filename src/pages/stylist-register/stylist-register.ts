@@ -3,7 +3,8 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  ActionSheetController
+  ActionSheetController,
+  Platform,
 } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
@@ -13,7 +14,7 @@ import { PhoneNumberValidator } from '../../validators/phone-number.validators';
 
 import {
   NativeGeocoderReverseResult,
-  NativeGeocoderForwardResult
+  NativeGeocoderForwardResult,
 } from '@ionic-native/native-geocoder';
 import { Camera } from '@ionic-native/camera';
 
@@ -34,7 +35,7 @@ import { Slides } from 'ionic-angular';
 @IonicPage()
 @Component({
   selector: 'page-stylist-register',
-  templateUrl: 'stylist-register.html'
+  templateUrl: 'stylist-register.html',
 })
 export class StylistRegisterPage {
   @ViewChild(Slides) slides: Slides;
@@ -76,8 +77,12 @@ export class StylistRegisterPage {
 
   public activeSlideIdx: any = 0;
 
+  public yes: boolean;
+  public no: boolean;
+
   constructor(
     public navCtrl: NavController,
+    private plt: Platform,
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     public storage: StorageProvider,
@@ -91,7 +96,7 @@ export class StylistRegisterPage {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: [
         '',
-        [Validators.required, PhoneNumberValidator.isPhoneNumber]
+        [Validators.required, PhoneNumberValidator.isPhoneNumber],
       ],
       stylistName: ['', Validators.required],
       isMyLocation: [true, Validators.required],
@@ -105,7 +110,7 @@ export class StylistRegisterPage {
       bio: ['', Validators.required],
       mobile: [false, Validators.required],
       mobileRange: [''],
-      loadImages: [false, Validators.required]
+      loadImages: [false, Validators.required],
     });
   }
 
@@ -147,37 +152,42 @@ export class StylistRegisterPage {
    *
    * @memberof StylistRegisterPage
    */
-  useCurrentAddress() {
+  public useCurrentAddress() {
     console.log('using current address!');
-    if (this.showAddressForm) {
-      this.showAddressForm = false;
-    } else {
-      this.location
-        .getAddressFromCoordinates(this.coords[0], this.coords[1])
-        .then((result: NativeGeocoderReverseResult) => {
-          this.stylistRegForm.controls['addressLine1'].setValue(
-            result.subThoroughfare
-          );
-          this.stylistRegForm.controls['addressLine2'].setValue(
-            result.thoroughfare
-          );
-          this.stylistRegForm.controls['addressTownCity'].setValue(
-            result.locality
-          );
-          this.stylistRegForm.controls['addressCounty'].setValue(
-            result.subAdministrativeArea
-          );
-          this.stylistRegForm.controls['addressPostcode'].setValue(
-            result.postalCode
-          );
+    console.log(this.plt.platforms());
+    if (this.plt.is('cordova')) {
+      if (this.showAddressForm) {
+        this.showAddressForm = false;
+      } else {
+        this.location
+          .getAddressFromCoordinates(this.coords[0], this.coords[1])
+          .then((result: NativeGeocoderReverseResult) => {
+            this.stylistRegForm.controls['addressLine1'].setValue(
+              result.subThoroughfare
+            );
+            this.stylistRegForm.controls['addressLine2'].setValue(
+              result.thoroughfare
+            );
+            this.stylistRegForm.controls['addressTownCity'].setValue(
+              result.locality
+            );
+            this.stylistRegForm.controls['addressCounty'].setValue(
+              result.subAdministrativeArea
+            );
+            this.stylistRegForm.controls['addressPostcode'].setValue(
+              result.postalCode
+            );
 
-          this.stylistRegForm.controls['baseLocation'].setValue([
-            this.coords[0],
-            this.coords[1]
-          ]);
-          this.showAddressForm = true;
-        })
-        .catch((error: any) => console.error(error));
+            this.stylistRegForm.controls['baseLocation'].setValue([
+              this.coords[0],
+              this.coords[1],
+            ]);
+            this.showAddressForm = true;
+          })
+          .catch((error: any) => console.error(error));
+      }
+    } else {
+      // Do it for mobile web
     }
   }
   /**
@@ -185,45 +195,49 @@ export class StylistRegisterPage {
    *
    * @memberof StylistRegisterPage
    */
-  findAddress() {
+  public findAddress() {
     console.log('finding address');
     console.log(this.stylistRegForm.get('baseLocation').value);
-    if (this.showAddressForm) {
-      this.showAddressForm = false;
+    if (this.plt.is('cordova')) {
+      if (this.showAddressForm) {
+        this.showAddressForm = false;
+      } else {
+        this.location
+          .getCoordinatesFromAddress(
+            this.stylistRegForm.get('locationLookup').value
+          )
+          .then((coords: NativeGeocoderForwardResult) => {
+            this.location
+              .getAddressFromCoordinates(coords.latitude, coords.longitude)
+              .then((result: NativeGeocoderReverseResult) => {
+                this.stylistRegForm.controls['addressLine1'].setValue(
+                  result.subThoroughfare
+                );
+                this.stylistRegForm.controls['addressLine2'].setValue(
+                  result.thoroughfare
+                );
+                this.stylistRegForm.controls['addressTownCity'].setValue(
+                  result.locality
+                );
+                this.stylistRegForm.controls['addressCounty'].setValue(
+                  result.subAdministrativeArea
+                );
+                this.stylistRegForm.controls['addressPostcode'].setValue(
+                  result.postalCode
+                );
+
+                this.stylistRegForm.controls['baseLocation'].setValue([
+                  coords.latitude,
+                  coords.longitude,
+                ]);
+
+                this.showAddressForm = true;
+              });
+          })
+          .catch((error: any) => console.error(error));
+      }
     } else {
-      this.location
-        .getCoordinatesFromAddress(
-          this.stylistRegForm.get('locationLookup').value
-        )
-        .then((coords: NativeGeocoderForwardResult) => {
-          this.location
-            .getAddressFromCoordinates(coords.latitude, coords.longitude)
-            .then((result: NativeGeocoderReverseResult) => {
-              this.stylistRegForm.controls['addressLine1'].setValue(
-                result.subThoroughfare
-              );
-              this.stylistRegForm.controls['addressLine2'].setValue(
-                result.thoroughfare
-              );
-              this.stylistRegForm.controls['addressTownCity'].setValue(
-                result.locality
-              );
-              this.stylistRegForm.controls['addressCounty'].setValue(
-                result.subAdministrativeArea
-              );
-              this.stylistRegForm.controls['addressPostcode'].setValue(
-                result.postalCode
-              );
-
-              this.stylistRegForm.controls['baseLocation'].setValue([
-                coords.latitude,
-                coords.longitude
-              ]);
-
-              this.showAddressForm = true;
-            });
-        })
-        .catch((error: any) => console.error(error));
+      // Do it for mobileweb
     }
   }
   /**
@@ -231,7 +245,7 @@ export class StylistRegisterPage {
    *
    * @memberof StylistRegisterPage
    */
-  onSubmitStylistRegForm() {
+  public onSubmitStylistRegForm() {
     console.log(this.stylistRegForm.value);
 
     this.stylist.addStylistProfile(this.stylistRegForm.value).then(res => {
@@ -271,7 +285,7 @@ export class StylistRegisterPage {
                   });
               });
             });
-          }
+          },
         },
         {
           text: 'Use Camera',
@@ -287,13 +301,13 @@ export class StylistRegisterPage {
                   });
                 });
               });
-          }
+          },
         },
         {
           text: 'Cancel',
-          role: 'cancel'
-        }
-      ]
+          role: 'cancel',
+        },
+      ],
     });
     actionSheet.present();
   }
@@ -364,6 +378,9 @@ export class StylistRegisterPage {
 
   setMobile(value) {
     this.stylistRegForm.controls['mobile'].setValue(value);
+    if (!value) {
+      this.next();
+    }
   }
 
   takePhoto() {

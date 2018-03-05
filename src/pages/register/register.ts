@@ -11,7 +11,7 @@ import { LocationProvider } from '../../providers/location/location';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   RegisterAction,
-  RegisterErrorAction
+  RegisterErrorAction,
 } from '../../model/auth/auth.actions';
 import { AuthProvider } from '../../providers/auth/auth';
 import { StorageProvider } from '../../providers/storage/storage';
@@ -26,7 +26,7 @@ import { StorageProvider } from '../../providers/storage/storage';
 @IonicPage()
 @Component({
   selector: 'page-register',
-  templateUrl: 'register.html'
+  templateUrl: 'register.html',
 })
 export class RegisterPage {
   public registerForm: any;
@@ -53,16 +53,16 @@ export class RegisterPage {
         displayName: ['', Validators.required],
         emailAddress: [
           '',
-          Validators.compose([Validators.required, Validators.email])
+          Validators.compose([Validators.required, Validators.email]),
         ],
         password: [
           '',
-          Validators.compose([Validators.minLength(6), Validators.required])
+          Validators.compose([Validators.minLength(6), Validators.required]),
         ],
         confpassword: [
           '',
-          Validators.compose([Validators.minLength(6), Validators.required])
-        ]
+          Validators.compose([Validators.minLength(6), Validators.required]),
+        ],
       },
       { validator: PasswordValidation.MatchPassword }
     );
@@ -94,13 +94,11 @@ export class RegisterPage {
         .doRegister(user)
         .then(res => {
           console.log('User Registered : ' + JSON.stringify(res));
-          this.storage.getStorage('isStylist').subscribe(res => {
-            if (res) {
-              this.navCtrl.push('StylistRegisterPage');
-            } else {
-              this.navCtrl.push('TabsPage', { isStylist: user.isStylist });
-            }
-          });
+          if (user.isStylist) {
+            this.navCtrl.push('StylistRegisterPage');
+          } else {
+            this.navCtrl.push('TabsPage', { isStylist: user.isStylist });
+          }
         })
         .catch(err => {
           this.invalidReg = true;
