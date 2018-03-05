@@ -28,7 +28,7 @@ export class UserProvider {
     });
   }
 
-  public getUserById(id) {
+  public getUserById<User>(id) {
     return this.afdb.object<User>(`userProfile/${id}`);
   }
 

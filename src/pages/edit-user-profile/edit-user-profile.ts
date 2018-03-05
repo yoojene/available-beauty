@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Plugins } from '@capacitor/core';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 /**
  * Generated class for the EditUserProfilePage page.
  *
@@ -14,18 +15,32 @@ import { IonicPage, NavController, NavParams, Navbar } from 'ionic-angular';
   templateUrl: 'edit-user-profile.html',
 })
 export class EditUserProfilePage {
-  // @ViewChild('navBar') navbar: Navbar;
+  image: SafeResourceUrl;
 
   editProfileTitle = 'Edit Profile';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EditUserProfilePage');
   }
 
-  // ngAfterViewInit() {
-  //   console.log('after view innniiiittt');
-  //   console.log(this.navbar.setBackButtonText(''));
-  // }
+  async takePhoto() {
+    console.log('takePhoto');
+    const { Camera } = Plugins;
+
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: 'base64',
+    }).catch(err => console.error(err));
+
+    this.image = this.sanitizer.bypassSecurityTrustResourceUrl(
+      image && image.base64_data
+    );
+  }
 }

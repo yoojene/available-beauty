@@ -21,6 +21,8 @@
     "@angular/http": "4.4.4",
     "@angular/platform-browser": "4.4.4",
     "@angular/platform-browser-dynamic": "4.4.4",
+    "@capacitor/cli": "1.0.0-alpha.6",
+    "@capacitor/core": "1.0.0-alpha.6",
     "@ionic-native/camera": "4.5.2",
     "@ionic-native/core": "4.3.2",
     "@ionic-native/facebook": "^4.3.3",
@@ -75,12 +77,13 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.0.1",
     "ionic": "3.19.1",
-    "typescript": "2.3.4"
+    "typescript": "2.8.0-dev.20180302"
   },
-  "description":
-    "An app to find salons, stylists and hairdressers available now and close to you",
+  "description": "An app to find salons, stylists and hairdressers available now and close to you",
   "cordova": {
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "plugins": {
       "ionic-plugin-keyboard": {},
       "cordova-plugin-whitelist": {},
@@ -111,8 +114,7 @@
         "TWITTER_SECRET": "OFQrLFimxHyWP9OPN7XotLkDOAtuO5TxB1XWoImPnhSinW7R8y"
       },
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID":
-          "com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.625369331469-pmq20aisjh665khr4jm4fisdv570lkp3"
       },
       "cordova-plugin-facebook4": {
         "APP_ID": "125684678101312",
@@ -126,8 +128,7 @@
         "PHOTOLIBRARY_USAGE_DESCRIPTION": " "
       },
       "com.synconset.imagepicker": {
-        "PHOTO_LIBRARY_USAGE_DESCRIPTION":
-          "To allow image picker to select photos from library"
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "To allow image picker to select photos from library"
       },
       "cordova-plugin-file": {}
     }

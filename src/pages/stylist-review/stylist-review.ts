@@ -16,7 +16,7 @@ import { User } from '../../model/users/user.model';
 @IonicPage()
 @Component({
   selector: 'page-stylist-review',
-  templateUrl: 'stylist-review.html'
+  templateUrl: 'stylist-review.html',
 })
 export class StylistReviewPage {
   public stylistId: any;
@@ -55,7 +55,7 @@ export class StylistReviewPage {
     });
   }
 
-  public getReviewer(review) {
+  public getReviewer(review): any {
     return this.user.getUserById(review.userId).valueChanges();
   }
 }
