@@ -31,23 +31,27 @@ export class BookingProvider {
    * Create /booking and update /availability booked to true
    *
    * @param {any} availId
+   * @param {any} stylistUserId
    * @returns
    * @memberof BookingProvider
    */
-  public makeBooking(availId) {
+  public makePendingBooking(availId, stylistUserId) {
+    console.log('makePendingBooking ');
     let bookingData = {
       availabilityId: availId,
-      userId: firebase.auth().currentUser.uid
+      userAccepted: false,
+      stylistAccepted: false,
     };
 
     let bookingKey = this.afdb.database
       .ref()
-      .child('booking')
+      .child(`userProfile/${stylistUserId}/bookings`)
       .push().key;
 
     let bookingPayload = {};
-    bookingPayload[`/booking/${bookingKey}`] = bookingData;
-    // bookingPayload[`/availability/${availId}/booked`] = true;
+    bookingPayload[
+      `userProfile/${stylistUserId}/bookings/${bookingKey}`
+    ] = bookingData;
 
     return this.afdb.database
       .ref()

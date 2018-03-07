@@ -403,6 +403,8 @@ export class StylistRegisterPage {
           console.log(baseress);
           this.photo.pushPhotoToStorage(baseress).then(stores => {
             console.log(stores[0]);
+
+            // TODO: this looks to be the place to update RTDB
             this.monitorUploadProgress(stores[0]);
           });
         });
