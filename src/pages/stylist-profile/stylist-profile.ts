@@ -19,7 +19,7 @@ import { BookingProvider } from '../../providers/booking/booking';
 @IonicPage()
 @Component({
   selector: 'page-stylist-profile',
-  templateUrl: 'stylist-profile.html'
+  templateUrl: 'stylist-profile.html',
 })
 export class StylistProfilePage implements OnDestroy {
   availabilityHeader: string = 'Availability';
@@ -129,7 +129,7 @@ export class StylistProfilePage implements OnDestroy {
       1.) create /booking entry
       2.) mark given /availability booked = true
     ****/
-    this.booking.makeBooking(this.selectedAvailability);
+    // this.booking.makeBooking(this.selectedAvailability);
   }
 
   // Events

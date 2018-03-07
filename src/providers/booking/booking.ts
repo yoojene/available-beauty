@@ -22,10 +22,14 @@ export class BookingProvider {
   }
 
   public getUserBookings(uid) {
-    return this.afdb.list<Booking>(`booking`, ref => {
-      console.log(ref);
-      return ref.orderByChild('userId').equalTo(uid);
-    });
+    // return this.afdb.list<Booking>(`booking`, ref => {
+    //   console.log(ref);
+    //   return ref.orderByChild('userId').equalTo(uid);
+    // });
+    console.log(uid);
+    return this.afdb
+      .list<Booking>(`userProfile/${uid}/bookings`)
+      .snapshotChanges();
   }
   /**
    * Create /booking and update /availability booked to true
