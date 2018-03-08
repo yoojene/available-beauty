@@ -121,7 +121,6 @@ export class LoginPage {
             });
         })
         .catch(err => {
-          console.log(err);
           this.invalidLogin = true;
           this.error = err.message; // This is the Firebase error - too techy?
           console.error(err.code);

@@ -10,6 +10,7 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 /**
  * Generated class for the BookingsPage page.
@@ -30,6 +31,11 @@ export class BookingsPage {
   bookedavailbility$: Observable<any>;
   bookedStylist$: Observable<any>;
 
+  stylist$: Observable<any>;
+  stylistId: any;
+  availabilities$: Observable<any>;
+  availabilities: any;
+
   bookedavailabilty: any;
   bookedstylist: any;
   bookeduser: any;
@@ -45,7 +51,8 @@ export class BookingsPage {
     private avail: AvailabilityProvider,
     private stylist: StylistProvider,
     private user: UserProvider,
-    private afdb: AngularFireDatabase
+    private afdb: AngularFireDatabase,
+    private utils: UtilsProvider
   ) {}
 
   ionViewDidLoad() {
@@ -55,7 +62,14 @@ export class BookingsPage {
   ionViewDidEnter() {
     // console.log('getting bookings');
     // TODO 16th Feb - This all needs to be rewritten with the new structure
-    this.getBookings();
+
+    this.stylist
+      .getStylist(firebase.auth().currentUser.uid)
+      .snapshotChanges()
+      .subscribe(res => {
+        this.stylistId = res[0].key;
+        this.getBookings();
+      });
   }
 
   private getBookings() {
@@ -63,10 +77,26 @@ export class BookingsPage {
     let uid = firebase.auth().currentUser.uid;
 
     console.log(uid);
+    console.log(this.stylistId);
 
     this.bookings$ = this.book.getUserBookings(uid);
+
     this.bookings$.subscribe(res => {
       console.log(res);
+      console.log(res[0].payload.val());
+      // this.availabilities$ =
+      this.avail
+        .getAvailabilityById(
+          this.stylistId,
+          res[0].payload.val().availabilityId
+        )
+        .snapshotChanges()
+        .subscribe(res => {
+          console.log('getAvailabilityByIdssss');
+          console.log(res);
+          let ava = this.utils.generateFirebaseKeyedValues(res);
+          console.log(ava);
+        });
     });
   }
 }

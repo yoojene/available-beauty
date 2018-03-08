@@ -17,12 +17,16 @@
   <h2> {{pendingBookingText}}</h2>
 
   <h2> {{acceptedBookingText}}</h2>
-  <div  *ngFor="let book of bookings$ | async">
+  <!-- <div *ngIf="availabilities$ | async; let avails"> -->
+    <div *ngFor="let avail of availabilities">
+{{avail}}
+<!-- {{availabilities$ | json}} -->
 
+<!--
+  <ion-item *ngIf="avails.payload.val()">
+    {{avails.payload.val().datetime}} -->
 
-  <ion-item *ngIf="book.payload.val(); let booking">
-    {{booking.availabilityId}}
-
-  </ion-item>
+  <!-- </ion-item> -->
+  <!-- </div> -->
   </div>
 </ion-content>
