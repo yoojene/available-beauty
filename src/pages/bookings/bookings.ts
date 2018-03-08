@@ -65,6 +65,8 @@ export class BookingsPage {
     console.log(uid);
 
     this.bookings$ = this.book.getUserBookings(uid);
-    this.bookings$.subscribe(res => console.log(res));
+    this.bookings$.subscribe(res => {
+      console.log(res);
+    });
   }
 }

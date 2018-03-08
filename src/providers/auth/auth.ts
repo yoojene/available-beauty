@@ -40,6 +40,7 @@ export class AuthProvider {
    */
   public doNativeLogin(email, password) {
     console.log('native afth login success', email + ' ' + password);
+
     return this.afauth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -159,7 +160,7 @@ export class AuthProvider {
     return this.google
       .login({
         webClientId: API_CONFIG_VALUES.google_ab_app_web_client_id,
-        offline: true
+        offline: true,
       })
       .then(
         res => {
@@ -234,7 +235,7 @@ export class AuthProvider {
       .then(newUser => {
         return Promise.all([
           this.updateUserProfile(newUser, user),
-          this.addUserProfile(user.isStylist, newUser, user)
+          this.addUserProfile(user.isStylist, newUser, user),
         ]);
       });
   }
@@ -292,7 +293,7 @@ export class AuthProvider {
     console.log(user);
 
     return firebaseUser.updateProfile({
-      displayName: user.displayName
+      displayName: user.displayName,
       // photoURL: user.photo
     });
   }
@@ -329,7 +330,7 @@ export class AuthProvider {
           avatarImage: userParam.photoURL,
           phoneNumber: null,
           homeLocation: this.geolocation,
-          isStylist: stylist
+          isStylist: stylist,
         }; // dummy
 
         console.log(userProfile);
@@ -373,7 +374,7 @@ export class AuthProvider {
           emailAddress: user.emailAddress,
           avatarImage: url,
           phoneNumber: null, // dummy
-          homeLocation: user.homeLocation
+          homeLocation: user.homeLocation,
         };
 
         return userProfile;
