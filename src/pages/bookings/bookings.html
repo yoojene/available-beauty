@@ -14,19 +14,25 @@
 
 
 <ion-content padding>
-  <h2> {{pendingBookingText}}</h2>
 
-  <h2> {{acceptedBookingText}}</h2>
-  <!-- <div *ngIf="availabilities$ | async; let avails"> -->
-    <div *ngFor="let avail of availabilities">
-{{avail}}
-<!-- {{availabilities$ | json}} -->
-
-<!--
-  <ion-item *ngIf="avails.payload.val()">
-    {{avails.payload.val().datetime}} -->
-
-  <!-- </ion-item> -->
-  <!-- </div> -->
+  <div *ngIf="bookings$ | async; let bookings">
+    <div *ngFor="let book of bookings">
+      <div *ngIf="book.payload.val().userAccepted === false && book.payload.val().stylistAccepted === false; then pending else no_pending"></div>
+        <ng-template #pending>
+            <h2> {{pendingBookingText}}</h2>
+          {{book.payload.val().availabilityId}}
+        </ng-template>
+        <ng-template #no_pending>
+          <h2> {{noPendingBookingText}}</h2>
+        </ng-template>
+      <div *ngIf="book.payload.val().userAccepted === true && book.payload.val().stylistAccepted === true; then accepted else no_accepted"></div>
+        <ng-template #accepted>
+          <h2> {{acceptedBookingText}}</h2>
+        {{book.payload.val().availabilityId}}
+        </ng-template>
+        <ng-template #no_accepted>
+          <h2> {{noAcceptedBookingText}}</h2>
+        </ng-template>
+      </div>
   </div>
 </ion-content>

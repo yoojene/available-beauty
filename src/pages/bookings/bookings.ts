@@ -26,7 +26,9 @@ import { UtilsProvider } from '../../providers/utils/utils';
 })
 export class BookingsPage {
   pendingBookingText = 'Pending Bookings';
+  noPendingBookingText = 'No Pending Bookings';
   acceptedBookingText = 'Accepted Bookings';
+  noAcceptedBookingText = 'No Accepted Bookings';
   bookings$: Observable<any>;
   bookedavailbility$: Observable<any>;
   bookedStylist$: Observable<any>;
@@ -84,6 +86,7 @@ export class BookingsPage {
     this.bookings$.subscribe(res => {
       console.log(res);
       console.log(res[0].payload.val());
+
       // this.availabilities$ =
       this.avail
         .getAvailabilityById(
