@@ -35,11 +35,11 @@ export class BookingProvider {
    * Create /booking and update /availability booked to true
    *
    * @param {any} availId
-   * @param {any} stylistUserId
+   * @param {any} userId
    * @returns
    * @memberof BookingProvider
    */
-  public makePendingBooking(availId, stylistUserId) {
+  public makePendingBooking(availId, userId) {
     console.log('makePendingBooking ');
     let bookingData = {
       availabilityId: availId,
@@ -49,13 +49,11 @@ export class BookingProvider {
 
     let bookingKey = this.afdb.database
       .ref()
-      .child(`userProfile/${stylistUserId}/bookings`)
+      .child(`userProfile/${userId}/bookings`)
       .push().key;
 
     let bookingPayload = {};
-    bookingPayload[
-      `userProfile/${stylistUserId}/bookings/${bookingKey}`
-    ] = bookingData;
+    bookingPayload[`userProfile/${userId}/bookings/${bookingKey}`] = bookingData;
 
     return this.afdb.database
       .ref()
