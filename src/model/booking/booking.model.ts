@@ -1,4 +1,5 @@
 export interface Booking {
   availabilityId: string;
-  userId: string;
+  stylistAccepted: boolean;
+  userAccepted: boolean;
 }

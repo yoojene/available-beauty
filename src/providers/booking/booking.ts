@@ -22,32 +22,38 @@ export class BookingProvider {
   }
 
   public getUserBookings(uid) {
-    return this.afdb.list<Booking>(`booking`, ref => {
-      console.log(ref);
-      return ref.orderByChild('userId').equalTo(uid);
-    });
+    // return this.afdb.list<Booking>(`booking`, ref => {
+    //   console.log(ref);
+    //   return ref.orderByChild('userId').equalTo(uid);
+    // });
+    console.log(uid);
+    return this.afdb
+      .list<Booking>(`userProfile/${uid}/bookings`)
+      .snapshotChanges();
   }
   /**
    * Create /booking and update /availability booked to true
    *
    * @param {any} availId
+   * @param {any} userId
    * @returns
    * @memberof BookingProvider
    */
-  public makeBooking(availId) {
+  public makePendingBooking(availId, userId) {
+    console.log('makePendingBooking ');
     let bookingData = {
       availabilityId: availId,
-      userId: firebase.auth().currentUser.uid
+      userAccepted: false,
+      stylistAccepted: false,
     };
 
     let bookingKey = this.afdb.database
       .ref()
-      .child('booking')
+      .child(`userProfile/${userId}/bookings`)
       .push().key;
 
     let bookingPayload = {};
-    bookingPayload[`/booking/${bookingKey}`] = bookingData;
-    // bookingPayload[`/availability/${availId}/booked`] = true;
+    bookingPayload[`userProfile/${userId}/bookings/${bookingKey}`] = bookingData;
 
     return this.afdb.database
       .ref()

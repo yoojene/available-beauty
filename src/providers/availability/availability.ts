@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
 import {
   Availability,
-  AvailabilitySlot
+  AvailabilitySlot,
 } from '../../model/availability/availability.model';
 import { StylistProvider } from '../stylist/stylist';
 import { Observable } from 'rxjs/Observable';
@@ -33,7 +33,7 @@ export class AvailabilityProvider {
     });
   }
   // Legacy
-  getAvailabilityById(avail) {
+  getOldAvailabilityById(avail) {
     console.log('calling getAvailabilityById()');
     console.log(avail);
     console.log(JSON.stringify(avail));
@@ -74,6 +74,16 @@ export class AvailabilityProvider {
     return availList$;
   }
 
+  // New
+
+  getAvailabilityById(stylistId, availId) {
+    console.log(stylistId);
+    console.log(availId);
+    return this.afdb.list(
+      `/stylistProfile/${stylistId}/availability/${availId}`
+    );
+  }
+
   // New RTDB format
   getBookedAvailability(stylistId: any) {
     console.log(stylistId);
@@ -93,7 +103,7 @@ export class AvailabilityProvider {
     console.log('setAvailabilityTaken');
     let availData = {
       datetime: slot,
-      booked: false
+      booked: false,
     };
 
     let availKey = this.afdb.database
@@ -139,8 +149,8 @@ export class AvailabilityProvider {
         time: startTime.format(format),
         epoch: startTime.unix(),
         disabled: false,
-        period: period
-      }
+        period: period,
+      },
     ];
     let loopInt = interval;
     for (let x = 0; x < slot; x++) {
@@ -153,7 +163,7 @@ export class AvailabilityProvider {
           .add(loopInt, unit)
           .unix(),
         disabled: false,
-        period: period
+        period: period,
       });
       loopInt = loopInt + interval;
     }

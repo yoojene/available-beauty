@@ -10,6 +10,7 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
+import { UtilsProvider } from '../../providers/utils/utils';
 
 /**
  * Generated class for the BookingsPage page.
@@ -21,12 +22,21 @@ import { UserProvider } from '../../providers/user/user';
 @IonicPage()
 @Component({
   selector: 'page-bookings',
-  templateUrl: 'bookings.html'
+  templateUrl: 'bookings.html',
 })
 export class BookingsPage {
+  pendingBookingText = 'Pending Bookings';
+  noPendingBookingText = 'No Pending Bookings';
+  acceptedBookingText = 'Accepted Bookings';
+  noAcceptedBookingText = 'No Accepted Bookings';
   bookings$: Observable<any>;
   bookedavailbility$: Observable<any>;
   bookedStylist$: Observable<any>;
+
+  stylist$: Observable<any>;
+  stylistId: any;
+  availabilities$: Observable<any>;
+  availabilities: any;
 
   bookedavailabilty: any;
   bookedstylist: any;
@@ -43,7 +53,8 @@ export class BookingsPage {
     private avail: AvailabilityProvider,
     private stylist: StylistProvider,
     private user: UserProvider,
-    private afdb: AngularFireDatabase
+    private afdb: AngularFireDatabase,
+    private utils: UtilsProvider
   ) {}
 
   ionViewDidLoad() {
@@ -51,90 +62,44 @@ export class BookingsPage {
   }
 
   ionViewDidEnter() {
-    console.log('getting bookings');
-    // this.getBookings();
+    // console.log('getting bookings');
     // TODO 16th Feb - This all needs to be rewritten with the new structure
+
+    this.stylist
+      .getStylist(firebase.auth().currentUser.uid)
+      .snapshotChanges()
+      .subscribe(res => {
+        this.stylistId = res[0].key;
+        this.getBookings();
+      });
   }
 
   private getBookings() {
-    console.log('getBookings');
+    console.log('gettttBookings');
     let uid = firebase.auth().currentUser.uid;
 
-    /* TODO: I _really_ want to chain the observables like this.
-    But as user can have 1>N bookings for an Stylist, and I can only pass a single
-    value (availabilityId) to the availability node it seems in AngularFirebaseList,
-    then having to loop through them and get the stylist details from the resulting
-    subscription
+    console.log(uid);
+    console.log(this.stylistId);
 
-    this.book
-      .getUserBookings(uid)
-      .valueChanges()
-      .flatMap(res => {
-        return (this.bookedavailbility$ = this.avail
-          .getAvailabilityById(res) // res is an array of bookings
-          .valueChanges());
-      })
-      .flatMap(res => {
-        return (this.bookedStylist$ = this.stylist
-          .getStylistById(res)
-          .valueChanges());
-      })
-      .subscribe(res => console.log(res));
-*/
+    this.bookings$ = this.book.getUserBookings(uid);
 
-    this.mybookings;
-    this.book
-      .getUserBookings(uid)
-      .valueChanges()
-      .subscribe(res => {
-        let availIds = [];
+    this.bookings$.subscribe(res => {
+      console.log(res);
+      console.log(res[0].payload.val());
 
-        // Parse out the availabilityIds from the bookings
-        res.forEach((el: any) => {
-          return availIds.push(el.availabilityId);
+      // this.availabilities$ =
+      this.avail
+        .getAvailabilityById(
+          this.stylistId,
+          res[0].payload.val().availabilityId
+        )
+        .snapshotChanges()
+        .subscribe(res => {
+          console.log('getAvailabilityByIdssss');
+          console.log(res);
+          let ava = this.utils.generateFirebaseKeyedValues(res);
+          console.log(ava);
         });
-
-        // Ugh - iterate over the availabiltyIds and get the availabilites
-        // Then for each of those, returned those that booked === true
-        // Then return the stylistProfile for these
-        // ....Got to be a better way!
-        availIds.forEach(el => {
-          return this.afdb
-            .list<Availability>(`availability`, ref => {
-              return ref.orderByKey().equalTo(el);
-            })
-            .valueChanges()
-            .subscribe(res => {
-              console.log(res);
-              res.forEach((el: any) => {
-                // let res: any = el;
-                console.log(el);
-                if (el.booked === true) {
-                  console.log('found booked');
-                  this.bookedavailabilty = el;
-                  return true;
-                }
-              });
-              return this.stylist
-                .getStylistById(this.bookedavailabilty)
-                .valueChanges()
-                .subscribe((res: any) => {
-                  this.bookedstylist = res;
-                  // this.mybookings.push(this.bookedstylist);
-
-                  return this.user
-                    .getUserById(res.userId)
-                    .valueChanges()
-                    .subscribe(res => {
-                      console.log(res);
-                      this.bookeduser = res;
-                      // this.mybookings.push(this.bookeduser);
-                    });
-                });
-            });
-        });
-      });
+    });
   }
 }
-
-// this.mybookings.push(this.bookedavailabilty);

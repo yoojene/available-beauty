@@ -5,6 +5,7 @@ import {
   NavParams,
   ModalController,
   LoadingController,
+  Loading,
 } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -45,6 +46,8 @@ export class LoginPage {
   private isStylist: boolean;
   private stylistRegistered: boolean = false;
 
+  public loading: Loading;
+
   constructor(
     public store: Store<AppState>,
     public formBuilder: FormBuilder,
@@ -53,7 +56,7 @@ export class LoginPage {
     private modal: ModalController,
     public afAuth: AngularFireAuth,
     public auth: AuthProvider,
-    private loading: LoadingController,
+    private loadingCtrl: LoadingController,
     private storage: StorageProvider,
     private user: UserProvider
   ) {
@@ -82,11 +85,9 @@ export class LoginPage {
     switch (this.loginType) {
       case 'Looking':
         this.isStylist = false;
-        // this.storage.setStorage('isStylist', this.isStylist);
         break;
       case 'Offering':
         this.isStylist = true;
-        // this.storage.setStorage('isStylist', this.isStylist);
         break;
     }
 
@@ -102,36 +103,35 @@ export class LoginPage {
     const userEmail = this.loginForm.value.email;
     const userPassword = this.loginForm.value.password;
 
-    let loading = this.loading.create();
+    this.loading = this.loadingCtrl.create();
 
-    loading.present().then(() => {
-      this.auth.doNativeLogin(userEmail, userPassword).then(res => {
-        console.log(res);
+    this.loading.present().then(() => {
+      this.auth
+        .doNativeLogin(userEmail, userPassword)
+        .then(res => {
+          console.log(res);
 
-        let uid = res.uid;
-        this.user
-          .getUserById(uid)
-          .valueChanges()
-          .subscribe((res: any) => {
-            loading.dismiss();
-            this.navCtrl.push('TabsPage', {
-              isStylist: res.isStylist,
+          let uid = res.uid;
+          this.user
+            .getUserById(uid)
+            .valueChanges()
+            .subscribe((res: any) => {
+              this.loading.dismiss().catch();
+              this.navCtrl.push('TabsPage', { isStylist: res.isStylist });
             });
-          });
-      }),
-        err => {
-          loading.dismiss();
+        })
+        .catch(err => {
           this.invalidLogin = true;
           this.error = err.message; // This is the Firebase error - too techy?
           console.error(err.code);
           console.error(err.message);
-          loading.dismiss();
-        };
+          this.loading.dismiss();
+        });
     });
   }
 
   onFacebookTap() {
-    let loading = this.loading.create();
+    let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth
@@ -152,7 +152,7 @@ export class LoginPage {
   }
 
   onGoogleTap() {
-    let loading = this.loading.create();
+    let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth
@@ -172,7 +172,7 @@ export class LoginPage {
   }
 
   onTwitterTap() {
-    let loading = this.loading.create();
+    let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth.doTwitterLogin(this.isStylist).then(

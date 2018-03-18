@@ -8,7 +8,7 @@ import { StorageProvider } from '../storage/storage';
 import {
   NativeGeocoder,
   NativeGeocoderReverseResult,
-  NativeGeocoderForwardResult
+  NativeGeocoderForwardResult,
 } from '@ionic-native/native-geocoder';
 
 /*
@@ -35,7 +35,7 @@ export class LocationProvider {
         console.log([position.coords.latitude, position.coords.longitude]);
         this.storage.setStorage('geolocation', [
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         ]);
         return [position.coords.latitude, position.coords.longitude];
       });
@@ -48,14 +48,22 @@ export class LocationProvider {
         console.log([resp.coords.latitude, resp.coords.longitude]);
         this.storage.setStorage('geolocation', [
           resp.coords.latitude,
-          resp.coords.longitude
+          resp.coords.longitude,
         ]);
         return [resp.coords.latitude, resp.coords.longitude];
       })
       .catch(err => console.error('Error getting location', err));
   }
 
-  getAddressFromCoordinates(lat, long) {
+  /**
+   * Passes coordinates to Native Geocoder cordova plugin to get address
+   *
+   * @param {any} lat
+   * @param {any} long
+   * @returns
+   * @memberof LocationProvider
+   */
+  public getAddressFromCoordinates(lat, long) {
     console.log('getAddressFromCoordinates');
     return this.nativeGeocoder
       .reverseGeocode(lat, long)
@@ -65,8 +73,14 @@ export class LocationProvider {
       })
       .catch((error: any) => console.error(error));
   }
-
-  getCoordinatesFromAddress(address) {
+  /**
+   * Passes address to Native Geocoder cordova plugin to get coordinates
+   *
+   * @param {any} address
+   * @returns
+   * @memberof LocationProvider
+   */
+  public getCoordinatesFromAddress(address) {
     console.log('getCoordinatesFromAddress');
     return this.nativeGeocoder
       .forwardGeocode(address)

@@ -19,6 +19,7 @@ import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
+import * as firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -41,8 +42,12 @@ export class HomePage {
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
+  // public stylistId: number;
+  public stylistUserId: number;
 
   public users: User[];
+
+  public uid = firebase.auth().currentUser.uid;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -121,13 +126,15 @@ export class HomePage {
     this.users.map(listItem => {
       if (user == listItem) {
         listItem.expanded = !listItem.expanded;
-        console.log(user.key);
+        // console.log(user.key);
+        this.stylistUserId = user.key;
 
-        this.stylist$ = this.stylist.getStylist(user.key).snapshotChanges();
+        this.stylist$ = this.stylist
+          .getStylist(this.stylistUserId)
+          .snapshotChanges();
 
         this.stylist$.subscribe(res => {
-          console.log(res);
-          console.log(res[0].key);
+          // this.stylistId = res[0].key;
           this.stylistAvail$ = this.stylist
             .getStylistAvailability(res[0].key)
             .snapshotChanges();
@@ -176,6 +183,11 @@ export class HomePage {
 
   public bookAvailability(avail) {
     console.log(avail);
+
+    // Make pending booking
+    this.booking
+      .makePendingBooking(avail.key, this.uid)
+      .then(res => console.log(res));
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       avail: avail,
