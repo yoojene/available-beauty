@@ -19,6 +19,7 @@ import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
+import * as firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -45,6 +46,8 @@ export class HomePage {
   public stylistUserId: number;
 
   public users: User[];
+
+  public uid = firebase.auth().currentUser.uid;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -183,7 +186,7 @@ export class HomePage {
 
     // Make pending booking
     this.booking
-      .makePendingBooking(avail.key, this.stylistUserId)
+      .makePendingBooking(avail.key, this.uid)
       .then(res => console.log(res));
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
