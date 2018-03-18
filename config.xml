@@ -89,9 +89,6 @@
     <plugin name="cordova-plugin-device" spec="1.1.4" />
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.11" />
-    <plugin name="cordova-plugin-geolocation" spec="~2.4.3">
-        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
-    </plugin>
     <plugin name="cordova-plugin-googlemaps" spec="~2.1.1">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyBeHaO48HWN6-rIcWPsNHHiLGHcQx2pie0" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyASVlONnA0udF3a0bWntj076WRe8ku6P6w" />
@@ -99,7 +96,6 @@
     <plugin name="cordova-sqlite-storage" spec="~2.1.2" />
     <plugin name="cordova-plugin-buildinfo" spec="~2.0.1" />
     <plugin name="cordova-universal-links-plugin" spec="~1.2.1" />
-    <plugin name="cordova-plugin-browsertab" spec="~0.2.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.7.2" />
     <plugin name="cordova-plugin-customurlscheme" spec="~4.3.0">
         <variable name="URL_SCHEME" value="com.available.beauty" />
@@ -122,13 +118,12 @@
     <plugin name="cordova-plugin-nativegeocoder" spec="~2.0.4">
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="Use geocoder service" />
     </plugin>
-    <plugin name="cordova-plugin-camera" spec="~2.4.1">
-        <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
-        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
-    </plugin>
     <plugin name="com.synconset.imagepicker" spec="~2.1.8">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To allow image picker to select photos from library" />
     </plugin>
-    <plugin name="cordova-plugin-file" spec="~4.3.3" />
     <engine name="android" spec="~6.1.2" />
+    <plugin name="cordova-plugin-camera" spec="~3.0.0" />
+    <plugin name="cordova-plugin-geolocation" spec="~4.0.0" />
+    <plugin name="cordova-plugin-file" spec="~5.0.0" />
+    <engine name="ios" spec="~4.3.1" />
 </widget>

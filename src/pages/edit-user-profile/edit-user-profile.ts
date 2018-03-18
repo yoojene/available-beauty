@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Plugins } from '@capacitor/core';
+import { Plugins, CameraResultType } from '@capacitor/core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 /**
  * Generated class for the EditUserProfilePage page.
@@ -36,11 +36,11 @@ export class EditUserProfilePage {
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
-      resultType: 'base64',
+      resultType: CameraResultType.Base64,
     }).catch(err => console.error(err));
 
     this.image = this.sanitizer.bypassSecurityTrustResourceUrl(
-      image && image.base64_data
+      image && image.base64Data
     );
   }
 }

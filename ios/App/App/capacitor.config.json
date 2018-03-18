@@ -1,0 +1,6 @@
+{
+  "appId": "com.available.availablebeauty",
+  "appName": "available-beauty",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}
