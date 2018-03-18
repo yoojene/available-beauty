@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterContentInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { Observable } from 'rxjs/Observable';
@@ -18,10 +18,11 @@ import { User } from '../../model/users/user.model';
   selector: 'page-stylist-review',
   templateUrl: 'stylist-review.html',
 })
-export class StylistReviewPage {
+export class StylistReviewPage implements AfterContentInit {
   public stylistId: any;
   public review$: Observable<Review[]>;
   public user$: Observable<User>;
+  public reviewUser: any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -33,8 +34,9 @@ export class StylistReviewPage {
     console.log('ionViewDidLoad StylistReviewPage');
   }
 
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter StylistReviewPage');
+  ionViewDidEnter() {}
+
+  ngAfterContentInit() {
     this.stylistId = this.navParams.get('stylistId');
 
     console.log(this.stylistId);
@@ -46,16 +48,19 @@ export class StylistReviewPage {
     this.review$ = this.stylist.getStylistReview(stylistId).valueChanges();
 
     this.review$.subscribe(res => {
-      console.log(res);
       res.forEach(el => {
-        this.user$ = this.getReviewer(el.userId);
-        console.log(this.user$);
-        return this.user$;
+        this.getReviewer(el.userId).subscribe(res => {
+          // TODO need to unsub
+          // TODO need to test how this works with different review users
+          let userObj = res.payload.val();
+          userObj.uid = res.key;
+          this.reviewUser = userObj;
+        });
       });
     });
   }
 
-  public getReviewer(review): any {
-    return this.user.getUserById(review.userId).valueChanges();
+  public getReviewer(uid): any {
+    return this.user.getUserById(uid).snapshotChanges();
   }
 }
