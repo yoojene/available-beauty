@@ -27,27 +27,67 @@ export class BookAvailabilityPage {
   chatmsgs: any = [];
   chatId: any;
 
+  userId: string;
+  stylistId: number;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public msg: MessagesProvider
   ) {}
 
+  // Lifecycle
+
   ionViewDidEnter() {
     console.log('ionViewDidEnter BookAvailabilityPage');
-    let params = this.navParams.get('avail');
+    const avail = this.navParams.get('avail');
+    this.stylistId = this.navParams.get('stylist');
+    this.userId = this.navParams.get('userId');
+    this.availableDate = avail.datetime;
 
-    this.availableDate = params.datetime;
+    // this.userId = firebase.auth().currentUser.uid;
 
-    let result = this.msg
-      .getChatsForUser(firebase.auth().currentUser.uid) // TODO Need to account for when there is no /chat existing for user
-      .mergeMap(res => {
-        this.chatId = res[0].key;
-        return this.msg.getMessagesForChat(res[0].key);
-      });
+    console.log(avail);
+    console.log(this.stylistId);
+    console.log(this.userId);
 
-    result.subscribe((res: any) => {
+    /* 1.
+          Check if current chat thread between user and stylist
+          if not, then create /chat
+          then create /message
+
+          if is, then append /message to existing /chat/id/message
+
+    */
+
+    this.checkIsChatThread().subscribe(res => {
       console.log(res);
+      if (!res) {
+        this.msg.addChat(this.userId, this.stylistId, avail.key);
+      } else {
+        this.getChatThread(res);
+      }
+    });
+  }
+
+  private checkIsChatThread() {
+    return (
+      this.msg
+        // .getChatsForUser(this.userId) // TODO Need to account for when there is no /chat existing for user
+        .getChatsForUserStylist(this.userId, this.stylistId) // TODO Need to account for when there is no /chat existing for user
+        .mergeMap(res => {
+          console.log(res);
+          if (res.length === 0) {
+            return Observable.of(false);
+          }
+          this.chatId = res[0].key; // only taking the first /chat
+          return Observable.of(this.chatId);
+        })
+    );
+  }
+
+  private getChatThread(chatId) {
+    this.msg.getMessagesForChat(chatId).subscribe((res: any) => {
       res.sort((a, b) => {
         return a.messageDate - b.messageDate;
       });
@@ -82,15 +122,9 @@ export class BookAvailabilityPage {
       this.chatmsgs = res;
       console.log(this.chatmsgs);
     });
-
-    // this.chatmsgs.forEach(chat => {
-    //   return (chat.messageDate = moment
-    //     .unix(chat.messageDate)
-    //     .format('ddd Do MMM HH:mm'));
-    // });
   }
 
-  onSubmitBookForm(e) {
+  public onSubmitBookForm(e) {
     e.preventDefault();
     console.log('submitted', this.booking.bookMessage);
     this.msg.addMessageForUser(this.chatId, this.booking.bookMessage);

@@ -24,12 +24,48 @@ export class MessagesProvider {
       .snapshotChanges();
   }
 
+  public getChatsForUserStylist(uid, stylistUid) {
+    return this.afdb
+      .list('chats', ref => {
+        return ref.orderByChild('userId').equalTo(uid);
+      })
+      .snapshotChanges()
+      .mergeMap(() => {
+        return this.afdb
+          .list('chats', ref => {
+            return ref.orderByChild('stylistId').equalTo(stylistUid);
+          })
+          .snapshotChanges();
+      });
+  }
+
   public getMessagesForChat(key) {
     console.log(key);
     return this.afdb.list(`chats/${key}/messages`).valueChanges();
   }
 
-  public addChat() {}
+  public addChat(userId, stylistId, availabilityId) {
+    const chatData = {
+      creationDate: moment().unix(),
+      stylistId: stylistId,
+      userId: userId,
+      availabilityId: availabilityId,
+    };
+
+    const chatKey = this.afdb.database
+      .ref()
+      .child(`chats`)
+      .push().key;
+
+    const chatPayload = {};
+
+    chatPayload[`chats/${chatKey}`] = chatData;
+
+    return this.afdb.database
+      .ref()
+      .update(chatPayload)
+      .then(res => console.log(res));
+  }
 
   public addMessageForUser(chatId, msg) {
     let messageData = {
