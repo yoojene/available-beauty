@@ -30,6 +30,13 @@ export class BookingProvider {
       .list<Booking>(`userProfile/${uid}/bookings`)
       .snapshotChanges();
   }
+
+  public getStylistBookings(stylistId) {
+    console.log('getStylistBookings -> ', stylistId);
+    return this.afdb.list(`bookings`, ref => {
+      return ref.orderByChild('stylistId').equalTo(stylistId);
+    });
+  }
   /**
    * Create /booking and update /availability booked to true
    *

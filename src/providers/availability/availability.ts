@@ -142,7 +142,6 @@ export class AvailabilityProvider {
     slot: number,
     period: string
   ) {
-    // moment(option.date + ' ' + option.time, 'ddd Do MMM HH:mm').unix();
     let slots: AvailabilitySlot[] = [
       {
         date: startTime.format('ddd Do MMM'),

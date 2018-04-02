@@ -31,6 +31,12 @@ export class UserProvider {
   public getUserById(id) {
     return this.afdb.object<User>(`userProfile/${id}`);
   }
+  public getUserListById(id) {
+    return this.afdb.list<User>(`userProfile/${id}`);
+    // return this.afdb.list<User>(`userProfile`, ref => {
+    //   return ref.key;
+    // });
+  }
 
   // OLD *****
   /**

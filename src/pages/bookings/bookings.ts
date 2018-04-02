@@ -11,6 +11,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
+import * as moment from 'moment';
 
 /**
  * Generated class for the BookingsPage page.
@@ -36,7 +37,9 @@ export class BookingsPage {
   stylist$: Observable<any>;
   stylistId: any;
   availabilities$: Observable<any>;
-  availabilities: any;
+  availabilities: any = [];
+  bookingUsers: any = [];
+  bookingUsers$: Observable<any>;
 
   bookedavailabilty: any;
   bookedstylist: any;
@@ -62,7 +65,9 @@ export class BookingsPage {
   }
 
   ionViewDidEnter() {
-    // console.log('getting bookings');
+    this.availabilities = [];
+    this.bookingUsers = [];
+    console.log('getting bookings');
     // TODO 16th Feb - This all needs to be rewritten with the new structure
 
     this.stylist
@@ -70,36 +75,62 @@ export class BookingsPage {
       .snapshotChanges()
       .subscribe(res => {
         this.stylistId = res[0].key;
-        this.getBookings();
+        this.getBookings(this.stylistId);
       });
   }
 
-  private getBookings() {
-    console.log('gettttBookings');
+  private getBookings(stylist) {
+    console.log('gettttBookings => ', stylist);
     let uid = firebase.auth().currentUser.uid;
 
-    console.log(uid);
-    console.log(this.stylistId);
-
-    this.bookings$ = this.book.getUserBookings(uid);
+    this.bookings$ = this.book.getStylistBookings(stylist).snapshotChanges();
 
     this.bookings$.subscribe(res => {
-      console.log(res);
-      console.log(res[0].payload.val());
+      console.log('bookings sub ', res);
 
-      // this.availabilities$ =
-      this.avail
-        .getAvailabilityById(
-          this.stylistId,
-          res[0].payload.val().availabilityId
-        )
-        .snapshotChanges()
-        .subscribe(res => {
-          console.log('getAvailabilityByIdssss');
-          console.log(res);
-          let ava = this.utils.generateFirebaseKeyedValues(res);
-          console.log(ava);
-        });
+      res.forEach(i => {
+        this.avail
+          .getAvailabilityById(this.stylistId, i.payload.val().availabilityId)
+          .snapshotChanges()
+          .subscribe(res => {
+            console.log('getAvailabilityByIdssss');
+            console.log(res);
+
+            this.availabilities.push({
+              availId: i.payload.val().availabilityId,
+              booked: res[0].payload.val(), // TODO need to filter these like the userList below
+              datetime: moment.unix(res[1].payload.val()).format('ddd Do MMM'), // TODO and this
+            });
+
+            console.log(this.availabilities);
+          });
+
+        this.user
+          .getUserListById(i.payload.val().userId)
+          .snapshotChanges()
+          .subscribe(res => {
+            console.log(res);
+
+            let name = res.filter(i => {
+              return i.key === 'name';
+            });
+            let emailAddress = res.filter(i => {
+              return i.key === 'emailAddress';
+            });
+            // console.log(name);
+            // console.log(emailAddress);
+            // console.log(name[0].payload.val());
+            // console.log(emailAddress[0].payload.val());
+
+            this.bookingUsers.push({
+              userId: i.payload.val().userId,
+              name: name[0].payload.val(),
+              emailAddress: emailAddress[0].payload.val(),
+            });
+
+            // console.log(this.bookingUsers);
+          });
+      });
     });
   }
 }
