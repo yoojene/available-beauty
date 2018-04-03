@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+} from 'ionic-angular';
 import { BookingProvider } from '../../providers/booking/booking';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/concatMap';
@@ -12,6 +17,7 @@ import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
+import { UserProfilePage } from '../user-profile/user-profile';
 
 /**
  * Generated class for the BookingsPage page.
@@ -52,6 +58,7 @@ export class BookingsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private modalCtrl: ModalController,
     private book: BookingProvider,
     private avail: AvailabilityProvider,
     private stylist: StylistProvider,
@@ -59,6 +66,8 @@ export class BookingsPage {
     private afdb: AngularFireDatabase,
     private utils: UtilsProvider
   ) {}
+
+  // Lifecycle
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad BookingsPage');
@@ -78,6 +87,28 @@ export class BookingsPage {
         this.getBookings(this.stylistId);
       });
   }
+
+  // Public
+  
+  /**
+   * Opens up UserProfile page in modal
+   *
+   * @param {any} userId
+   * @memberof BookingsPage
+   */
+  onBookingTap(userId) {
+    const profileModal = this.modalCtrl.create(UserProfilePage, {
+      user: userId,
+    });
+
+    profileModal.onDidDismiss(data => {
+      console.log('dismissed stylistProfileModal', data);
+    });
+
+    profileModal.present();
+  }
+
+  // Private
 
   private getBookings(stylist) {
     console.log('gettttBookings => ', stylist);

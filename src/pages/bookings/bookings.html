@@ -24,7 +24,7 @@
         <ng-template #pending>
           Avail ID {{pendbook.payload.val().availabilityId}}
 
-          <ion-item>
+          <ion-item (click)="onBookingTap(pendbook.payload.val().userId)">
           <div *ngFor="let avail of availabilities">
             <div *ngIf="pendbook.payload.val().availabilityId === avail.availId">
               {{avail.datetime}}
