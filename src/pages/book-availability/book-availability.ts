@@ -29,6 +29,7 @@ export class BookAvailabilityPage {
 
   userId: string;
   stylistId: number;
+  availability: any;
 
   constructor(
     public navCtrl: NavController,
@@ -40,14 +41,15 @@ export class BookAvailabilityPage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter BookAvailabilityPage');
-    const avail = this.navParams.get('avail');
+    this.availability = this.navParams.get('avail');
     this.stylistId = this.navParams.get('stylist');
     this.userId = this.navParams.get('userId');
-    this.availableDate = avail.datetime;
+    const bookingId = this.navParams.get('bookingId');
+    this.availableDate = this.availability.datetime;
 
     // this.userId = firebase.auth().currentUser.uid;
 
-    console.log(avail);
+    console.log(this.availability);
     console.log(this.stylistId);
     console.log(this.userId);
 
@@ -63,7 +65,7 @@ export class BookAvailabilityPage {
     this.checkIsChatThread().subscribe(res => {
       console.log(res);
       if (!res) {
-        this.msg.addChat(this.userId, this.stylistId, avail.key);
+        this.msg.addChat(this.userId, this.stylistId, this.availability.key);
       } else {
         this.getChatThread(res);
       }
@@ -74,7 +76,7 @@ export class BookAvailabilityPage {
     return (
       this.msg
         // .getChatsForUser(this.userId) // TODO Need to account for when there is no /chat existing for user
-        .getChatsForUserStylist(this.userId, this.stylistId) // TODO Need to account for when there is no /chat existing for user
+        .getChatsForAvailability(this.availability.key) // TODO Need to account for when there is no /chat existing for user
         .mergeMap(res => {
           console.log(res);
           if (res.length === 0) {

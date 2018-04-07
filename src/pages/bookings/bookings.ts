@@ -18,6 +18,7 @@ import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { UserProfilePage } from '../user-profile/user-profile';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * Generated class for the BookingsPage page.
@@ -36,24 +37,31 @@ export class BookingsPage {
   noPendingBookingText = 'No Pending Bookings';
   acceptedBookingText = 'Accepted Bookings';
   noAcceptedBookingText = 'No Accepted Bookings';
-  bookings$: Observable<any>;
-  bookedavailbility$: Observable<any>;
-  bookedStylist$: Observable<any>;
+
+  bookingTitle = 'Booking';
+  stylistTitle = 'Stylist';
 
   stylist$: Observable<any>;
   stylistId: any;
   availabilities$: Observable<any>;
   availabilities: any = [];
+
+  bookings$: Observable<any>;
+  bookedavailbility$: Observable<any>;
+  bookedStylist$: Observable<any>;
+
   bookingUsers: any = [];
   bookingUsers$: Observable<any>;
 
-  bookedavailabilty: any;
-  bookedstylist: any;
-  bookeduser: any;
-  mybookings = [];
+  bookedUsername: string;
+  bookedDate: number;
 
-  bookingTitle = 'Booking';
-  stylistTitle = 'Stylist';
+  bookedDateAvailability: any = [];
+  bookedUserAvailability: any = [];
+
+  bookings = [];
+
+  public destroy$: Subject<any> = new Subject();
 
   constructor(
     public navCtrl: NavController,
@@ -88,8 +96,14 @@ export class BookingsPage {
       });
   }
 
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
+
   // Public
-  
+
   /**
    * Opens up UserProfile page in modal
    *
@@ -116,51 +130,58 @@ export class BookingsPage {
 
     this.bookings$ = this.book.getStylistBookings(stylist).snapshotChanges();
 
-    this.bookings$.subscribe(res => {
-      console.log('bookings sub ', res);
+    this.bookings$.takeUntil(this.destroy$).subscribe(actions => {
+      this.bookings = this.utils.generateFirebaseKeyedValues(actions);
+      console.log('bookings ', this.bookings);
 
-      res.forEach(i => {
-        this.avail
-          .getAvailabilityById(this.stylistId, i.payload.val().availabilityId)
-          .snapshotChanges()
-          .subscribe(res => {
-            console.log('getAvailabilityByIdssss');
-            console.log(res);
+      this.bookings.forEach(i => {
+        this.bookingUsers$ = this.user
+          .getUserListById(i.userId)
+          .snapshotChanges();
 
-            this.availabilities.push({
-              availId: i.payload.val().availabilityId,
-              booked: res[0].payload.val(), // TODO need to filter these like the userList below
-              datetime: moment.unix(res[1].payload.val()).format('ddd Do MMM'), // TODO and this
+        this.availabilities$ = this.avail
+          .getAvailabilityById(i.availabilityId)
+          .snapshotChanges();
+
+        this.bookingUsers$.takeUntil(this.destroy$).subscribe(res => {
+          console.log(res);
+
+          this.bookedUsername = res
+            .filter(a => {
+              return a.key === 'name';
+            })
+            .map(a => {
+              return a.payload.val();
             });
 
-            console.log(this.availabilities);
+          this.bookedUserAvailability.push({
+            availId: i.availabilityId,
+            userName: this.bookedUsername,
           });
 
-        this.user
-          .getUserListById(i.payload.val().userId)
-          .snapshotChanges()
-          .subscribe(res => {
-            console.log(res);
+          console.log(this.bookedUserAvailability);
+        });
 
-            let name = res.filter(i => {
-              return i.key === 'name';
-            });
-            let emailAddress = res.filter(i => {
-              return i.key === 'emailAddress';
-            });
-            // console.log(name);
-            // console.log(emailAddress);
-            // console.log(name[0].payload.val());
-            // console.log(emailAddress[0].payload.val());
+        this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
+          console.log(res);
+          this.bookedDate = res
+            .filter(a => {
+              // console.log(a);
+              return a.key === 'datetime';
+            })
+            .map(a => {
+              // console.log(a.payload.val());
 
-            this.bookingUsers.push({
-              userId: i.payload.val().userId,
-              name: name[0].payload.val(),
-              emailAddress: emailAddress[0].payload.val(),
+              return moment.unix(a.payload.val()).format('ddd Do MMM HH:mm');
             });
 
-            // console.log(this.bookingUsers);
+          this.bookedDateAvailability.push({
+            availId: i.availabilityId,
+            bookedDate: this.bookedDate,
           });
+
+          console.log(this.bookedDateAvailability);
+        });
       });
     });
   }

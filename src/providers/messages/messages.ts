@@ -39,6 +39,14 @@ export class MessagesProvider {
       });
   }
 
+  public getChatsForAvailability(availId) {
+    return this.afdb
+      .list('chats', ref => {
+        return ref.orderByChild('availabilityId').equalTo(availId);
+      })
+      .snapshotChanges();
+  }
+
   public getMessagesForChat(key) {
     console.log(key);
     return this.afdb.list(`chats/${key}/messages`).valueChanges();
@@ -46,7 +54,7 @@ export class MessagesProvider {
 
   public addChat(userId, stylistId, availabilityId) {
     const chatData = {
-      creationDate: moment().unix(),
+      creationDate: moment().valueOf(),
       stylistId: stylistId,
       userId: userId,
       availabilityId: availabilityId,
@@ -69,7 +77,7 @@ export class MessagesProvider {
 
   public addMessageForUser(chatId, msg) {
     let messageData = {
-      messageDate: moment().unix(),
+      messageDate: moment().valueOf(),
       messageSender: firebase.auth().currentUser.displayName,
       messageText: msg,
       senderUid: firebase.auth().currentUser.uid,

@@ -24,14 +24,7 @@ export class AvailabilityProvider {
   getAvailabilities() {
     return this.afdb.list('availability');
   }
-  // Legacy
-  getStylistAvailability(stylistId) {
-    console.log(stylistId);
-    return this.afdb.list(`availability`, ref => {
-      console.log(ref);
-      return ref.orderByChild('stylistId').equalTo(stylistId);
-    });
-  }
+
   // Legacy
   getOldAvailabilityById(avail) {
     console.log('calling getAvailabilityById()');
@@ -74,21 +67,40 @@ export class AvailabilityProvider {
     return availList$;
   }
 
-  // New
-
-  getAvailabilityById(stylistId, availId) {
+  // Legcay
+  getOld2AvailabilityById(stylistId, availId) {
     console.log(stylistId);
     console.log(availId);
     return this.afdb.list(
       `/stylistProfile/${stylistId}/availability/${availId}`
     );
   }
-
-  // New RTDB format
-  getBookedAvailability(stylistId: any) {
+  // Legacy
+  getOldBookedAvailability(stylistId: any) {
     console.log(stylistId);
     console.log(`/stylistProfile/${stylistId}/availability`);
     return this.afdb.list(`/stylistProfile/${stylistId}/availability`);
+  }
+
+  // New
+  getAvailabilityById(availId) {
+    console.log(availId);
+    return this.afdb.list(`/availability/${availId}`);
+  }
+
+  /**
+   * Get availabilities for a stylist
+   *
+   * @param {*} stylistId
+   * @returns
+   * @memberof AvailabilityProvider
+   */
+  getStylistAvailability(stylistId: any) {
+    console.log(stylistId);
+    return this.afdb.list(`availability`, ref => {
+      console.log(ref);
+      return ref.orderByChild('stylistId').equalTo(stylistId);
+    });
   }
 
   /**
@@ -102,19 +114,18 @@ export class AvailabilityProvider {
   setAvailabilityTaken(slot: number, stylistId: string) {
     console.log('setAvailabilityTaken');
     let availData = {
+      stylistId: stylistId,
       datetime: slot,
       booked: false,
     };
 
     let availKey = this.afdb.database
       .ref()
-      .child(`/stylistProfile/${stylistId}/availability`)
+      .child(`/availability/`)
       .push().key;
 
     let availPayload = {};
-    availPayload[
-      `/stylistProfile/${stylistId}/availability/${availKey}`
-    ] = availData;
+    availPayload[`/availability/${availKey}`] = availData;
 
     console.log(availPayload);
 
@@ -123,6 +134,7 @@ export class AvailabilityProvider {
       .update(availPayload)
       .then(res => console.log(res));
   }
+
   /**
    * Create stylist availability slots
    *

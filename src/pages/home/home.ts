@@ -20,6 +20,7 @@ import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 import * as firebase from 'firebase';
+import { AvailabilityProvider } from '../../providers/availability/availability';
 
 @IonicPage()
 @Component({
@@ -62,12 +63,15 @@ export class HomePage {
 
   public uid = firebase.auth().currentUser.uid;
 
+  private bookingId: string;
+
   public destroy$: Subject<any> = new Subject();
 
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
     private stylist: StylistProvider,
+    private avail: AvailabilityProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
     private utils: UtilsProvider,
@@ -149,7 +153,7 @@ export class HomePage {
         this.stylist$.subscribe(res => {
           this.stylistId = res[0].key;
 
-          this.stylistAvail$ = this.stylist
+          this.stylistAvail$ = this.avail
             .getStylistAvailability(res[0].key)
             .snapshotChanges();
 
@@ -199,12 +203,13 @@ export class HomePage {
     // Make pending booking
     this.booking
       .makePendingBooking(avail.key, this.stylistId, this.uid)
-      .then(res => console.log(res));
+      .then(res => (this.bookingId = res));
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       avail: avail,
       stylist: this.stylistId,
       userId: this.uid,
+      // bookingId: this.bookingId,
     });
 
     bookingModal.onDidDismiss(data => {

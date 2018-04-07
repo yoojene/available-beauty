@@ -22,19 +22,26 @@
     <div *ngFor="let pendbook of pendbookings">
       <div *ngIf="pendbook.payload.val().userAccepted === false && pendbook.payload.val().stylistAccepted === false; then pending else no_pending"></div>
         <ng-template #pending>
-          Avail ID {{pendbook.payload.val().availabilityId}}
 
           <ion-item (click)="onBookingTap(pendbook.payload.val().userId)">
-          <div *ngFor="let avail of availabilities">
-            <div *ngIf="pendbook.payload.val().availabilityId === avail.availId">
-              {{avail.datetime}}
-            </div>
-          </div>
-          <div *ngFor="let user of bookingUsers">
-            <div *ngIf="pendbook.payload.val().userId === user.userId">
-              {{user.name}}
-            </div>
-          </div>
+
+              Avail ID {{pendbook.payload.val().availabilityId}}
+
+              <div *ngIf="bookedUserAvailability">
+                <div *ngFor="let bua of bookedUserAvailability">
+                  <div *ngIf="bua.availId === pendbook.payload.val().availabilityId">
+                    {{bua.userName}}
+                  </div>
+                </div>
+
+              </div>
+              <div *ngIf="bookedDateAvailability">
+                <div *ngFor="let bda of bookedDateAvailability">
+                  <div *ngIf="bda.availId === pendbook.payload.val().availabilityId">
+                    {{bda.bookedDate}}
+                  </div>
+                </div>
+              </div>
           </ion-item>
         </ng-template>
 

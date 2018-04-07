@@ -68,6 +68,8 @@ export class BookingProvider {
     return this.afdb.database
       .ref()
       .update(bookingPayload)
-      .then(res => console.log(res));
+      .then(() => {
+        return bookingKey;
+      });
   }
 }

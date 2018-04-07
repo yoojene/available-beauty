@@ -1,4 +1,5 @@
 export interface Availability {
+  stylistId: string;
   booked: boolean;
   datetime: Date;
   availabilityId: string;

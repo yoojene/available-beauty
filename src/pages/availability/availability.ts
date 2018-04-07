@@ -3,7 +3,7 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  LoadingController
+  LoadingController,
 } from 'ionic-angular';
 import * as moment from 'moment';
 import { AvailabilityProvider } from '../../providers/availability/availability';
@@ -12,6 +12,7 @@ import * as firebase from 'firebase';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { UtilsProvider } from '../../providers/utils/utils';
+import { Moment } from 'moment';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -23,7 +24,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 @IonicPage()
 @Component({
   selector: 'page-availability',
-  templateUrl: 'availability.html'
+  templateUrl: 'availability.html',
 })
 export class AvailabilityPage {
   availabilitySubHeader = 'Mark the times you are available';
@@ -45,15 +46,6 @@ export class AvailabilityPage {
   schedule: any;
 
   entryLoader: any;
-  //  = [
-  //   { unit: 'day', date: moment().format(this.dayOfWeekFmt) },
-  //   {
-  //     unit: 'day',
-  //     date: moment()
-  //       .add(1, 'day')
-  //       .format(this.dayOfWeekFmt)
-  //   }
-  // ];
 
   constructor(
     public navCtrl: NavController,
@@ -152,7 +144,7 @@ export class AvailabilityPage {
     console.log(stylistId);
 
     this.avail
-      .getBookedAvailability(stylistId)
+      .getStylistAvailability(stylistId)
       .snapshotChanges()
       .subscribe(res => {
         let results = this._utils.generateFirebaseKeyedValues(res);
@@ -175,7 +167,7 @@ export class AvailabilityPage {
     console.log(this.navCtrl.length());
     if (this.navCtrl.length() === 1) {
       this.navCtrl.push('TabsPage', {
-        isStylist: true
+        isStylist: true,
       });
     }
   }
@@ -191,7 +183,13 @@ export class AvailabilityPage {
    * @returns
    * @memberof AvailabilityPage
    */
-  generateSchedule(startDate, dateFmt, interval, dateUnit, runsFor) {
+  generateSchedule(
+    startDate: Moment,
+    dateFmt: string,
+    interval: number,
+    dateUnit: moment.unitOfTime.DurationConstructor,
+    runsFor: number
+  ) {
     let schedule = [{ date: startDate.format(dateFmt), unit: dateUnit }];
     let loopInt = interval;
     for (let x = 0; x < runsFor; x++) {
@@ -199,7 +197,7 @@ export class AvailabilityPage {
         date: moment(startDate)
           .add(loopInt, dateUnit)
           .format(dateFmt),
-        unit: dateUnit
+        unit: dateUnit,
       });
       loopInt = loopInt + interval;
     }
