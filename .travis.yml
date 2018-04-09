@@ -1,6 +1,8 @@
 os:
 - linux
 - osx
+osx_image: xcode9.2
+language: android
 before_install:
 - nvm install 8.9.4
 - npm install -g npm@5.6.0
