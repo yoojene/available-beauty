@@ -60,6 +60,7 @@ export class StylistProvider {
       addressTownCity: stylist.addressTownCity,
       addressCounty: stylist.addressCounty,
       addressPostcode: stylist.addressPostcode,
+      bannerImage: stylist.bannerImage,
       galleryImages: null,
     };
 
