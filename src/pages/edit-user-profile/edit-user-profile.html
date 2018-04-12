@@ -13,14 +13,14 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content no-padding>
 
-  <ion-list>
-      <div class="bannerContainer">
-        <ion-item>
-          <button class="button editBannerbutton icon ion-camera"></button>
-          <img class="bannerImage" src="{{stylistDetails?.bannerImage}}"/>
-        </ion-item>
+  <ion-list no-padding>
+      <div no-padding class="bannerContainer">
+        <ion-item no-padding>
+            <img no-padding src="{{stylistDetails?.bannerImage}}"/>
+            <ion-icon no-padding name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
+          </ion-item>
       </div>
 
       <ion-item>
