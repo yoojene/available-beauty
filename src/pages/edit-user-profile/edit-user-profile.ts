@@ -1,6 +1,7 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { StylistProvider } from '../../providers/stylist/stylist';
+import { StylistProvider } from '../../providers/stylist/stylist'; 
+import { UserProvider } from '../../providers/user/user';
 import * as firebase from 'firebase';
 import { PhotoProvider } from '../../providers/photo/photo';
 
@@ -22,6 +23,7 @@ import { PhotoProvider } from '../../providers/photo/photo';
 export class EditUserProfilePage implements AfterContentInit {
   stylistId: any;
   stylistDetails: any;
+  userDetails: any;
   // @ViewChild('navBar') navbar: Navbar;
 
   editProfileTitle = 'Edit Profile';
@@ -32,6 +34,12 @@ export class EditUserProfilePage implements AfterContentInit {
   addressCounty = 'County';
   addressPostcode = 'Postcode';
   bio = 'Bio';
+  mobileStylist = 'Mobile Stylist?';
+  mobileRange = 'Mobile Range';
+  location = 'Base Location';
+  userName = 'User Name';
+  phoneNumber = 'Phone Number';
+  emailAddress = 'Email';
 
   public loadProgress: any = 0;
   public downloadUrls: Array<any> = [];
@@ -41,6 +49,7 @@ export class EditUserProfilePage implements AfterContentInit {
     public navCtrl: NavController, 
     public navParams: NavParams,
     private stylist: StylistProvider,
+    private user: UserProvider,
     public photo: PhotoProvider,
     //private utils: UtilsProvider
   ) {
@@ -63,6 +72,17 @@ export class EditUserProfilePage implements AfterContentInit {
       this.stylistId = res[0].key;
       this.getDetails(this.stylistId);
     });
+
+    firebase
+    .database()
+    .ref('/userProfile')
+    .child(firebase.auth().currentUser.uid)
+    .once('value')
+    .then(res => {
+      console.log(res.val());
+
+      this.user = res.val();
+    });
     
   }
 
@@ -83,6 +103,7 @@ export class EditUserProfilePage implements AfterContentInit {
 
         console.log(obj);
       });
+
 
   }
 

@@ -17,55 +17,88 @@
 
   <ion-list no-padding>
       <div no-padding class="bannerContainer">
-        <ion-item no-padding>
+        <ion-item no-padding no-lines>
             <img no-padding src="{{stylistDetails?.bannerImage}}"/>
             <ion-icon no-padding name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
+          </ion-item>
+          <ion-item no-padding no-lines>
+            <img no-padding src="{{userDetails?.avatarImage}}"/>
+            <ion-icon no-padding name="ios-open-outline" (click)="doEditAvatar()"></ion-icon>
           </ion-item>
       </div>
 
       <ion-item>
-        <ion-label color="primary">{{stylistName}}</ion-label>
+        <ion-label color="primary">User Details</ion-label>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label stacked color="primary">{{userName}}</ion-label>
+        <ion-input placeholder="{{userDetails?.name}}"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label stacked color="primary">{{phoneNumber}}</ion-label>
+        <ion-input placeholder="{{userDetails?.phoneNumber}}"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label stacked color="primary">{{emailAddress}}</ion-label>
+        <ion-input placeholder="{{userDetails?.emailAddress}}"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label stacked color="primary">{{location}}</ion-label>
+        <ion-input placeholder="{{userDetails?.location}}"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label color="primary">Stylist Details</ion-label>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label stacked color="primary">{{stylistName}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.stylistName}}"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item no-lines>
         <ion-label stacked color="primary">{{address1Line}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.addressLine1}}"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item no-lines>
         <ion-label stacked color="primary">{{address2Line}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.addressLine2}}"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item no-lines>
         <ion-label stacked color="primary">{{addressTown}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.addressTownCity}}"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item no-lines>
         <ion-label stacked color="primary">{{addressCounty}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.addressCounty}}"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item no-lines>
         <ion-label stacked color="primary">{{addressPostcode}}</ion-label>
         <ion-input placeholder="{{stylistDetails?.addressPostcode}}"></ion-input>
       </ion-item>
-
       <ion-row>
-        <ion-item text-wrap>
+        <ion-item no-lines text-wrap>
           <ion-label stacked color="primary">{{bio}}</ion-label>
           <ion-textarea placeholder="{{stylistDetails?.bio}}" ></ion-textarea>
         </ion-item>
       </ion-row>
 
+
+      <ion-item no-lines>
+        <ion-label color="primary">{{location}}</ion-label>
+      </ion-item>
+
       <ion-row>
-        <ion-item>
-          <ion-label color="primary">Mobile Stylist</ion-label>
+        <ion-item no-lines>
+          <ion-label color="primary">{{mobileStylist}}</ion-label>
           <ion-checkbox checked="{{stylistDetails?.mobile}}"></ion-checkbox>
+        </ion-item>
           <!-- TODO : If mobile=true, then display block below??? -->
-         <!-- <ion-label color="primary">Mobile Range</ion-label>
-          <ion-input placeholder="{{stylistDetails?.mobileRange}}"></ion-input>  -->
+        <ion-item no-lines>
+          <ion-label color="primary">{{mobileRange}}</ion-label>
+          <ion-input placeholder="{{stylistDetails?.mobileRange}}"></ion-input> 
         </ion-item>
       </ion-row>
 
-      <ion-item-divider></ion-item-divider>
       
       <div class="buttonsContainer">
         <ion-row>
