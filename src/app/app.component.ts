@@ -59,7 +59,6 @@ export class AvailableBeautyApp {
       } else {
         const uid = res.uid;
         // Check if is Stylist or User
-        // this.storage.getStorage('isStylist').subscribe(res => {
         this.user.checkIsStylist(uid).subscribe(res => {
           if (!res) {
             this.rootPage = 'LookingPage';
