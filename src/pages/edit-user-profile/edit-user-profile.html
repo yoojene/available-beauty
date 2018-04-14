@@ -47,13 +47,13 @@
         <ion-input placeholder="{{userDetails?.location}}"></ion-input>
       </ion-item>
 
-
+      <div>  <!--  ngIf isStylist = true -->
       <ion-item>
         <ion-label color="primary">Stylist Details</ion-label>
       </ion-item>
       <ion-item no-lines>
         <ion-label stacked color="primary">{{stylistName}}</ion-label>
-        <ion-input placeholder="{{stylistDetails?.stylistName}}"></ion-input>
+        <ion-input placeholder="{{stylistDetails?.stylistName}}" ></ion-input>
       </ion-item>
       <ion-item no-lines>
         <ion-label stacked color="primary">{{address1Line}}</ion-label>
@@ -81,6 +81,7 @@
           <ion-textarea placeholder="{{stylistDetails?.bio}}" ></ion-textarea>
         </ion-item>
       </ion-row>
+    </div>
 
 
       <ion-item no-lines>
@@ -102,8 +103,8 @@
       
       <div class="buttonsContainer">
         <ion-row>
-          <button class="cancel" ion-button round>Cancel</button>
-          <button class="save" ion-button round>Save</button>
+          <button class="cancel" ion-button round (click)="doCancel()">Cancel</button>
+          <button class="save" ion-button round (click)="doSave()">Save</button>
         </ion-row>
       </div>
     <!-- dimensions set using attributes -->

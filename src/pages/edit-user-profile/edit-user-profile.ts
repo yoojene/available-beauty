@@ -125,6 +125,15 @@ export class EditUserProfilePage implements AfterContentInit {
     //UPDATE IMAGE ON PAGE
   }
 
+  doSave() {
+    console.log('Saving user details');
+    this.stylist.updateStylist(this.stylistId, this.stylistDetails);
+  }
+  
+  doCancel() {
+    console.log('Cancel');
+  }
+
   public monitorUploadProgress(tasks) {
     console.log('monitorUploadProgress');
 
