@@ -26,6 +26,33 @@ export class UtilsProvider {
     console.log(returnArr);
     return returnArr;
   }
+
+  /**
+   * Helper method for getting values from `/someNode/{someId}` RTDB calls
+   * .snapshotChanges() returns each attribute 'row' as an array of objects
+   * This allows you to pass in the snapshotChanges object and the attribute/key you want to
+   * get the value of
+   *
+   * @param {Array<any>} snapChangesData
+   * @param {string} searchKey
+   * @returns
+   * @memberof UtilsProvider
+   */
+  public getFirebaseRealtimeDbKeyedValueById(
+    snapChangesData: Array<any>,
+    searchKey: string
+  ) {
+    let returnValue: any;
+
+    returnValue = snapChangesData
+      .filter(a => {
+        return a.key === searchKey;
+      })
+      .map(a => {
+        return a.payload.val();
+      });
+    return returnValue;
+  }
   /**
    * Controls expanded-item component
    *

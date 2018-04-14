@@ -23,7 +23,7 @@
       <div *ngIf="pendbook.payload.val().userAccepted === false && pendbook.payload.val().stylistAccepted === false; then pending else no_pending"></div>
         <ng-template #pending>
 
-          <ion-item (click)="onBookingTap(pendbook.payload.val().userId)">
+          <ion-item (click)="onBookingTap(pendbook.payload.val().availabilityId)">
 
               Avail ID {{pendbook.payload.val().availabilityId}}
 

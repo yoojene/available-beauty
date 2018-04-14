@@ -7,12 +7,14 @@ import { Observable } from 'rxjs/Observable';
 import { User } from '../../model/users/user.model';
 
 import { AngularFireDatabase } from 'angularfire2/database';
+import { UtilsProvider } from '../utils/utils';
 
 @Injectable()
 export class UserProvider {
   constructor(
     public http: HttpClient,
     public afdb: AngularFireDatabase,
+    private utils: UtilsProvider,
     @Inject(API_CONFIG) public config: ApiConfig
   ) {}
   /**
@@ -26,6 +28,32 @@ export class UserProvider {
     return this.afdb.list<User>('userProfile', ref => {
       return ref.orderByChild('isStylist').equalTo(true);
     });
+  }
+  /**
+   * Look up userId in /userProfile and check isStylist attribute.
+   * If true return profile else false
+   *
+   * @param {any} uid
+   * @returns
+   * @memberof UserProvider
+   */
+  public checkIsStylist(uid) {
+    return this.afdb
+      .list<User>('userProfile', ref => {
+        return ref.orderByChild('isStylist').equalTo(true);
+      })
+      .snapshotChanges()
+      .mergeMap(res => {
+        const keyed = this.utils.generateFirebaseKeyedValues(res);
+        const user = keyed.filter(el => {
+          return el.key === uid;
+        });
+        if (user.length > 0) {
+          return Observable.of(user);
+        } else {
+          return Observable.of(false);
+        }
+      });
   }
 
   public getUserById(id) {

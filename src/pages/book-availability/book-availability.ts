@@ -4,6 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
+import { AvailabilityProvider } from '../../providers/availability/availability';
+import { UtilsProvider } from '../../providers/utils/utils';
+import { UserProfilePage } from '../user-profile/user-profile';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -18,9 +22,9 @@ import * as moment from 'moment';
   templateUrl: 'book-availability.html',
 })
 export class BookAvailabilityPage {
+  isStylist: boolean;
   availableDate: any;
   booking: any = {};
-  // bookMessage: any;
 
   messages$: Observable<any>;
   chats: any;
@@ -34,24 +38,46 @@ export class BookAvailabilityPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public msg: MessagesProvider
+    public msg: MessagesProvider,
+    public utils: UtilsProvider,
+    public avail: AvailabilityProvider,
+    private user: UserProvider
   ) {}
 
   // Lifecycle
 
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter ionViewWillEnter');
+
+    this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      if (!res) {
+        this.isStylist = false;
+      } else {
+        this.isStylist = true;
+      }
+    });
+  }
+
   ionViewDidEnter() {
     console.log('ionViewDidEnter BookAvailabilityPage');
-    this.availability = this.navParams.get('avail');
+    this.availability = this.navParams.get('availId');
     this.stylistId = this.navParams.get('stylist');
     this.userId = this.navParams.get('userId');
-    const bookingId = this.navParams.get('bookingId');
-    this.availableDate = this.availability.datetime;
-
-    // this.userId = firebase.auth().currentUser.uid;
 
     console.log(this.availability);
     console.log(this.stylistId);
     console.log(this.userId);
+
+    this.avail
+      .getAvailabilityById(this.availability)
+      .snapshotChanges()
+      .subscribe(res => {
+        let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'datetime'
+        );
+        this.availableDate = moment.unix(date).format('ddd Do MMM HH:mm');
+      });
 
     /* 1.
           Check if current chat thread between user and stylist
@@ -65,7 +91,7 @@ export class BookAvailabilityPage {
     this.checkIsChatThread().subscribe(res => {
       console.log(res);
       if (!res) {
-        this.msg.addChat(this.userId, this.stylistId, this.availability.key);
+        this.msg.addChat(this.userId, this.stylistId, this.availability);
       } else {
         this.getChatThread(res);
       }
@@ -73,19 +99,16 @@ export class BookAvailabilityPage {
   }
 
   private checkIsChatThread() {
-    return (
-      this.msg
-        // .getChatsForUser(this.userId) // TODO Need to account for when there is no /chat existing for user
-        .getChatsForAvailability(this.availability.key) // TODO Need to account for when there is no /chat existing for user
-        .mergeMap(res => {
-          console.log(res);
-          if (res.length === 0) {
-            return Observable.of(false);
-          }
-          this.chatId = res[0].key; // only taking the first /chat
-          return Observable.of(this.chatId);
-        })
-    );
+    return this.msg
+      .getChatsForAvailability(this.availability) // TODO Need to account for when there is no /chat existing for user
+      .mergeMap(res => {
+        console.log(res);
+        if (res.length === 0) {
+          return Observable.of(false);
+        }
+        this.chatId = res[0].key; // only taking the first /chat
+        return Observable.of(this.chatId);
+      });
   }
 
   private getChatThread(chatId) {

@@ -13,6 +13,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAction } from 'angularfire2/database/interfaces';
 import { StorageProvider } from '../providers/storage/storage';
 import { StylistProvider } from '../providers/stylist/stylist';
+import { UserProvider } from '../providers/user/user';
 
 @Component({
   templateUrl: 'app.html',
@@ -32,7 +33,8 @@ export class AvailableBeautyApp {
     private stylist: StylistProvider,
     private location: LocationProvider,
     private afAuth: AngularFireAuth,
-    private storage: StorageProvider
+    private storage: StorageProvider,
+    private user: UserProvider
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -55,10 +57,10 @@ export class AvailableBeautyApp {
         // Unauthenticated state
         this.rootPage = 'LandingPage';
       } else {
-        let uid = res.uid;
+        const uid = res.uid;
         // Check if is Stylist or User
-        this.storage.getStorage('isStylist').subscribe(res => {
-          console.log(res);
+        // this.storage.getStorage('isStylist').subscribe(res => {
+        this.user.checkIsStylist(uid).subscribe(res => {
           if (!res) {
             this.rootPage = 'LookingPage';
           } else {
