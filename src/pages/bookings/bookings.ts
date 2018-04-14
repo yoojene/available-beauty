@@ -19,6 +19,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { UserProfilePage } from '../user-profile/user-profile';
 import { Subject } from 'rxjs/Subject';
+import { BookAvailabilityPage } from '../book-availability/book-availability';
 
 /**
  * Generated class for the BookingsPage page.
@@ -54,7 +55,7 @@ export class BookingsPage {
   bookingUsers$: Observable<any>;
 
   bookedUsername: string;
-  bookedDate: number;
+  bookedDate: string;
 
   bookedDateAvailability: any = [];
   bookedUserAvailability: any = [];
@@ -84,9 +85,6 @@ export class BookingsPage {
   ionViewDidEnter() {
     this.availabilities = [];
     this.bookingUsers = [];
-    console.log('getting bookings');
-    // TODO 16th Feb - This all needs to be rewritten with the new structure
-
     this.stylist
       .getStylist(firebase.auth().currentUser.uid)
       .snapshotChanges()
@@ -97,7 +95,6 @@ export class BookingsPage {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy');
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
@@ -106,20 +103,23 @@ export class BookingsPage {
 
   /**
    * Opens up UserProfile page in modal
-   *
+   *t
    * @param {any} userId
    * @memberof BookingsPage
    */
-  onBookingTap(userId) {
-    const profileModal = this.modalCtrl.create(UserProfilePage, {
-      user: userId,
+  onBookingTap(availId) {
+    console.log(availId);
+    const bookAvailModal = this.modalCtrl.create(BookAvailabilityPage, {
+      availId: availId,
+      stylist: this.stylistId,
+      userId: firebase.auth().currentUser.uid,
     });
 
-    profileModal.onDidDismiss(data => {
-      console.log('dismissed stylistProfileModal', data);
+    bookAvailModal.onDidDismiss(data => {
+      console.log('dismissed bookingAvailPageModal', data);
     });
 
-    profileModal.present();
+    bookAvailModal.present();
   }
 
   // Private
@@ -146,13 +146,10 @@ export class BookingsPage {
         this.bookingUsers$.takeUntil(this.destroy$).subscribe(res => {
           console.log(res);
 
-          this.bookedUsername = res
-            .filter(a => {
-              return a.key === 'name';
-            })
-            .map(a => {
-              return a.payload.val();
-            });
+          this.bookedUsername = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'name'
+          );
 
           this.bookedUserAvailability.push({
             availId: i.availabilityId,
@@ -164,16 +161,11 @@ export class BookingsPage {
 
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
           console.log(res);
-          this.bookedDate = res
-            .filter(a => {
-              // console.log(a);
-              return a.key === 'datetime';
-            })
-            .map(a => {
-              // console.log(a.payload.val());
-
-              return moment.unix(a.payload.val()).format('ddd Do MMM HH:mm');
-            });
+          let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'datetime'
+          );
+          this.bookedDate = moment.unix(date).format('ddd Do MMM HH:mm');
 
           this.bookedDateAvailability.push({
             availId: i.availabilityId,

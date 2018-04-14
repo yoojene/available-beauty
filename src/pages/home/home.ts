@@ -206,10 +206,9 @@ export class HomePage {
       .then(res => (this.bookingId = res));
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
-      avail: avail,
+      availId: avail.key,
       stylist: this.stylistId,
       userId: this.uid,
-      // bookingId: this.bookingId,
     });
 
     bookingModal.onDidDismiss(data => {
@@ -247,7 +246,7 @@ export class HomePage {
       .getStylistUsers()
       .snapshotChanges()
       .subscribe(actions => {
-        let values = this.utils.generateFirebaseKeyedValues(actions);
+        const values = this.utils.generateFirebaseKeyedValues(actions);
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
       });
