@@ -2,6 +2,7 @@
 
 set -e
 pwd
+ls -r
 # Build Ionic App for Android
 cordova platform add android --nofetch
 
