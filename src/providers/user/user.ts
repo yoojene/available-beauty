@@ -37,9 +37,9 @@ export class UserProvider {
    * @returns
    * @memberof UserProvider
    */
-  public checkIsStylist(uid) {
+  public checkIsStylist(uid: any) {
     return this.afdb
-      .list<User>('userProfile', ref => {
+      .list('userProfile', ref => {
         return ref.orderByChild('isStylist').equalTo(true);
       })
       .snapshotChanges()
@@ -49,9 +49,9 @@ export class UserProvider {
           return el.key === uid;
         });
         if (user.length > 0) {
-          return Observable.of(user);
+          return Observable.of(user) as any;
         } else {
-          return Observable.of(false);
+          return Observable.of(false) as any;
         }
       });
   }

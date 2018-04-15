@@ -48,7 +48,7 @@ cache:
 before_install:
 - export LANG=en_US.UTF-8
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install openssl ruby rbenv ruby-build npm ios-sim
-  jq ios-deploy cocoapods ; rbenv install 2.5.0 ; rvm use system ; pod install ; fi
+  jq ios-deploy cocoapods ; rbenv install 2.5.0 ; rvm use system ; touch Podfile ; pod install ; fi
 - nvm install 8.9.4
 - npm install -g npm@5.6.0
 - npm install -g ionic@3.20.0 cordova@7.1
