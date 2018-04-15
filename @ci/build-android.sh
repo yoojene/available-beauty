@@ -4,7 +4,7 @@ set -e
 pwd
 ls -r
 # Build Ionic App for Android
-ionic cordova platform add android --nofetch
+ionic cordova platform add android@6.3.0 --nofetch
 
 if [[ "$TRAVIS_BRANCH" == "develop" ]]
 then
