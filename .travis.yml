@@ -1,3 +1,4 @@
+language: android
 branches:
   only:
   - master
@@ -5,7 +6,6 @@ matrix:
   include:
   - os: linux
     sudo: false
-    language: android
     android:
       components:
       - tools
@@ -24,7 +24,7 @@ matrix:
         packages:
         - oracle-java8-installer
         - oracle-java8-set-default
-        - yarn
+        - npm
         - jq
     licenses:
     - android-sdk-preview-license-.+
@@ -46,15 +46,15 @@ cache:
   - $HOME/.cache/yarn/v1/
 before_install:
 - export LANG=en_US.UTF-8
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install nvm ios-sim
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install npm ios-sim
   jq ios-deploy cocoapods ; rvm use system ; pod setup ; fi
-- nvm install 8.9.4
+- npm install 8.9.4
 - npm install -g npm@5.6.0
 - npm install -g ionic@3.20.0 cordova@7.1
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./@ci/addkeys.sh ; fi
 script:
-- yarn install
+- npm install
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./@ci/build-ios.sh && ./@ci/package-ios.sh ; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./@ci/build-android.sh && ./@ci/package-android.sh ; fi
 env:
