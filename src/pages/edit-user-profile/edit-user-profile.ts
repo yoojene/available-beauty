@@ -1,4 +1,5 @@
 import { Component, AfterContentInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist'; 
 import { UserProvider } from '../../providers/user/user';
@@ -24,6 +25,7 @@ export class EditUserProfilePage implements AfterContentInit {
   stylistId: any;
   stylistDetails: any;
   userDetails: any;
+  public editUserForm: FormGroup;
   // @ViewChild('navBar') navbar: Navbar;
 
   editProfileTitle = 'Edit Profile';
@@ -44,17 +46,36 @@ export class EditUserProfilePage implements AfterContentInit {
   public loadProgress: any = 0;
   public downloadUrls: Array<any> = [];
   
+  
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     private stylist: StylistProvider,
+    private updatedStylist: StylistProvider,
     private user: UserProvider,
     public photo: PhotoProvider,
+    private formBuilder: FormBuilder
     //private utils: UtilsProvider
   ) {
 
+    this.editUserForm = formBuilder.group({
+      stylistName: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      addressTownCity: [''],
+      addressCounty: [''],
+      addressPostcode: [''],
+      bio: [''],
+      mobile: [''],
+      mobileRange: [''],
+      baseLocation: ['']
+    });
   }
+  logForm(){
+    console.log('something');
+  }
+
 
   ngAfterContentInit() {
 
@@ -109,7 +130,7 @@ export class EditUserProfilePage implements AfterContentInit {
 
   doEditBanner() {
     console.log('Getting photo from picker');
-    this.photo.getLibraryPictures().then(res => {
+    this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
       this.photo
         .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
@@ -118,6 +139,7 @@ export class EditUserProfilePage implements AfterContentInit {
           this.photo.pushPhotoToStorage(baseress).then(stores => {
             console.log(stores[0]);
             this.monitorUploadProgress(stores[0]);
+            // Write stores to DB
           });
         });
     });
@@ -126,12 +148,36 @@ export class EditUserProfilePage implements AfterContentInit {
   }
 
   doSave() {
-    console.log('Saving user details');
-    this.stylist.updateStylist(this.stylistId, this.stylistDetails);
+
+    if (this.editUserForm.valid) {
+      let updatedStylist = this.editUserForm.value;
+
+      console.log('stylist name = ' + updatedStylist.stylistName);
+      updatedStylist.baseLocation = this.stylistDetails.baseLocation;
+      updatedStylist.bannerImage = this.stylistDetails.bannerImage;
+
+      console.log(JSON.stringify(updatedStylist));
+        this.stylist.updateStylistProfile(this.stylistId, updatedStylist).then(res => {
+          console.log('Updating stylist: name ' + this.stylistDetails.stylistName);  //, res
+          this.navCtrl.pop();
+        });
+    } else {
+      console.log('something invalid');
+    } 
+
+    // this.stylist.updateStylistProfile(this.stylistId, this.stylistDetails).then(res => {
+    //   console.log('Updating stylist: with new name ' + this.stylistDetails.stylistName, res);
+    //   this.navCtrl.pop();
+    // });
+    
+    //  Create updateStylistProfile...
+
+    //Do the same with user details
   }
-  
+
   doCancel() {
     console.log('Cancel');
+    this.navCtrl.pop();
   }
 
   public monitorUploadProgress(tasks) {

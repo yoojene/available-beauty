@@ -54,7 +54,7 @@ export class PhotoProvider {
 
   public getOneLibraryPicture() {
     let options = {
-      maximumImagesCount: 8,
+      maximumImagesCount: 1,
       width: 500,
       height: 500,
       quality: 100
