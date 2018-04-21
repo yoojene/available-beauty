@@ -51,6 +51,41 @@ export class PhotoProvider {
       return fullPath;
     });
   }
+
+  public getOneLibraryPicture() {
+    let options = {
+      maximumImagesCount: 1,
+      width: 500,
+      height: 500,
+      quality: 100
+    }
+    let photo;
+
+    return this.imagePicker.getPictures(options).then(
+      res => {
+        console.log(res);
+        for (let i = 0; i < 1; i++) {
+          let fullPath;
+          if (this.plt.is('ios')) {
+            fullPath = 'file://' + res[i];
+          } else {
+            fullPath = res[i];
+          }
+          let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+
+          photo = {photoFullPath: fullPath, path: path}
+          //photos.push({ photoFullPath: fullPath, path: path });
+        }
+        return Promise.resolve(photo);
+      },
+      err => {
+        console.error(err);
+      }
+      //file_uris => this._navCtrl.push(GalleryPage, {images: file_uris}),
+      //err => console.log('uh oh')
+    );
+  }
+
   /**
    * Cordova image picker, select image from library
    *

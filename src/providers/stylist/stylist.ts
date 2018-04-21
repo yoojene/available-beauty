@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Stylist } from '../../model/stylist/stylist.model';
-import { MOCK_STYLISTS } from '../../mocks/stylist.mocks';
-import { Observable } from 'rxjs/Observable';
 
 import firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -39,17 +37,6 @@ export class StylistProvider {
     });
   }
 
-  getStylistAvailability(stylistId) {
-    console.log(stylistId);
-
-    return this.afdb.list<Stylist>(
-      `stylistProfile/${stylistId}/availability`,
-      ref => {
-        return ref.orderByChild('datetime');
-      }
-    );
-  }
-
   getStylistById(stylist) {
     console.log(stylist);
     return this.afdb.object<Stylist>(`stylistProfile/${stylist.stylistId}`);
@@ -71,6 +58,7 @@ export class StylistProvider {
       addressTownCity: stylist.addressTownCity,
       addressCounty: stylist.addressCounty,
       addressPostcode: stylist.addressPostcode,
+      bannerImage: stylist.bannerImage,
       galleryImages: null,
     };
 
@@ -92,17 +80,38 @@ export class StylistProvider {
       .then(res => console.log(res));
   }
 
-  updateStylistProfile(key, value) {
-    console.log(key);
-    console.log(value);
+  //  Make copy of above, and instead of creating new key, use exiting passed in
 
-    if (value instanceof Array) {
-      value.forEach(el => {
-        console.log(el);
-      });
-    }
+  updateStylistProfile(stylistId: any, stylist: Stylist) {
+    console.log('addStylistProfile ' + stylist);
 
-    return this.afdb.database.ref().update({ key: value });
+    let stylistProfile = {
+      userId: firebase.auth().currentUser.uid,
+      stylistName: stylist.stylistName,
+      mobile: stylist.mobile,
+      mobileRange: stylist.mobileRange,
+      bio: stylist.bio,
+      baseLocation: stylist.baseLocation,
+      addressLine1: stylist.addressLine1,
+      addressLine2: stylist.addressLine2,
+      addressTownCity: stylist.addressTownCity,
+      addressCounty: stylist.addressCounty,
+      addressPostcode: stylist.addressPostcode,
+      bannerImage: stylist.bannerImage,
+      //galleryImages: null,
+    };
+
+    // if (stylist.loadImages) {
+    //   stylistProfile.galleryImages = stylist.galleryImages;
+    // }
+
+    let stylistPayload = {};
+    stylistPayload[`stylistProfile/${stylistId}`] = stylistProfile;
+
+    return this.afdb.database
+      .ref()
+      .update(stylistPayload)
+      .then(res => console.log(res));
   }
 
   getStylistReview(stylistId: any) {
@@ -110,44 +119,4 @@ export class StylistProvider {
     return this.afdb.list<Review>(`stylistProfile/${stylistId}/reviews`);
   }
 
-  // OLD *****
-  /**
-   * Create a new stylist
-   *
-   * @param {any} stylist
-   * @returns
-   * @memberof StylistProvider
-   */
-  createStylist(stylist) {
-    return this.http.post(
-      this.config.endpointURL + this.config.stylistPath,
-      stylist
-    );
-  }
-
-  /**
-   * Update existing an stylist
-   *
-   * @param {any} stylistId
-   * @param {any} stylistDetails
-   * @returns
-   * @memberof StylistProvider
-   */
-  updateStylist(stylistId, stylistDetails) {
-    return this.http.put(
-      this.config.endpointURL + this.config.stylistsPath + stylistId,
-      stylistDetails
-    );
-  }
-
-  /**
-   * Delete a stylist
-   *
-   * @returns
-   * @memberof StylistProvider
-   */
-  deleteStylist() {
-    // When would we do this?  Account delete only?
-    return this.http.delete(this.config.endpointURL + this.config.stylistsPath);
-  }
 }

@@ -4,6 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
+import { AvailabilityProvider } from '../../providers/availability/availability';
+import { UtilsProvider } from '../../providers/utils/utils';
+import { UserProfilePage } from '../user-profile/user-profile';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -18,36 +22,97 @@ import * as moment from 'moment';
   templateUrl: 'book-availability.html',
 })
 export class BookAvailabilityPage {
+  isStylist: boolean;
   availableDate: any;
   booking: any = {};
-  // bookMessage: any;
 
   messages$: Observable<any>;
   chats: any;
   chatmsgs: any = [];
   chatId: any;
 
+  userId: string;
+  stylistId: number;
+  availability: any;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public msg: MessagesProvider
+    public msg: MessagesProvider,
+    public utils: UtilsProvider,
+    public avail: AvailabilityProvider,
+    private user: UserProvider
   ) {}
+
+  // Lifecycle
+
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter ionViewWillEnter');
+
+    this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      if (!res) {
+        this.isStylist = false;
+      } else {
+        this.isStylist = true;
+      }
+    });
+  }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter BookAvailabilityPage');
-    let params = this.navParams.get('avail');
+    this.availability = this.navParams.get('availId');
+    this.stylistId = this.navParams.get('stylist');
+    this.userId = this.navParams.get('userId');
 
-    this.availableDate = params.datetime;
+    console.log(this.availability);
+    console.log(this.stylistId);
+    console.log(this.userId);
 
-    let result = this.msg
-      .getChatsForUser(firebase.auth().currentUser.uid) // TODO Need to account for when there is no /chat existing for user
-      .mergeMap(res => {
-        this.chatId = res[0].key;
-        return this.msg.getMessagesForChat(res[0].key);
+    this.avail
+      .getAvailabilityById(this.availability)
+      .snapshotChanges()
+      .subscribe(res => {
+        let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'datetime'
+        );
+        this.availableDate = moment.unix(date).format('ddd Do MMM HH:mm');
       });
 
-    result.subscribe((res: any) => {
+    /* 1.
+          Check if current chat thread between user and stylist
+          if not, then create /chat
+          then create /message
+
+          if is, then append /message to existing /chat/id/message
+
+    */
+
+    this.checkIsChatThread().subscribe(res => {
       console.log(res);
+      if (!res) {
+        this.msg.addChat(this.userId, this.stylistId, this.availability);
+      } else {
+        this.getChatThread(res);
+      }
+    });
+  }
+
+  private checkIsChatThread() {
+    return this.msg
+      .getChatsForAvailability(this.availability) // TODO Need to account for when there is no /chat existing for user
+      .mergeMap(res => {
+        console.log(res);
+        if (res.length === 0) {
+          return Observable.of(false);
+        }
+        this.chatId = res[0].key; // only taking the first /chat
+        return Observable.of(this.chatId);
+      });
+  }
+
+  private getChatThread(chatId) {
+    this.msg.getMessagesForChat(chatId).subscribe((res: any) => {
       res.sort((a, b) => {
         return a.messageDate - b.messageDate;
       });
@@ -82,15 +147,9 @@ export class BookAvailabilityPage {
       this.chatmsgs = res;
       console.log(this.chatmsgs);
     });
-
-    // this.chatmsgs.forEach(chat => {
-    //   return (chat.messageDate = moment
-    //     .unix(chat.messageDate)
-    //     .format('ddd Do MMM HH:mm'));
-    // });
   }
 
-  onSubmitBookForm(e) {
+  public onSubmitBookForm(e) {
     e.preventDefault();
     console.log('submitted', this.booking.bookMessage);
     this.msg.addMessageForUser(this.chatId, this.booking.bookMessage);

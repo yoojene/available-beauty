@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
-import * as firebase from 'firebase';
 import { Booking } from '../../model/booking/booking.model';
 
 @Injectable()
@@ -31,33 +30,46 @@ export class BookingProvider {
       .list<Booking>(`userProfile/${uid}/bookings`)
       .snapshotChanges();
   }
+
+  public getStylistBookings(stylistId) {
+    console.log('getStylistBookings -> ', stylistId);
+    return this.afdb.list(`bookings`, ref => {
+      return ref.orderByChild('stylistId').equalTo(stylistId);
+    });
+  }
   /**
    * Create /booking and update /availability booked to true
    *
    * @param {any} availId
+   * @param {any} stylistId
    * @param {any} userId
    * @returns
    * @memberof BookingProvider
    */
-  public makePendingBooking(availId, userId) {
+  public makePendingBooking(availId, stylistId, userId) {
     console.log('makePendingBooking ');
+
     let bookingData = {
       availabilityId: availId,
+      stylistId: stylistId,
+      userId: userId,
       userAccepted: false,
       stylistAccepted: false,
     };
 
     let bookingKey = this.afdb.database
       .ref()
-      .child(`userProfile/${userId}/bookings`)
+      .child(`/bookings`)
       .push().key;
 
     let bookingPayload = {};
-    bookingPayload[`userProfile/${userId}/bookings/${bookingKey}`] = bookingData;
+    bookingPayload[`/bookings/${bookingKey}`] = bookingData;
 
     return this.afdb.database
       .ref()
       .update(bookingPayload)
-      .then(res => console.log(res));
+      .then(() => {
+        return bookingKey;
+      });
   }
 }

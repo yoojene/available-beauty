@@ -1,7 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, AfterContentInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Plugins, CameraResultType } from '@capacitor/core';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { StylistProvider } from '../../providers/stylist/stylist'; 
+import { UserProvider } from '../../providers/user/user';
+import * as firebase from 'firebase';
+import { PhotoProvider } from '../../providers/photo/photo';
+
+//import { UtilsProvider } from '../../providers/utils/utils';
+//import { Observable } from 'rxjs/Observable';
+
 /**
  * Generated class for the EditUserProfilePage page.
  *
@@ -14,33 +21,205 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
   selector: 'page-edit-user-profile',
   templateUrl: 'edit-user-profile.html',
 })
-export class EditUserProfilePage {
-  image: SafeResourceUrl;
+export class EditUserProfilePage implements AfterContentInit {
+  stylistId: any;
+  stylistDetails: any;
+  userDetails: any;
+  public editUserForm: FormGroup;
+  // @ViewChild('navBar') navbar: Navbar;
 
   editProfileTitle = 'Edit Profile';
+  stylistName = 'Salon Name';
+  address1Line = 'Address Line 1';
+  address2Line = 'Address Line 1';
+  addressTown = 'Town';
+  addressCounty = 'County';
+  addressPostcode = 'Postcode';
+  bio = 'Bio';
+  mobileStylist = 'Mobile Stylist?';
+  mobileRange = 'Mobile Range';
+  location = 'Base Location';
+  userName = 'User Name';
+  phoneNumber = 'Phone Number';
+  emailAddress = 'Email';
+
+  public loadProgress: any = 0;
+  public downloadUrls: Array<any> = [];
+  
+  
 
   constructor(
-    public navCtrl: NavController,
+    public navCtrl: NavController, 
     public navParams: NavParams,
-    private sanitizer: DomSanitizer
-  ) {}
+    private stylist: StylistProvider,
+    private updatedStylist: StylistProvider,
+    private user: UserProvider,
+    public photo: PhotoProvider,
+    private formBuilder: FormBuilder
+    //private utils: UtilsProvider
+  ) {
+
+    this.editUserForm = formBuilder.group({
+      stylistName: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      addressTownCity: [''],
+      addressCounty: [''],
+      addressPostcode: [''],
+      bio: [''],
+      mobile: [''],
+      mobileRange: [''],
+      baseLocation: ['']
+    });
+  }
+  logForm(){
+    console.log('something');
+  }
+
+
+  ngAfterContentInit() {
+
+  }
+
+  ionViewDidEnter() {
+    console.log('getting stylistID from current user ' + firebase.auth().currentUser.uid);
+
+    this.stylist
+    .getStylist(firebase.auth().currentUser.uid)
+    .snapshotChanges()
+    .subscribe(res => {
+      //let obj = { ...res[0] };
+      //this.stylistDetails = obj;
+      this.stylistId = res[0].key;
+      this.getDetails(this.stylistId);
+    });
+
+    firebase
+    .database()
+    .ref('/userProfile')
+    .child(firebase.auth().currentUser.uid)
+    .once('value')
+    .then(res => {
+      console.log(res.val());
+
+      this.user = res.val();
+    });
+    
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad EditUserProfilePage');
   }
 
-  async takePhoto() {
-    console.log('takePhoto');
-    const { Camera } = Plugins;
+  getDetails(stylistId: any) {
 
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.Base64,
-    }).catch(err => console.error(err));
+    console.log('getstylistprofile');
+    this.stylist
+      .getStylist(firebase.auth().currentUser.uid)
+      .valueChanges()
+      .subscribe(res => {
+        console.log(res);
+        let obj = { ...res[0] };
+        this.stylistDetails = obj;
 
-    this.image = this.sanitizer.bypassSecurityTrustResourceUrl(
-      image && image.base64Data
-    );
+        console.log(obj);
+      });
+
+
   }
+
+  doEditBanner() {
+    console.log('Getting photo from picker');
+    this.photo.getOneLibraryPicture().then(res => {
+      let returnedPhoto: any = res;
+      this.photo
+        .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
+        .then(baseress => {
+          console.log(baseress);
+          this.photo.pushPhotoToStorage(baseress).then(stores => {
+            console.log(stores[0]);
+            this.monitorUploadProgress(stores[0]);
+            // Write stores to DB
+          });
+        });
+    });
+
+    //UPDATE IMAGE ON PAGE
+  }
+
+  doSave() {
+
+    if (this.editUserForm.valid) {
+      let updatedStylist = this.editUserForm.value;
+
+      console.log('stylist name = ' + updatedStylist.stylistName);
+      updatedStylist.baseLocation = this.stylistDetails.baseLocation;
+      updatedStylist.bannerImage = this.stylistDetails.bannerImage;
+
+      console.log(JSON.stringify(updatedStylist));
+        this.stylist.updateStylistProfile(this.stylistId, updatedStylist).then(res => {
+          console.log('Updating stylist: name ' + this.stylistDetails.stylistName);  //, res
+          this.navCtrl.pop();
+        });
+    } else {
+      console.log('something invalid');
+    } 
+
+    // this.stylist.updateStylistProfile(this.stylistId, this.stylistDetails).then(res => {
+    //   console.log('Updating stylist: with new name ' + this.stylistDetails.stylistName, res);
+    //   this.navCtrl.pop();
+    // });
+    
+    //  Create updateStylistProfile...
+
+    //Do the same with user details
+  }
+
+  doCancel() {
+    console.log('Cancel');
+    this.navCtrl.pop();
+  }
+
+  public monitorUploadProgress(tasks) {
+    console.log('monitorUploadProgress');
+
+    tasks.forEach(task => {
+      console.log(task);
+      task.on(
+        'state_changed',
+        (snapshot: any) => {
+          this.loadProgress = (
+            snapshot.bytesTransferred /
+            snapshot.totalBytes *
+            100
+          ).toFixed(2);
+          // this.loadProgress.push(prog);
+          // console.log(this.loadProgress);
+          console.log('Upload is ' + this.loadProgress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+          // return progress;
+        },
+        err => {
+          console.error(err);
+        },
+        () => {
+          console.log('success!');
+          // Need the URLs for RTDB update
+          this.downloadUrls.push(task.snapshot.downloadURL);
+        }
+      );
+    });
+  }
+
+  // ngAfterViewInit() {
+  //   console.log('after view innniiiittt');
+  //   console.log(this.navbar.setBackButtonText(''));
+  // }
 }

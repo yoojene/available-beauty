@@ -35,6 +35,8 @@ export class UserProfilePage {
   stylist$: any;
   style: any;
 
+  hideOnModal = false;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -47,7 +49,19 @@ export class UserProfilePage {
   ionViewWillEnter() {
     console.log('ionViewDidLoad UserProfilePage');
 
-    this.getUserProfile();
+    const user = this.navParams.get('user');
+
+    console.log(user);
+
+    if (user) {
+      this.hideOnModal = false;
+    } else {
+      this.hideOnModal = true;
+    }
+
+    console.log('hideOnModal  ', this.hideOnModal);
+
+    this.getUserProfile(user);
     this.getStylistProfile();
     this.storage.getStorage('isStylist').subscribe(res => {
       if (res) {
@@ -88,13 +102,21 @@ export class UserProfilePage {
 
   //-- Private
 
-  private getUserProfile() {
+  private getUserProfile(user?) {
+    // TODO Make this dynamic with userId passed in from navParams
     console.log(this.afauth.auth.currentUser.uid);
+    console.log(user);
+    let userId;
+    if (user) {
+      userId = user;
+    } else {
+      userId = this.afauth.auth.currentUser.uid;
+    }
 
     firebase
       .database()
       .ref('/userProfile')
-      .child(this.afauth.auth.currentUser.uid)
+      .child(userId)
       .once('value')
       .then(res => {
         console.log(res.val());

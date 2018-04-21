@@ -6,14 +6,112 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton="true">
     <ion-title>{{editProfileTitle}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <button ion-button (click)="takePhoto()"> Take Photo</button>
+<ion-content no-padding>
+
+  <ion-list no-padding>
+
+      <form [formGroup]="editUserForm" (submit)="doSave()">
+
+        <div class="bannerContainer">
+          <div no-lines>
+              <img src="{{stylistDetails?.bannerImage}}"/>
+              <ion-icon name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
+          </div>
+            <div no-lines>
+              <img src="{{userDetails?.avatarImage}}"/>
+              <ion-icon name="ios-open-outline" (click)="doEditAvatar()"></ion-icon>
+            </div>
+        </div>
+
+        <ion-item>
+          <ion-label color="primary">User Details</ion-label>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{userName}}</ion-label>
+          <ion-input value="{{userDetails?.name}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{phoneNumber}}</ion-label>
+          <ion-input value="{{userDetails?.phoneNumber}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{emailAddress}}</ion-label>
+          <ion-input value="{{userDetails?.emailAddress}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{location}}</ion-label>
+          <ion-input value="{{userDetails?.location}}"></ion-input>
+        </ion-item>
+
+        <div>  <!--  ngIf user.isStylist = true -->
+        <ion-item>
+          <ion-label color="primary">Stylist Details</ion-label>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{stylistName}}</ion-label>
+          <ion-input formControlName="stylistName" type="text" value="{{stylistDetails?.stylistName}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{address1Line}}</ion-label>
+          <ion-input formControlName="addressLine1" type="text" value="{{stylistDetails?.addressLine1}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{address2Line}}</ion-label>
+          <ion-input formControlName="addressLine2" type="text" value="{{stylistDetails?.addressLine2}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{addressTown}}</ion-label>
+          <ion-input formControlName="addressTownCity" type="text" value="{{stylistDetails?.addressTownCity}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{addressCounty}}</ion-label>
+          <ion-input formControlName="addressCounty" type="text" value="{{stylistDetails?.addressCounty}}"></ion-input>
+        </ion-item>
+        <ion-item no-lines>
+          <ion-label stacked color="primary">{{addressPostcode}}</ion-label>
+          <ion-input formControlName="addressPostcode" type="text" value="{{stylistDetails?.addressPostcode}}"></ion-input>
+        </ion-item>
+        <ion-row>
+          <ion-item no-lines text-wrap>
+            <ion-label stacked color="primary">{{bio}}</ion-label>
+            <ion-textarea formControlName="bio" value="{{stylistDetails?.bio}}" ></ion-textarea>
+          </ion-item>
+        </ion-row>
+      </div>
+
+
+        <ion-item no-lines>
+          <ion-label color="primary">{{location}}</ion-label>
+        </ion-item>
+
+        <ion-row>
+          <ion-item no-lines>
+            <ion-label color="primary">{{mobileStylist}}</ion-label>
+            <ion-checkbox formControlName="mobile" checked="{{stylistDetails?.mobile}}"></ion-checkbox>
+          </ion-item>
+            <!-- TODO : If mobile=true, then display block below??? -->
+          <ion-item no-lines>
+            <ion-label color="primary">{{mobileRange}}</ion-label>
+            <ion-input formControlName="mobileRange" type="number" value="{{stylistDetails?.mobileRange}}"></ion-input> 
+          </ion-item>
+        </ion-row>
+
+        
+        <div class="buttonsContainer">
+          <ion-row>
+            <button class="cancel" ion-button round (click)="doCancel()">Cancel</button>
+            <button class="save" ion-button round  type="submit">Save</button>  <!--[disabled]="!userEditForm.valid"-->
+          </ion-row>
+        </div>
+      </form>
+  </ion-list>
+  
 
 </ion-content>

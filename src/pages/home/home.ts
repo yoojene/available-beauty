@@ -20,6 +20,7 @@ import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 import * as firebase from 'firebase';
+import { AvailabilityProvider } from '../../providers/availability/availability';
 
 @IonicPage()
 @Component({
@@ -42,12 +43,27 @@ export class HomePage {
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
-  // public stylistId: number;
+  /**
+   * /stylistProfile key
+   *
+   * @type {number}
+   * @memberof HomePage
+   */
+  public stylistId: number;
+
+  /**
+   * /userProfile key for a give /stylistProfile
+   *
+   * @type {number}
+   * @memberof HomePage
+   */
   public stylistUserId: number;
 
   public users: User[];
 
   public uid = firebase.auth().currentUser.uid;
+
+  private bookingId: string;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -55,6 +71,7 @@ export class HomePage {
     public navCtrl: NavController,
     private storage: StorageProvider,
     private stylist: StylistProvider,
+    private avail: AvailabilityProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
     private utils: UtilsProvider,
@@ -126,7 +143,7 @@ export class HomePage {
     this.users.map(listItem => {
       if (user == listItem) {
         listItem.expanded = !listItem.expanded;
-        // console.log(user.key);
+
         this.stylistUserId = user.key;
 
         this.stylist$ = this.stylist
@@ -134,8 +151,9 @@ export class HomePage {
           .snapshotChanges();
 
         this.stylist$.subscribe(res => {
-          // this.stylistId = res[0].key;
-          this.stylistAvail$ = this.stylist
+          this.stylistId = res[0].key;
+
+          this.stylistAvail$ = this.avail
             .getStylistAvailability(res[0].key)
             .snapshotChanges();
 
@@ -182,15 +200,15 @@ export class HomePage {
   }
 
   public bookAvailability(avail) {
-    console.log(avail);
-
     // Make pending booking
     this.booking
-      .makePendingBooking(avail.key, this.uid)
-      .then(res => console.log(res));
+      .makePendingBooking(avail.key, this.stylistId, this.uid)
+      .then(res => (this.bookingId = res));
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
-      avail: avail,
+      availId: avail.key,
+      stylist: this.stylistId,
+      userId: this.uid,
     });
 
     bookingModal.onDidDismiss(data => {
@@ -199,38 +217,6 @@ export class HomePage {
 
     bookingModal.present();
   }
-
-  // let bookingAlert = this.alertCtrl.create({
-  //   title: `Request Booking for ${avail.datetime}?`,
-  //   message:
-  //     'Do you want to request to book this slot?  <br> <br> Enter any details for the stylist below and they will contact you to confirm the booking',
-  //   inputs: [
-  //     {
-  //       name: 'details',
-  //       placeholder: 'Details',
-  //       type: 'text'
-  //     }
-  //   ],
-  //   buttons: [
-  //     {
-  //       text: 'Cancel',
-  //       role: 'cancel',
-  //       handler: () => {
-  //         console.log('Cancel clicked');
-  //       }
-  //     },
-  //     {
-  //       text: 'Confirm',
-  //       handler: () => {
-  //         console.log('Confirm booking clicked');
-  //         this.booking.makeBooking(avail.key); // TODO what should happen here MVP 1 are we actually booking
-  //       }
-  //     }
-  //   ]
-  // });
-
-  // bookingAlert.present();
-  // }
 
   public toggleFavourite() {
     if (!this.toggled) {
@@ -260,7 +246,7 @@ export class HomePage {
       .getStylistUsers()
       .snapshotChanges()
       .subscribe(actions => {
-        let values = this.utils.generateFirebaseKeyedValues(actions);
+        const values = this.utils.generateFirebaseKeyedValues(actions);
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
       });

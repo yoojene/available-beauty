@@ -15,24 +15,60 @@
 
 <ion-content padding>
 
-  <div *ngIf="bookings$ | async; let bookings">
-    <div *ngFor="let book of bookings">
-      <div *ngIf="book.payload.val().userAccepted === false && book.payload.val().stylistAccepted === false; then pending else no_pending"></div>
+  <ion-list-header>
+{{pendingBookingText}}
+  </ion-list-header>
+  <div *ngIf="bookings$ | async; let pendbookings">
+    <div *ngFor="let pendbook of pendbookings">
+      <div *ngIf="pendbook.payload.val().userAccepted === false && pendbook.payload.val().stylistAccepted === false; then pending else no_pending"></div>
         <ng-template #pending>
-            <h2> {{pendingBookingText}}</h2>
-          {{book.payload.val().availabilityId}}
+
+          <ion-item (click)="onBookingTap(pendbook.payload.val().availabilityId)">
+
+              Avail ID {{pendbook.payload.val().availabilityId}}
+
+              <div *ngIf="bookedUserAvailability">
+                <div *ngFor="let bua of bookedUserAvailability">
+                  <div *ngIf="bua.availId === pendbook.payload.val().availabilityId">
+                    {{bua.userName}}
+                  </div>
+                </div>
+
+              </div>
+              <div *ngIf="bookedDateAvailability">
+                <div *ngFor="let bda of bookedDateAvailability">
+                  <div *ngIf="bda.availId === pendbook.payload.val().availabilityId">
+                    {{bda.bookedDate}}
+                  </div>
+                </div>
+              </div>
+          </ion-item>
         </ng-template>
-        <ng-template #no_pending>
-          <h2> {{noPendingBookingText}}</h2>
-        </ng-template>
-      <div *ngIf="book.payload.val().userAccepted === true && book.payload.val().stylistAccepted === true; then accepted else no_accepted"></div>
-        <ng-template #accepted>
-          <h2> {{acceptedBookingText}}</h2>
-        {{book.payload.val().availabilityId}}
-        </ng-template>
-        <ng-template #no_accepted>
-          <h2> {{noAcceptedBookingText}}</h2>
-        </ng-template>
+
       </div>
   </div>
+    <ng-template #no_pending>
+      <h2> {{noPendingBookingText}}</h2>
+    </ng-template>
+
+
+    <hr>
+
+    <ion-list-header>
+      {{acceptedBookingText}}
+    </ion-list-header>
+
+  <div *ngIf="bookings$ | async; let accbookings">
+    <div *ngFor="let accbook of accbookings">
+
+      <div *ngIf="accbook.payload.val().userAccepted === true && accbook.payload.val().stylistAccepted === true; then accepted"></div>
+        <ng-template #accepted>
+        {{accbook.payload.val().availabilityId}}
+        </ng-template>
+
+      </div>
+  </div>
+  <ng-template #no_accepted>
+    <h2> {{noAcceptedBookingText}}</h2>
+  </ng-template>
 </ion-content>

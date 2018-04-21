@@ -1,3 +1,41 @@
 page-edit-user-profile {
 
+.bannerContainer {
+    position: relative;
+    width: 100%;
+}
+
+.buttonsContainer {
+    position: relative;
+    top: 30%;
+    width: 100%;
+}
+
+.cancel {
+    position: absolute;
+    left: 50px;
+}
+
+.save {
+    position: absolute;
+    right: 50px;
+}
+
+
+.icon {
+    position:absolute; 
+    font-size: 300%;
+    top:80%; 
+    left:80%;
+    color: wheat;
+}
+
+.profilebutton {
+    z-index: 2;
+    position: absolute;
+    left: 22%;
+    top: 8%;
+    margin: auto;
+}
+
 }

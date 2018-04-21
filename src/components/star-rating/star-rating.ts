@@ -7,7 +7,7 @@ import { Component, Input, AfterContentInit } from '@angular/core';
  */
 @Component({
   selector: 'star-rating',
-  templateUrl: 'star-rating.html'
+  templateUrl: 'star-rating.html',
 })
 export class StarRatingComponent implements AfterContentInit {
   @Input() rating: any;
@@ -17,9 +17,7 @@ export class StarRatingComponent implements AfterContentInit {
   starRating = [];
   remainder: any;
 
-  constructor() {
-    console.log('Hello StarRatingComponent Component');
-  }
+  constructor() {}
 
   ngAfterContentInit() {
     this.generateStarList(this.rating);
@@ -35,7 +33,5 @@ export class StarRatingComponent implements AfterContentInit {
     for (let i = 0; i < whole; i++) {
       this.starRating.push(i);
     }
-
-    console.log(this.starRating);
   }
 }

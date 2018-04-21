@@ -15,9 +15,13 @@
 
 <ion-content padding>
   <h2>{{availableDate}} </h2>
-  <div> Do you want to request to book this slot?
+
+  <div *ngIf="!isStylist"> Do you want to request to book this slot?
   <br>
   <br> Enter any details for the stylist below and they will contact you to confirm the booking</div>
+  <div *ngIf="isStylist"> Confirm the booking with the user by using the buttons below
+  <br>
+  <br> Enter any additional comments for the user below </div>
 
 
   <ion-list no-padding>

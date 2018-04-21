@@ -1,0 +1,63 @@
+
+branches:
+  only:
+  - master
+matrix:
+  include:
+  - os: linux
+    language: android
+    sudo: false
+    android:
+      components:
+      - tools
+      - platform-tools
+      - tools
+      - build-tools-26.0.0
+      - android-25
+      - extra-google-google_play_services
+      - extra-google-m2repository
+      - extra-android-m2repository
+    addons:
+      apt:
+        sources:
+        - sourceline: deb https://dl.yarnpkg.com/debian/ stable main
+          key_url: https://dl.yarnpkg.com/debian/pubkey.gpg
+        packages:
+        - oracle-java8-installer
+        - oracle-java8-set-default
+        - npm
+        - jq
+    licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
+  - os: osx
+    language: objective-c
+    osx_image: xcode9.2
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f  $HOME/.gradle/caches/transforms-1/transforms-1.lock
+- rm -rf $HOME/.gradle/caches/3.5/fileHashes/
+- rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/Library/Caches/Yarn/v1/
+  - $HOME/.cache/yarn/v1/
+before_install:
+- export LANG=en_US.UTF-8
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install openssl ruby rbenv ruby-build npm ios-sim
+  jq ios-deploy cocoapods ; rbenv install 2.5.0 ; rvm use system ; touch Podfile ; pod install ; fi
+- nvm install 8.9.4
+- npm install -g npm@5.6.0
+- npm install -g ionic@3.20.0 cordova@7.1
+before_script:
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./@ci/addkeys.sh ; fi
+script:
+- npm install
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./@ci/build-ios.sh && ./@ci/package-ios.sh ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./@ci/build-android.sh && ./@ci/package-android.sh ; fi
+env:
+  global:
+  - JAVA_HOME=/usr/lib/jvm/java-8-oracle
