@@ -25,6 +25,9 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
 import { Slides } from 'ionic-angular';
 
+import { Plugins, CameraResultType } from '@capacitor/core';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+
 /**
  * Generated class for the StylistRegisterPage page.
  *
@@ -80,6 +83,8 @@ export class StylistRegisterPage {
   public yes: boolean;
   public no: boolean;
 
+  private image: SafeResourceUrl;
+
   constructor(
     public navCtrl: NavController,
     private plt: Platform,
@@ -88,10 +93,11 @@ export class StylistRegisterPage {
     public storage: StorageProvider,
     public stylist: StylistProvider,
     public location: LocationProvider,
-    public camera: Camera,
+    public cordovaCamera: Camera,
     public actionSheetCtrl: ActionSheetController,
     public photo: PhotoProvider,
-    public afdb: AngularFireDatabase
+    public afdb: AngularFireDatabase,
+    private sanitizer: DomSanitizer
   ) {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: [
@@ -290,17 +296,18 @@ export class StylistRegisterPage {
         {
           text: 'Use Camera',
           handler: () => {
-            this.photo
-              .takePhoto(this.camera.PictureSourceType.CAMERA)
-              .then(res => {
-                console.log(res);
-                this.photo.getBase64Data(res).then(baseres => {
-                  this.photo.pushPhotoToStorage(baseres).then(stores => {
-                    console.log(stores[0]);
-                    this.monitorUploadProgress(stores[0]);
-                  });
-                });
-              });
+            // this.photo
+            //   .takePhoto(this.cordovaCamera.PictureSourceType.CAMERA)
+            //   .then(res => {
+            //     console.log(res);
+            //     this.photo.getBase64Data(res).then(baseres => {
+            //       this.photo.pushPhotoToStorage(baseres).then(stores => {
+            //         console.log(stores[0]);
+            //         this.monitorUploadProgress(stores[0]);
+            //       });
+            //     });
+            //   });
+            this.takePhoto();
           },
         },
         {
@@ -383,16 +390,19 @@ export class StylistRegisterPage {
     }
   }
 
-  takePhoto() {
-    this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
-      console.log(res);
-      this.photo.getBase64Data(res).then(baseres => {
-        this.photo.pushPhotoToStorage(baseres).then(stores => {
-          console.log(stores[0]);
-          this.monitorUploadProgress(stores[0]);
+  // Cordova
+  takeCordovaPhoto() {
+    this.photo
+      .takePhoto(this.cordovaCamera.PictureSourceType.CAMERA)
+      .then(res => {
+        console.log(res);
+        this.photo.getBase64Data(res).then(baseres => {
+          this.photo.pushPhotoToStorage(baseres).then(stores => {
+            console.log(stores[0]);
+            this.monitorUploadProgress(stores[0]);
+          });
         });
       });
-    });
   }
 
   selectPhoto() {
@@ -410,6 +420,23 @@ export class StylistRegisterPage {
         });
       });
     });
+  }
+
+  // Capacitor
+
+  private async takePhoto() {
+    console.log('takePhoto uing cpx');
+    const { Camera } = Plugins;
+
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Base64,
+    }).catch(err => console.error(err));
+
+    this.image = this.sanitizer.bypassSecurityTrustResourceUrl(
+      image && image.base64Data
+    );
   }
 
   checkDisabled() {
