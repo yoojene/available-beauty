@@ -83,7 +83,7 @@ export class StylistRegisterPage {
   public yes: boolean;
   public no: boolean;
 
-  private image: SafeResourceUrl;
+  public image: SafeResourceUrl;
 
   constructor(
     public navCtrl: NavController,

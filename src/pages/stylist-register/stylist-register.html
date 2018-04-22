@@ -120,6 +120,11 @@
       <button block round ion-button outline type="button" (click)="takePhoto()" color="aubergine">
         {{useCameraButtonText}}
       </button>
+
+      <div *ngIf="image">
+        <img [src]="image" />
+      </div>
+
       <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
       </progress-bar>
 
