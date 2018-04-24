@@ -81,20 +81,49 @@ export class UserProvider {
       user
     );
   }
-  /**
-   * Update existing user details
+   /**
+   * Creates userProfile record in realtime DB
    *
-   * @param {any} userId
-   * @param {any} userDetails
+   * @param {boolean} stylist Flag to denote whether user is stylist or not
+   * @param {any} newUser FirebaseUser returned from native createUserWithEmailAndPassword()
+   * @param {any} user user details from RegisterPage component
    * @returns
-   * @memberof UserProvider
+   * @memberof AuthProvider
    */
-  public updateUser(userId, userDetails) {
-    return this.http.put(
-      this.config.endpointURL + this.config.usersPath + userId,
-      userDetails
-    );
-  }
+  public updateUserProfile(userId: any, user: User) {
+
+    console.log('updating user ' + userId);
+
+    // let userProfile;
+    // if (!user) {
+      // this.storage.getStorage('geolocation').subscribe(res => {
+      //   this.geolocation = res;
+
+        let userProfile = {
+          name: user.name,
+          emailAddress: user.emailAddress,
+        //  avatarImage: user.avatarImage,
+          phoneNumber: user.phoneNumber,
+          // homeLocation: user.homeLocation,
+          // isStylist: user.isStylist,
+        };
+
+        console.log('Updating user ' + userProfile.name);
+
+        let userPayload = {};
+        userPayload[`stylistProfile/${userId}`] = userProfile;
+
+        console.log('JSON USER CONTENT: ' + JSON.stringify(userPayload));
+    
+        return this.afdb.database
+          .ref()
+          .update(userPayload)
+          .then(res => console.log(res));
+      // } else {
+      //   console.log('no user object');
+      // }
+    }
+
   /**
    * Delete a user
    *

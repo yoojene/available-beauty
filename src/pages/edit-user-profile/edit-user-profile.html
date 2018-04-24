@@ -24,10 +24,10 @@
               <img src="{{stylistDetails?.bannerImage}}"/>
               <ion-icon name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
           </div>
-            <div no-lines>
+            <!--<div no-lines>
               <img src="{{userDetails?.avatarImage}}"/>
               <ion-icon name="ios-open-outline" (click)="doEditAvatar()"></ion-icon>
-            </div>
+            </div>-->
         </div>
 
         <ion-item>
@@ -35,19 +35,19 @@
         </ion-item>
         <ion-item no-lines>
           <ion-label stacked color="primary">{{userName}}</ion-label>
-          <ion-input value="{{userDetails?.name}}"></ion-input>
+          <ion-input formControlName="name" value="{{userDetails?.name}}"></ion-input>
         </ion-item>
         <ion-item no-lines>
           <ion-label stacked color="primary">{{phoneNumber}}</ion-label>
-          <ion-input value="{{userDetails?.phoneNumber}}"></ion-input>
+          <ion-input formControlName="phoneNumber" value="{{userDetails?.phoneNumber}}"></ion-input>
         </ion-item>
         <ion-item no-lines>
           <ion-label stacked color="primary">{{emailAddress}}</ion-label>
-          <ion-input value="{{userDetails?.emailAddress}}"></ion-input>
+          <ion-input formControlName="emailAddress" value="{{userDetails?.emailAddress}}"></ion-input>
         </ion-item>
         <ion-item no-lines>
           <ion-label stacked color="primary">{{location}}</ion-label>
-          <ion-input value="{{userDetails?.location}}"></ion-input>
+          <ion-input formControlName="location" value="{{userDetails?.location}}"></ion-input>
         </ion-item>
 
         <div>  <!--  ngIf user.isStylist = true -->
