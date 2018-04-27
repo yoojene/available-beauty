@@ -111,7 +111,7 @@ export class UserProvider {
         console.log('Updating user ' + userProfile.name);
 
         let userPayload = {};
-        userPayload[`stylistProfile/${userId}`] = userProfile;
+        userPayload[`userProfile/${userId}`] = userProfile;
 
         console.log('JSON USER CONTENT: ' + JSON.stringify(userPayload));
     
