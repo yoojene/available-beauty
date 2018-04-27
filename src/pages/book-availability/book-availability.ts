@@ -22,6 +22,9 @@ import { UserProvider } from '../../providers/user/user';
   templateUrl: 'book-availability.html',
 })
 export class BookAvailabilityPage {
+  public acceptBookingText = 'Accept';
+  public rejectBookingText = 'Reject';
+  
   isStylist: boolean;
   availableDate: any;
   booking: any = {};
@@ -155,4 +158,7 @@ export class BookAvailabilityPage {
     this.msg.addMessageForUser(this.chatId, this.booking.bookMessage);
     this.booking.bookMessage = '';
   }
+
+  public acceptBooking() {}
+  public rejectBooking() {}
 }
