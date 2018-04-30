@@ -1,3 +1,21 @@
 page-book-availability {
+  .page-book-availability {
+    &--message-entry {
+      background-color: #f4f4f4;
+      padding: 0%;
+    }
 
+    &--message-container {
+      position: relative;
+      // top: 20px;
+    }
+
+    &--message-entry.item-ios.item-block > .item-inner {
+      border-bottom: none;
+      border-top: 0.55px solid #c8c7cc;
+    }
+    &--message-entry.item-ios.item-block > .item-inner > button {
+      margin-top: 20px;
+    }
+  }
 }

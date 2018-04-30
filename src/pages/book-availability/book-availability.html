@@ -4,6 +4,7 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+
 <ion-header>
 
   <ion-navbar>
@@ -13,9 +14,11 @@
 </ion-header>
 
 
-<ion-content padding>
-  <h2>{{availableDate}} </h2>
+<ion-content no-padding>
+  <div class="page-book-availability">
+  <h2 text-center>{{availableDate}} </h2>
 
+  <div padding>
   <div *ngIf="!isStylist"> Do you want to request to book this slot?
   <br>
   <br> Enter any details for the stylist below and they will contact you to confirm the booking</div>
@@ -23,21 +26,17 @@
   <br>
   <br> Enter any additional comments for the user below </div>
 
-
+</div>
   <ion-list no-padding>
       <div *ngFor="let msg of chatmsgs">
         <chat-bubble [msg]="msg"></chat-bubble>
-        <!-- <ion-item>
-          {{msg.messageSender}} -- {{msg.messageDate}}
-        </ion-item>
-        <ion-item text-wrap no-lines>
-          {{msg.messageText}}
-        </ion-item> -->
     </div>
   </ion-list>
-  <form (submit)="onSubmitBookForm($event)">
-    <ion-item-divider></ion-item-divider>
-    <ion-item>
+  <br>
+  <br>
+  <br>
+  <form class="page-book-availability--message-container" no-padding (submit)="onSubmitBookForm($event)">
+    <ion-item class="page-book-availability--message-entry">
       <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message"></ion-textarea>
       <button ion-button item-end>
         <ion-icon name="send"></ion-icon>
@@ -45,4 +44,11 @@
     </ion-item>
   </form>
 
+  <div *ngIf="isStylist" text-center>
+      <button (click)="acceptBooking()" ion-button round> {{acceptBookingText}} </button>
+      <button (click)="rejectBooking()" ion-button round> {{rejectBookingText}} </button>
+  </div>
+</div>
 </ion-content>
+
+

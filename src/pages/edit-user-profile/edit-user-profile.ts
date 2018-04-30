@@ -23,6 +23,7 @@ import { PhotoProvider } from '../../providers/photo/photo';
 })
 export class EditUserProfilePage implements AfterContentInit {
   stylistId: any;
+  userId: any;
   stylistDetails: any;
   userDetails: any;
   public editUserForm: FormGroup;
@@ -69,7 +70,11 @@ export class EditUserProfilePage implements AfterContentInit {
       bio: [''],
       mobile: [''],
       mobileRange: [''],
-      baseLocation: ['']
+      baseLocation: [''],
+      name: [''],
+      phoneNumber: [''],
+      emailAddress: [''],
+      location: ['']
     });
   }
   logForm(){
@@ -94,15 +99,12 @@ export class EditUserProfilePage implements AfterContentInit {
       this.getDetails(this.stylistId);
     });
 
-    firebase
-    .database()
-    .ref('/userProfile')
-    .child(firebase.auth().currentUser.uid)
-    .once('value')
-    .then(res => {
-      console.log(res.val());
-
-      this.user = res.val();
+    this.user
+    .getUserById(firebase.auth().currentUser.uid)
+    .valueChanges()
+    .subscribe(res => {
+      this.userDetails = res;
+      console.log('Getting details of User Name ' + this.userDetails.name + ', User ID: ' + firebase.auth().currentUser.uid);
     });
     
   }
@@ -122,7 +124,7 @@ export class EditUserProfilePage implements AfterContentInit {
         let obj = { ...res[0] };
         this.stylistDetails = obj;
 
-        console.log(obj);
+        console.log('Got details of Stylist Name ' + this.stylistDetails.stylistName);
       });
 
 
@@ -151,16 +153,19 @@ export class EditUserProfilePage implements AfterContentInit {
 
     if (this.editUserForm.valid) {
       let updatedStylist = this.editUserForm.value;
+      let updatedUser = this.editUserForm.value;
 
       console.log('stylist name = ' + updatedStylist.stylistName);
       updatedStylist.baseLocation = this.stylistDetails.baseLocation;
       updatedStylist.bannerImage = this.stylistDetails.bannerImage;
 
       console.log(JSON.stringify(updatedStylist));
-        this.stylist.updateStylistProfile(this.stylistId, updatedStylist).then(res => {
-          console.log('Updating stylist: name ' + this.stylistDetails.stylistName);  //, res
-          this.navCtrl.pop();
-        });
+
+      return Promise.all([
+        this.stylist.updateStylistProfile(this.stylistId, updatedStylist),
+        this.user.updateUserProfile(firebase.auth().currentUser.uid, updatedUser),
+        this.navCtrl.pop()
+      ]);
     } else {
       console.log('something invalid');
     } 
