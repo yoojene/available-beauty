@@ -74,12 +74,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-   <key>FacebookAppID</key>
-  <string>125684678101312</string>
-    <key>FacebookDisplayName</key>
-  <string>Available Beauty</string>
-    <key>Google Maps API Key</key>
-  <string>AIzaSyASVlONnA0udF3a0bWntj076WRe8ku6P6w</string>
+	<true/>
 </dict>
 </plist>

@@ -1,3 +1,5 @@
+//# sourceURL=capacitor-runtime.js
+
 (function(win) {
   win.Capacitor = win.Capacitor || {
     Plugins: {}
@@ -7,6 +9,9 @@
 
   // Export Cordova if not defined
   win.cordova = win.cordova || {};
+
+  // Add any legacy handlers to keep Cordova compat 100% good
+  addLegacyHandlers(win);
 
   capacitor.Plugins = capacitor.Plugins || {};
   
@@ -88,6 +93,29 @@
       };
     }
   });
+
+  function addLegacyHandlers(win) {
+    win.navigator.app = {
+      exitApp: function() {
+        capacitor.toNative("App", "exitApp", {}, null);
+      }
+    }
+    let documentAddEventListener = document.addEventListener;
+    document.addEventListener = function() {
+      var name = arguments[0];
+      var handler = arguments[1];
+      if (name === 'deviceready') {
+        setTimeout(function() {
+          handler && handler();
+        });
+      } else if (name === 'backbutton') {
+        // Add a dummy listener so Capacitor doesn't do the default
+        // back button action
+        Capacitor.Plugins.App && Capacitor.Plugins.App.addListener('backButton', function() {});
+      }
+      return documentAddEventListener.apply(document, arguments);
+    }
+  }
 
   /**
    * Send a plugin method call to the native layer
@@ -244,6 +272,18 @@
       callbackId,
       eventName
     }, callback);
+  }
+
+  capacitor.triggerEvent = function(eventName, target, data) {
+    var event = new CustomEvent(eventName, { detail: data || {} });
+    if (target === "document") {
+      document.dispatchEvent(event);
+    } else if (target === "window") {
+      window.dispatchEvent(event);
+    } else {
+      const targetEl = document.querySelector(target);
+      targetEl && targetEl.dispatchEvent(event);
+    }
   }
 
   capacitor.handleError = function(error) {
@@ -481,7 +521,7 @@
     var copyButton = el.querySelector('#_avc-copy-error');
     copyButton.addEventListener('click', function(e) {
       if(lastError) {
-        Capacitor.Plugins.Clipboard.set({
+        Capacitor.Plugins.Clipboard.write({
           string: lastError.message + '\n' + lastError.stack
         });
       }

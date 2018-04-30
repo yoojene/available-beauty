@@ -25,7 +25,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
 import { Slides } from 'ionic-angular';
 
-import { Plugins, CameraResultType } from '@capacitor/core';
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 
 /**
@@ -405,26 +405,40 @@ export class StylistRegisterPage {
       });
   }
 
-  selectPhoto() {
-    this.photo.getLibraryPictures().then(res => {
-      let photos: any = res;
-      photos.forEach(el => {
-        this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
-          console.log(baseress);
-          this.photo.pushPhotoToStorage(baseress).then(stores => {
-            console.log(stores[0]);
+  public async selectPhoto() {
+    // this.photo.getLibraryPictures().then(res => {
+    //   let photos: any = res;
+    //   photos.forEach(el => {
+    //     this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
+    //       console.log(baseress);
+    //       this.photo.pushPhotoToStorage(baseress).then(stores => {
+    //         console.log(stores[0]);
 
-            // TODO: this looks to be the place to update RTDB
-            this.monitorUploadProgress(stores[0]);
-          });
-        });
-      });
-    });
+    //         // TODO: this looks to be the place to update RTDB
+    //         this.monitorUploadProgress(stores[0]);
+    //       });
+    //     });
+    //   });
+    // });
+
+    console.log('selectPhotot uing cpx');
+    const { Camera } = Plugins;
+
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Prompt,
+    }).catch(err => console.error(err));
+
+    this.image = this.sanitizer.bypassSecurityTrustResourceUrl(
+      image && image.base64Data
+    );
   }
 
   // Capacitor
 
-  private async takePhoto() {
+  public async takePhoto() {
     console.log('takePhoto uing cpx');
     const { Camera } = Plugins;
 

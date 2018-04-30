@@ -43407,6 +43407,13 @@ ion-navbar.toolbar {
   display: inherit;
 }
 
+/* Capacitor double icon workaround
+ https://github.com/ionic-team/capacitor/issues/472
+ */
+.icon-inner {
+  display: none;
+}
+
 .chatBubble img.profile-pic {
   width: 40px;
   height: 40px;
@@ -43562,6 +43569,61 @@ progress-bar .progress-inner {
   padding: 5px;
   border-radius: 20px;
   background-color: #604472;
+}
+
+page-book-availability .page-book-availability--message-entry {
+  background-color: #f4f4f4;
+  padding: 0%;
+}
+
+page-book-availability .page-book-availability--message-container {
+  position: relative;
+}
+
+page-book-availability .page-book-availability--message-entry.item-ios.item-block > .item-inner {
+  border-bottom: none;
+  border-top: 0.55px solid #c8c7cc;
+}
+
+page-book-availability .page-book-availability--message-entry.item-ios.item-block > .item-inner > button {
+  margin-top: 20px;
+}
+
+page-edit-user-profile .bannerContainer {
+  position: relative;
+  width: 100%;
+}
+
+page-edit-user-profile .buttonsContainer {
+  position: relative;
+  top: 30%;
+  width: 100%;
+}
+
+page-edit-user-profile .cancel {
+  position: absolute;
+  left: 50px;
+}
+
+page-edit-user-profile .save {
+  position: absolute;
+  right: 50px;
+}
+
+page-edit-user-profile .icon {
+  position: absolute;
+  font-size: 300%;
+  top: 80%;
+  left: 80%;
+  color: wheat;
+}
+
+page-edit-user-profile .profilebutton {
+  z-index: 2;
+  position: absolute;
+  left: 22%;
+  top: 8%;
+  margin: auto;
 }
 
 page-home .page-home--slide-background {

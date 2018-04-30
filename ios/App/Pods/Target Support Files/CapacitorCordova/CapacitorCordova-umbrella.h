@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "AppDelegate.h"
 #import "CDV.h"
 #import "CDVAvailability.h"
 #import "CDVCommandDelegate.h"

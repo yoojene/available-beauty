@@ -1,10 +1,15 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '10.0'
+platform :ios, '10.0'
+use_frameworks!
 
 target 'App' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-  use_frameworks!
+  # Add your Pods here
 
-  # Pods for IonicRunner
-  pod 'Capacitor'
+  # Automatic Capacitor Pod dependencies, do not delete
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+  pod 'CordovaPlugins', :path => '../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins'
+    
+      pod 'CordovaPluginsResources', :path => '../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins'
+    
+  # Do not delete
 end

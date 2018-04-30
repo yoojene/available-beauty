@@ -2,6 +2,14 @@
   cordova.define('cordova/plugin_list', function(require, exports, module) {
     module.exports = [
       {
+        "id": "com.synconset.imagepicker.ImagePicker",
+        "file": "plugins/com.synconset.imagepicker/www/imagepicker.js",
+        "pluginId": "com.synconset.imagepicker",
+        "clobbers": [
+          "plugins.imagePicker"
+        ]
+      },
+      {
         "id": "cordova-plugin-buildinfo.BuildInfo",
         "file": "plugins/cordova-plugin-buildinfo/www/buildinfo.js",
         "pluginId": "cordova-plugin-buildinfo",
@@ -411,12 +419,28 @@
         ]
       },
       {
+        "id": "cordova-plugin-googleplus.GooglePlus",
+        "file": "plugins/cordova-plugin-googleplus/www/GooglePlus.js",
+        "pluginId": "cordova-plugin-googleplus",
+        "clobbers": [
+          "window.plugins.googleplus"
+        ]
+      },
+      {
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "pluginId": "cordova-plugin-inappbrowser",
         "clobbers": [
           "cordova.InAppBrowser.open",
           "window.open"
+        ]
+      },
+      {
+        "id": "cordova-plugin-ionic-webview.ios-wkwebview-exec",
+        "file": "plugins/cordova-plugin-ionic-webview/src/www/ios/ios-wkwebview-exec.js",
+        "pluginId": "cordova-plugin-ionic-webview",
+        "clobbers": [
+          "cordova.exec"
         ]
       },
       {
@@ -450,11 +474,21 @@
         "clobbers": [
           "cordova.plugins.Keyboard"
         ]
+      },
+      {
+        "id": "twitter-connect-plugin.TwitterConnect",
+        "file": "plugins/twitter-connect-plugin/www/TwitterConnect.js",
+        "pluginId": "twitter-connect-plugin",
+        "clobbers": [
+          "TwitterConnect"
+        ]
       }
     ];
     module.exports.metadata =
     // TOP OF METADATA
     {
+      "com.synconset.imagepicker": "2.1.8",
+      "cordova-plugin-add-swift-support": "1.7.2",
       "cordova-plugin-buildinfo": "2.0.1",
       "cordova-plugin-camera": "3.0.0",
       "cordova-plugin-customurlscheme": "4.3.0",
@@ -463,11 +497,15 @@
       "cordova-plugin-file": "5.0.0",
       "cordova-plugin-geolocation": "4.0.0",
       "cordova-plugin-googlemaps": "2.1.1",
+      "cordova-plugin-googlemaps-sdk": "2.6.0",
+      "cordova-plugin-googleplus": "5.1.1",
       "cordova-plugin-inappbrowser": "1.7.2",
+      "cordova-plugin-ionic-webview": "1.1.16",
       "cordova-plugin-nativegeocoder": "2.0.5",
       "cordova-sqlite-storage": "2.1.5",
       "cordova-universal-links-plugin": "1.2.1",
-      "ionic-plugin-keyboard": "2.2.1"
+      "ionic-plugin-keyboard": "2.2.1",
+      "twitter-connect-plugin": "0.6.0"
     };
     // BOTTOM OF METADATA
     });

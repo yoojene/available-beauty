@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
+		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
 		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
 		504EC30D1FED79650016851F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30B1FED79650016851F /* Main.storyboard */; };
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		504EC30C1FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -71,13 +73,14 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				50B271D01FEDC1A000F3C39B /* public */,
+				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
 				504EC3131FED79650016851F /* Info.plist */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
+				50B271D01FEDC1A000F3C39B /* public */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -103,7 +106,7 @@
 				504EC3011FED79650016851F /* Frameworks */,
 				504EC3021FED79650016851F /* Resources */,
 				9592DBEFFC6D2A0C8D5DEB22 /* [CP] Embed Pods Frameworks */,
-				FD71F2B5DB4525CF1AE42CE5 /* [CP] Copy Pods Resources */,
+				D53CAD136005A30BADC011B9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -155,6 +158,7 @@
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
+				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
 			);
@@ -190,12 +194,14 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-App/Pods-App-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Capacitor/Capacitor.framework",
 				"${BUILT_PRODUCTS_DIR}/CapacitorCordova/Cordova.framework",
+				"${BUILT_PRODUCTS_DIR}/CordovaPlugins/CordovaPlugins.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Capacitor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cordova.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CordovaPlugins.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,15 +209,48 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-App/Pods-App-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FD71F2B5DB4525CF1AE42CE5 /* [CP] Copy Pods Resources */ = {
+		D53CAD136005A30BADC011B9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-App/Pods-App-resources.sh",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMEmptyFolder@1x.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMEmptyFolder@2x.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMSelected.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMSelected@2x.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMVideoIcon.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GMVideoIcon@2x.png",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/ca.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/de.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/en.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/es.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/fr.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/it.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/pt.lproj",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/TwitterKitResources.bundle",
+				"${PODS_ROOT}/../../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins/resources/zh-Hans.lproj",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMEmptyFolder@1x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMEmptyFolder@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMSelected.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMSelected@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMVideoIcon.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GMVideoIcon@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ca.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/de.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/es.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fr.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/it.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pt.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zh-Hans.lproj",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

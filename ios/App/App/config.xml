@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
   <widget version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   
+  <feature name="ImagePicker">
+    <param name="ios-package" value="SOSPicker"/>
+  </feature>
+
+
   <feature name="BuildInfo">
     <param name="ios-package" value="CDVBuildInfo"/>
   </feature>
@@ -73,8 +78,19 @@
   </feature>
 
 
+  <feature name="GooglePlus">
+    <param name="ios-package" value="GooglePlus"/>
+    <param name="onload" value="true"/>
+  </feature>
+
+
   <feature name="InAppBrowser">
     <param name="ios-package" value="CDVInAppBrowser"/>
+  </feature>
+
+
+  <feature name="CDVWKWebViewEngine">
+    <param name="ios-package" value="CDVWKWebViewEngine"/>
   </feature>
 
 
@@ -97,5 +113,13 @@
   <feature name="Keyboard">
     <param name="ios-package" value="IonicKeyboard" onload="true"/>
   </feature>
+
+
+  <feature name="TwitterConnect">
+    <param name="ios-package" value="TwitterConnect"/>
+  </feature>
+
+
+  <feature/>
 
   </widget>

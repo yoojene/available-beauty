@@ -1,20 +1,42 @@
 PODS:
-  - Capacitor (0.0.113):
-    - CapacitorCordova (= 0.0.113)
+  - Capacitor (1.0.0-alpha.35):
+    - CapacitorCordova (= 1.0.0-alpha.35)
     - GCDWebServer (~> 3.0)
-  - CapacitorCordova (0.0.113)
+  - CapacitorCordova (1.0.0-alpha.35)
+  - CordovaPlugins (1.0.0-alpha.36):
+    - CapacitorCordova
+  - CordovaPluginsResources (0.0.105)
   - GCDWebServer (3.4.2):
     - GCDWebServer/Core (= 3.4.2)
   - GCDWebServer/Core (3.4.2)
 
 DEPENDENCIES:
-  - Capacitor
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CordovaPlugins (from `../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins`)"
+  - "CordovaPluginsResources (from `../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins`)"
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - GCDWebServer
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CordovaPlugins:
+    :path: "../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins"
+  CordovaPluginsResources:
+    :path: "../../node_modules/@capacitor/cli/assets/capacitor-cordova-ios-plugins"
 
 SPEC CHECKSUMS:
-  Capacitor: b37060b0b2685257bedbc69e49a54a74ef30fb9a
-  CapacitorCordova: a923a32bc7ad5f1f3d69664ca86ff69580343ed3
+  Capacitor: 6626398d94ba04d083a83057a3ef5f861096543a
+  CapacitorCordova: 0d287a27c9caf599aaf36a47622d0704c914b2b1
+  CordovaPlugins: 8142714fff445537adea1715468b5e2e417ab09c
+  CordovaPluginsResources: 83a99c2e0c802a4d8f9c424879e6692629089500
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
 
-PODFILE CHECKSUM: a745a6c05c8bd26c607c07c90772fcb71aadf25e
+PODFILE CHECKSUM: 172a78117eb5c69347afc82e2e45e61ddaad952c
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0
