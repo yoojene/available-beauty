@@ -72,4 +72,10 @@ export class BookingProvider {
         return bookingKey;
       });
   }
+
+  public async stylistBookingAccept(bookingId) {
+    return await this.afdb.database
+      .ref(`bookings/${bookingId}`)
+      .update({ stylistAccepted: true });
+  }
 }

@@ -85,6 +85,8 @@ export class BookingsPage {
   ionViewDidEnter() {
     this.availabilities = [];
     this.bookingUsers = [];
+    this.bookedUserAvailability = [];
+    this.bookedDateAvailability = [];
     this.stylist
       .getStylist(firebase.auth().currentUser.uid)
       .snapshotChanges()
@@ -107,10 +109,10 @@ export class BookingsPage {
    * @param {any} userId
    * @memberof BookingsPage
    */
-  onBookingTap(availId) {
-    console.log(availId);
+  onBookingTap(availId, bookId) {
     const bookAvailModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: availId,
+      bookId: bookId,
       stylist: this.stylistId,
       userId: firebase.auth().currentUser.uid,
     });

@@ -8,6 +8,7 @@ import { AvailabilityProvider } from '../../providers/availability/availability'
 import { UtilsProvider } from '../../providers/utils/utils';
 import { UserProfilePage } from '../user-profile/user-profile';
 import { UserProvider } from '../../providers/user/user';
+import { BookingProvider } from '../../providers/booking/booking';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -24,7 +25,7 @@ import { UserProvider } from '../../providers/user/user';
 export class BookAvailabilityPage {
   public acceptBookingText = 'Accept';
   public rejectBookingText = 'Reject';
-  
+
   isStylist: boolean;
   availableDate: any;
   booking: any = {};
@@ -37,6 +38,7 @@ export class BookAvailabilityPage {
   userId: string;
   stylistId: number;
   availability: any;
+  bookingId: any;
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +46,8 @@ export class BookAvailabilityPage {
     public msg: MessagesProvider,
     public utils: UtilsProvider,
     public avail: AvailabilityProvider,
-    private user: UserProvider
+    private user: UserProvider,
+    private bookingProvider: BookingProvider
   ) {}
 
   // Lifecycle
@@ -66,10 +69,12 @@ export class BookAvailabilityPage {
     this.availability = this.navParams.get('availId');
     this.stylistId = this.navParams.get('stylist');
     this.userId = this.navParams.get('userId');
+    this.bookingId = this.navParams.get('bookId');
 
     console.log(this.availability);
     console.log(this.stylistId);
     console.log(this.userId);
+    console.log('bookingId is ', this.bookingId);
 
     this.avail
       .getAvailabilityById(this.availability)
@@ -159,6 +164,17 @@ export class BookAvailabilityPage {
     this.booking.bookMessage = '';
   }
 
-  public acceptBooking() {}
+  public async acceptBooking() {
+    // If Stylist, set bookings/{bookingId}/stylistAccepted = true
+    // If User, set bookings/{bookingId}/userAccepted = true
+
+    if (this.isStylist) {
+      const result = await this.bookingProvider.stylistBookingAccept(
+        this.bookingId
+      );
+
+      console.log(result);
+    }
+  }
   public rejectBooking() {}
 }
