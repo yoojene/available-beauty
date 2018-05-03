@@ -20,15 +20,11 @@ export class BookingProvider {
     return this.afdb.list('booking');
   }
 
-  public getUserBookings(uid) {
-    // return this.afdb.list<Booking>(`booking`, ref => {
-    //   console.log(ref);
-    //   return ref.orderByChild('userId').equalTo(uid);
-    // });
-    console.log(uid);
-    return this.afdb
-      .list<Booking>(`userProfile/${uid}/bookings`)
-      .snapshotChanges();
+  public getUserBookings(userId) {
+    console.log('getUserBookings -> ', userId);
+    return this.afdb.list(`bookings`, ref => {
+      return ref.orderByChild('userId').equalTo(userId);
+    });
   }
 
   public getStylistBookings(stylistId) {

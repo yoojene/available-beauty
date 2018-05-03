@@ -62,6 +62,8 @@ export class BookingsPage {
 
   bookings = [];
 
+  public isStylist = false;
+
   public destroy$: Subject<any> = new Subject();
 
   constructor(
@@ -82,18 +84,35 @@ export class BookingsPage {
     console.log('ionViewDidLoad BookingsPage');
   }
 
+  ionViewWillEnter() {
+    // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
+    this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      if (!res) {
+        this.isStylist = false;
+      } else {
+        this.isStylist = true;
+      }
+    });
+
+    if (this.isStylist === true) {
+      this.stylist
+        .getStylist(firebase.auth().currentUser.uid)
+        .snapshotChanges()
+        .subscribe(res => {
+          this.stylistId = res[0].key;
+          this.getBookings(this.stylistId, this.isStylist);
+        });
+    } else {
+      console.log(firebase.auth().currentUser.uid);
+      this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
+    }
+  }
+
   ionViewDidEnter() {
     this.availabilities = [];
     this.bookingUsers = [];
     this.bookedUserAvailability = [];
     this.bookedDateAvailability = [];
-    this.stylist
-      .getStylist(firebase.auth().currentUser.uid)
-      .snapshotChanges()
-      .subscribe(res => {
-        this.stylistId = res[0].key;
-        this.getBookings(this.stylistId);
-      });
   }
 
   ngOnDestroy() {
@@ -126,11 +145,18 @@ export class BookingsPage {
 
   // Private
 
-  private getBookings(stylist) {
-    console.log('gettttBookings => ', stylist);
-    let uid = firebase.auth().currentUser.uid;
-
-    this.bookings$ = this.book.getStylistBookings(stylist).snapshotChanges();
+  private getBookings(stylistOrUserId: any, isStylist: boolean) {
+    console.log('gettttBookings => ', stylistOrUserId);
+    // let uid = firebase.auth().currentUser.uid;
+    if (isStylist) {
+      this.bookings$ = this.book
+        .getStylistBookings(stylistOrUserId)
+        .snapshotChanges();
+    } else {
+      this.bookings$ = this.book
+        .getUserBookings(stylistOrUserId)
+        .snapshotChanges();
+    }
 
     this.bookings$.takeUntil(this.destroy$).subscribe(actions => {
       this.bookings = this.utils.generateFirebaseKeyedValues(actions);
@@ -158,7 +184,7 @@ export class BookingsPage {
             userName: this.bookedUsername,
           });
 
-          console.log(this.bookedUserAvailability);
+          // console.log(this.bookedUserAvailability);
         });
 
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
@@ -174,7 +200,7 @@ export class BookingsPage {
             bookedDate: this.bookedDate,
           });
 
-          console.log(this.bookedDateAvailability);
+          // console.log(this.bookedDateAvailability);
         });
       });
     });

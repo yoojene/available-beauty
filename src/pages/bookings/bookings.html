@@ -60,8 +60,6 @@
   <div *ngIf="bookings$ | async; let accbookings">
     <div *ngFor="let accbook of accbookings">
 
-      {{accbook.payload.val() | json}}
-
       <div *ngIf="accbook.payload.val().userAccepted === false && accbook.payload.val().stylistAccepted === true; then accepted"></div>
         <ng-template #accepted>
         <ion-item>
