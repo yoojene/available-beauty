@@ -9,6 +9,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 import { UserProfilePage } from '../user-profile/user-profile';
 import { UserProvider } from '../../providers/user/user';
 import { BookingProvider } from '../../providers/booking/booking';
+import { BookingStatus } from '../../model/booking/booking.model';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -24,7 +25,10 @@ import { BookingProvider } from '../../providers/booking/booking';
 })
 export class BookAvailabilityPage {
   public acceptBookingText = 'Accept';
-  public rejectBookingText = 'Reject';
+  public cancelBookingText = 'Cancel';
+  public acceptedText = 'Accepted Booking';
+  public pendingText = 'Pending Booking';
+  public cancelledText = 'Cancelled Booking';
 
   isStylist: boolean;
   availableDate: any;
@@ -39,6 +43,8 @@ export class BookAvailabilityPage {
   stylistId: number;
   availability: any;
   bookingId: any;
+
+  bookingStatus: any;
 
   constructor(
     public navCtrl: NavController,
@@ -75,6 +81,19 @@ export class BookAvailabilityPage {
     console.log(this.stylistId);
     console.log(this.userId);
     console.log('bookingId is ', this.bookingId);
+
+    this.bookingProvider
+      .getBookingById(this.bookingId)
+      .snapshotChanges()
+      .subscribe(res => {
+        console.log(res);
+        this.bookingStatus = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'status'
+        );
+        console.log('bookingStatus');
+        console.log(this.bookingStatus);
+      });
 
     this.avail
       .getAvailabilityById(this.availability)
@@ -165,16 +184,21 @@ export class BookAvailabilityPage {
   }
 
   public async acceptBooking() {
-    // If Stylist, set bookings/{bookingId}/stylistAccepted = true
-    // If User, set bookings/{bookingId}/userAccepted = true
-
+    // set bookings{bookingId}/status = 'ACCEPTED'
     if (this.isStylist) {
-      const result = await this.bookingProvider.stylistBookingAccept(
-        this.bookingId
+      const result = await this.bookingProvider.doBookingStatusChange(
+        this.bookingId,
+        BookingStatus.accepted
       );
 
       console.log(result);
     }
   }
-  public rejectBooking() {}
+
+  public async cancelBooking() {
+    const result = await this.bookingProvider.doBookingStatusChange(
+      this.bookingId,
+      BookingStatus.cancelled
+    );
+  }
 }

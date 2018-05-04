@@ -20,7 +20,7 @@
   </ion-list-header>
   <div *ngIf="bookings$ | async; let pendbookings">
     <div *ngFor="let pendbook of pendbookings">
-      <div *ngIf="pendbook.payload.val().userAccepted === false && pendbook.payload.val().stylistAccepted === false; then pending else no_pending"></div>
+      <div *ngIf="pendbook.payload.val().status === 'PENDING'; then pending else no_pending"></div>
         <ng-template #pending>
           <ion-item (click)="onBookingTap(pendbook.payload.val().availabilityId, pendbook.key)">
 
@@ -60,9 +60,9 @@
   <div *ngIf="bookings$ | async; let accbookings">
     <div *ngFor="let accbook of accbookings">
 
-      <div *ngIf="accbook.payload.val().userAccepted === false && accbook.payload.val().stylistAccepted === true; then accepted"></div>
+      <div *ngIf="accbook.payload.val().status === 'ACCEPTED'; then accepted else no_accepted"></div>
         <ng-template #accepted>
-        <ion-item>
+        <ion-item (click)="onBookingTap(accbook.payload.val().availabilityId, accbook.key)">
            Avail ID {{accbook.payload.val().availabilityId}}
 
           <div *ngIf="bookedUserAvailability">

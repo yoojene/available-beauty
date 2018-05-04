@@ -3,3 +3,9 @@ export interface Booking {
   stylistAccepted: boolean;
   userAccepted: boolean;
 }
+
+export enum BookingStatus {
+  accepted = 'ACCEPTED',
+  pending = 'PENDING',
+  cancelled = 'CANCELLED',
+}

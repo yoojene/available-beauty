@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Booking } from '../../model/booking/booking.model';
+import { Booking, BookingStatus } from '../../model/booking/booking.model';
 
 @Injectable()
 export class BookingProvider {
@@ -33,6 +33,10 @@ export class BookingProvider {
       return ref.orderByChild('stylistId').equalTo(stylistId);
     });
   }
+
+  public getBookingById(bookingId) {
+    return this.afdb.list(`bookings/${bookingId}`);
+  }
   /**
    * Create /booking and update /availability booked to true
    *
@@ -49,8 +53,7 @@ export class BookingProvider {
       availabilityId: availId,
       stylistId: stylistId,
       userId: userId,
-      userAccepted: false,
-      stylistAccepted: false,
+      status: BookingStatus.pending,
     };
 
     let bookingKey = this.afdb.database
@@ -69,9 +72,9 @@ export class BookingProvider {
       });
   }
 
-  public async stylistBookingAccept(bookingId) {
+  public async doBookingStatusChange(bookingId, status) {
     return await this.afdb.database
       .ref(`bookings/${bookingId}`)
-      .update({ stylistAccepted: true });
+      .update({ status: status });
   }
 }

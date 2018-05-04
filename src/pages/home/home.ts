@@ -199,16 +199,21 @@ export class HomePage {
     });
   }
 
-  public bookAvailability(avail) {
+  public async bookAvailability(avail) {
     // Make pending booking
-    this.booking
-      .makePendingBooking(avail.key, this.stylistId, this.uid)
-      .then(res => (this.bookingId = res));
+    const result = await this.booking.makePendingBooking(
+      avail.key,
+      this.stylistId,
+      this.uid
+    );
+
+    this.bookingId = result;
 
     let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: avail.key,
       stylist: this.stylistId,
       userId: this.uid,
+      bookId: this.bookingId,
     });
 
     bookingModal.onDidDismiss(data => {

@@ -26,6 +26,9 @@
   <br>
   <br> Enter any additional comments for the user below </div>
 
+  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED'">{{acceptedText}}</h2>
+  <h2 class="page-book-availability--pending" text-center *ngIf="bookingStatus === 'PENDING'">{{pendingText}}</h2>
+  <h2 class="page-book-availability--cancelled" text-center *ngIf="bookingStatus === 'CANCELLED'">{{cancelledText}}</h2>
 </div>
   <ion-list no-padding>
       <div *ngFor="let msg of chatmsgs">
@@ -44,9 +47,21 @@
     </ion-item>
   </form>
 
-  <div *ngIf="isStylist" text-center>
-      <button (click)="acceptBooking()" ion-button round> {{acceptBookingText}} </button>
-      <button (click)="rejectBooking()" ion-button round> {{rejectBookingText}} </button>
+  <div text-center>
+      <button
+        *ngIf="isStylist"
+        (click)="acceptBooking()"
+        ion-button
+        round
+        > {{acceptBookingText}}
+      </button>
+      <button
+        (click)="cancelBooking()"
+        [disabled]="bookingStatus==='PENDING' || bookingStatus==='CANCELLED'"
+        ion-button
+        round
+      > {{cancelBookingText}}
+    </button>
   </div>
 </div>
 </ion-content>
