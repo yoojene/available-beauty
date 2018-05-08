@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Booking, BookingStatus } from '../../model/booking/booking.model';
+import * as moment from 'moment';
 
 @Injectable()
 export class BookingProvider {
@@ -46,11 +47,12 @@ export class BookingProvider {
    * @returns
    * @memberof BookingProvider
    */
-  public makePendingBooking(availId, stylistId, userId) {
+  public makePendingBooking(availId, availDate, stylistId, userId) {
     console.log('makePendingBooking ');
 
     let bookingData = {
       availabilityId: availId,
+      bookedAvailSlot: availDate,
       stylistId: stylistId,
       userId: userId,
       status: BookingStatus.pending,
@@ -64,6 +66,8 @@ export class BookingProvider {
     let bookingPayload = {};
     bookingPayload[`/bookings/${bookingKey}`] = bookingData;
 
+    console.log(bookingPayload);
+
     return this.afdb.database
       .ref()
       .update(bookingPayload)
@@ -76,5 +80,26 @@ export class BookingProvider {
     return await this.afdb.database
       .ref(`bookings/${bookingId}`)
       .update({ status: status });
+  }
+
+  public checkBookingIsInPast(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate < moment().unix()) {
+        // booking in past
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  public checkBookingIsInFuture(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate > moment().unix()) {
+        // booking in future
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

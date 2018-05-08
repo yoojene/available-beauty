@@ -23,7 +23,6 @@ export class UtilsProvider {
       item.key = act.key;
       return returnArr.push(item);
     });
-    console.log(returnArr);
     return returnArr;
   }
 

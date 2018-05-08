@@ -26,7 +26,8 @@
   <br>
   <br> Enter any additional comments for the user below </div>
 
-  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED'">{{acceptedText}}</h2>
+  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInFuture(bookedDate)">{{acceptedText}}</h2>
+  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInPast(bookedDate)">{{pastAcceptedText}}</h2>
   <h2 class="page-book-availability--pending" text-center *ngIf="bookingStatus === 'PENDING'">{{pendingText}}</h2>
   <h2 class="page-book-availability--cancelled" text-center *ngIf="bookingStatus === 'CANCELLED'">{{cancelledText}}</h2>
 </div>

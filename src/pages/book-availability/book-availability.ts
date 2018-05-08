@@ -27,6 +27,7 @@ export class BookAvailabilityPage {
   public acceptBookingText = 'Accept';
   public cancelBookingText = 'Cancel';
   public acceptedText = 'Accepted Booking';
+  public pastAcceptedText = 'Past Booking';
   public pendingText = 'Pending Booking';
   public cancelledText = 'Cancelled Booking';
 
@@ -45,6 +46,7 @@ export class BookAvailabilityPage {
   bookingId: any;
 
   bookingStatus: any;
+  bookedDate: any;
 
   constructor(
     public navCtrl: NavController,
@@ -90,6 +92,10 @@ export class BookAvailabilityPage {
         this.bookingStatus = this.utils.getFirebaseRealtimeDbKeyedValueById(
           res,
           'status'
+        );
+        this.bookedDate = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'bookedAvailSlot'
         );
         console.log('bookingStatus');
         console.log(this.bookingStatus);
@@ -200,5 +206,12 @@ export class BookAvailabilityPage {
       this.bookingId,
       BookingStatus.cancelled
     );
+  }
+
+  public checkBookingIsInPast(bookingDate) {
+    return this.bookingProvider.checkBookingIsInPast(bookingDate);
+  }
+  public checkBookingIsInFuture(bookingDate) {
+    return this.bookingProvider.checkBookingIsInFuture(bookingDate);
   }
 }

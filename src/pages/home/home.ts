@@ -181,6 +181,7 @@ export class HomePage {
             this.availabilities.forEach(el => {
               // TODO group availabilities by day / month and display
               return (
+                (el.origdatetime = el.datetime) &&
                 (el.day = moment.unix(el.datetime).format('ddd Do')) &&
                 (el.month = moment.unix(el.datetime).format('MMM')) &&
                 (el.datetime = moment
@@ -203,6 +204,7 @@ export class HomePage {
     // Make pending booking
     const result = await this.booking.makePendingBooking(
       avail.key,
+      avail.origdatetime,
       this.stylistId,
       this.uid
     );

@@ -12,12 +12,10 @@ import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { Stylist } from '../../model/stylist/stylist.model';
-import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
-import { UserProfilePage } from '../user-profile/user-profile';
 import { Subject } from 'rxjs/Subject';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 
@@ -38,6 +36,7 @@ export class BookingsPage {
   noPendingBookingText = 'No Pending Bookings';
   acceptedBookingText = 'Accepted Bookings';
   noAcceptedBookingText = 'No Accepted Bookings';
+  pastBookingsText = 'Past Bookings';
 
   bookingTitle = 'Booking';
   stylistTitle = 'Stylist';
@@ -62,7 +61,11 @@ export class BookingsPage {
 
   bookings = [];
 
+  bookedAvailability: any = [];
+
   public isStylist = false;
+
+  public isPast = false;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -74,7 +77,6 @@ export class BookingsPage {
     private avail: AvailabilityProvider,
     private stylist: StylistProvider,
     private user: UserProvider,
-    private afdb: AngularFireDatabase,
     private utils: UtilsProvider
   ) {}
 
@@ -85,27 +87,35 @@ export class BookingsPage {
   }
 
   ionViewWillEnter() {
+    console.log(' booking view will enter ');
+
+    this.availabilities = [];
+    this.bookingUsers = [];
+    this.bookedUserAvailability = [];
+    this.bookedDateAvailability = [];
+    this.bookedAvailability = [];
     // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      console.log(res);
       if (!res) {
         this.isStylist = false;
       } else {
         this.isStylist = true;
       }
-    });
 
-    if (this.isStylist === true) {
-      this.stylist
-        .getStylist(firebase.auth().currentUser.uid)
-        .snapshotChanges()
-        .subscribe(res => {
-          this.stylistId = res[0].key;
-          this.getBookings(this.stylistId, this.isStylist);
-        });
-    } else {
-      console.log(firebase.auth().currentUser.uid);
-      this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
-    }
+      if (this.isStylist) {
+        this.stylist
+          .getStylist(firebase.auth().currentUser.uid)
+          .snapshotChanges()
+          .subscribe(res => {
+            this.stylistId = res[0].key;
+            this.getBookings(this.stylistId, this.isStylist);
+          });
+      } else {
+        console.log(firebase.auth().currentUser.uid);
+        this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
+      }
+    });
   }
 
   ionViewDidEnter() {
@@ -113,6 +123,7 @@ export class BookingsPage {
     this.bookingUsers = [];
     this.bookedUserAvailability = [];
     this.bookedDateAvailability = [];
+    this.bookedAvailability = [];
   }
 
   ngOnDestroy() {
@@ -188,21 +199,50 @@ export class BookingsPage {
         });
 
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
-          console.log(res);
           let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
             res,
             'datetime'
           );
+
           this.bookedDate = moment.unix(date).format('ddd Do MMM HH:mm');
+
+          if (moment().unix() < date) {
+            this.isPast = false;
+          } else {
+            this.isPast = true;
+          }
 
           this.bookedDateAvailability.push({
             availId: i.availabilityId,
             bookedDate: this.bookedDate,
+            isPast: this.isPast,
           });
 
-          // console.log(this.bookedDateAvailability);
+          console.log('this.bookedDateAvailability');
+          console.log(this.bookedDateAvailability);
         });
       });
     });
+  }
+
+  public checkBookingIsInPast(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate < moment().unix()) {
+        // booking in past
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  public checkBookingIsInFuture(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate > moment().unix()) {
+        // booking in future
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }
