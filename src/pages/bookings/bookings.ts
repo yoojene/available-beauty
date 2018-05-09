@@ -118,17 +118,17 @@ export class BookingsPage {
     });
   }
 
-  ionViewDidEnter() {
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
+
+  public ionViewWillLeave() {
     this.availabilities = [];
     this.bookingUsers = [];
     this.bookedUserAvailability = [];
     this.bookedDateAvailability = [];
     this.bookedAvailability = [];
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   // Public

@@ -59,7 +59,7 @@
       </button>
       <button
         (click)="cancelBooking()"
-        [disabled]="bookingStatus==='PENDING' || bookingStatus==='CANCELLED'"
+        [disabled]="bookingStatus==='CANCELLED'"
         ion-button
         round
       > {{cancelBookingText}}
