@@ -30,6 +30,7 @@ export class BookAvailabilityPage {
   public pastAcceptedText = 'Past Booking';
   public pendingText = 'Pending Booking';
   public cancelledText = 'Cancelled Booking';
+  public reviewText = 'Leave a Review';
 
   isStylist: boolean;
   availableDate: any;
@@ -206,6 +207,10 @@ export class BookAvailabilityPage {
       this.bookingId,
       BookingStatus.cancelled
     );
+  }
+
+  public doLeaveReview() {
+    console.log('review');
   }
 
   public checkBookingIsInPast(bookingDate) {
