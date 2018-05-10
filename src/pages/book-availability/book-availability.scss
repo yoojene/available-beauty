@@ -5,6 +5,12 @@ page-book-availability {
       padding: 0%;
     }
 
+    &--message-and-buttons-container {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
     &--message-container {
       position: relative;
       // top: 20px;

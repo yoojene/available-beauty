@@ -114,9 +114,40 @@ export class StylistProvider {
       .then(res => console.log(res));
   }
 
+  public async addStylistReview(
+    stylistId: any,
+    userId: any,
+    review: any,
+    starRating: any
+  ) {
+    const reviewData = {
+      stylistId: stylistId,
+      userId: userId,
+      reviewText: review,
+      starRating: starRating,
+    };
+
+    const reviewKey = this.afdb.database
+      .ref()
+      .child(`/stylistProfile/${stylistId}/reviews/`)
+      .push().key;
+
+    let reviewPayload = {};
+    reviewPayload[
+      `/stylistProfile/${stylistId}/reviews/${reviewKey}`
+    ] = reviewData;
+
+    console.log(reviewPayload);
+
+    const result = await this.afdb.database.ref().update(reviewPayload);
+
+    console.log(result);
+
+    return result;
+  }
+
   getStylistReview(stylistId: any) {
     console.log(stylistId);
     return this.afdb.list<Review>(`stylistProfile/${stylistId}/reviews`);
   }
-
 }
