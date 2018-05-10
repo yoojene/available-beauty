@@ -14,6 +14,7 @@ import { AngularFireAction } from 'angularfire2/database/interfaces';
 import { StorageProvider } from '../providers/storage/storage';
 import { StylistProvider } from '../providers/stylist/stylist';
 import { UserProvider } from '../providers/user/user';
+import { FcmProvider } from '../providers/fcm/fcm';
 
 @Component({
   templateUrl: 'app.html',
@@ -34,7 +35,8 @@ export class AvailableBeautyApp {
     private location: LocationProvider,
     private afAuth: AngularFireAuth,
     private storage: StorageProvider,
-    private user: UserProvider
+    private user: UserProvider,
+    public fcm: FcmProvider
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -43,6 +45,7 @@ export class AvailableBeautyApp {
       splashScreen.hide();
       this.watchGeoLocation();
       this.checkAuthState();
+      fcm.getToken();
     });
   }
 

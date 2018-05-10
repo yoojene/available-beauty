@@ -4,6 +4,7 @@ import {
   IonicPage,
   ModalController,
   AlertController,
+  ToastController,
 } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
@@ -21,6 +22,8 @@ import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
+import { FcmProvider } from '../../providers/fcm/fcm';
+import { tap } from 'rxjs/operators';
 
 @IonicPage()
 @Component({
@@ -76,11 +79,26 @@ export class HomePage {
     private modalCtrl: ModalController,
     private utils: UtilsProvider,
     private alertCtrl: AlertController,
-    private booking: BookingProvider
+    private booking: BookingProvider,
+    public fcm: FcmProvider,
+    public toastCtrl: ToastController
   ) {}
 
   ionViewDidLoad() {
     this.getGeoLocation();
+
+    this.fcm
+      .listenToNotifications()
+      .pipe(
+        tap(msg => {
+          const toast = this.toastCtrl.create({
+            message: msg.body,
+            duration: 3000,
+          });
+          toast.present();
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {
@@ -257,5 +275,9 @@ export class HomePage {
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
       });
+  }
+
+  public doTestFCM() {
+    this.fcm.getToken();
   }
 }

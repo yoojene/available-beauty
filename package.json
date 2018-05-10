@@ -68,7 +68,7 @@
     "ionicons": "3.0.0",
     "libphonenumber-js": "1.0.8",
     "moment": "2.20.1",
-    "rxjs": "5.4.3",
+    "rxjs": "5.5.0",
     "sw-toolbox": "3.6.0",
     "twitter-connect-plugin": "https://github.com/chroa/twitter-connect-plugin",
     "zone.js": "0.8.18"
