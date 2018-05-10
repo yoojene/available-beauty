@@ -35,6 +35,8 @@ import { ComponentsModule } from '../components/components.module';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { UserProvider } from '../providers/user/user';
 
+import { Firebase } from '@ionic-native/firebase';
+
 import { API_CONFIG_VALUES } from '../config/api.config';
 import { FIREBASE_CONFIG_VALUES } from '../config/firebase.config';
 import { API_CONFIG } from '../model/api.config';
@@ -51,6 +53,7 @@ import { UtilsProvider } from '../providers/utils/utils';
 import { BookingProvider } from '../providers/booking/booking';
 import { PhotoProvider } from '../providers/photo/photo';
 import { MessagesProvider } from '../providers/messages/messages';
+import { FcmProvider } from '../providers/fcm/fcm';
 
 @NgModule({
   declarations: [
@@ -110,6 +113,8 @@ import { MessagesProvider } from '../providers/messages/messages';
     BookingProvider,
     PhotoProvider,
     MessagesProvider,
+    Firebase,
+    FcmProvider,
   ],
 })
 export class AppModule {}

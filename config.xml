@@ -131,4 +131,5 @@
     </plugin>
     <plugin name="cordova-plugin-file" spec="~4.3.3" />
     <engine name="android" spec="~6.1.2" />
+    <plugin name="cordova-plugin-firebase" spec="~1.0.4" />
 </widget>
