@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "625369331469",
+    "firebase_url": "https://available-beauty-1511287868565.firebaseio.com",
+    "project_id": "available-beauty-1511287868565",
+    "storage_bucket": "available-beauty-1511287868565.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625369331469:android:3a0211cb575d3b5e",
+        "android_client_info": {
+          "package_name": "com.available.availablebeauty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625369331469-5d7s79lfkpei60335q42eqpo43clgami.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.available.availablebeauty",
+            "certificate_hash": "d068f6ba47160f868558fb2796451e0c865240c6"
+          }
+        },
+        {
+          "client_id": "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB57HeYoCKCc8Sa2G4IKC3rsFiZS52OFSc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625369331469-pmq20aisjh665khr4jm4fisdv570lkp3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.available.beauty"
+              }
+            },
+            {
+              "client_id": "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

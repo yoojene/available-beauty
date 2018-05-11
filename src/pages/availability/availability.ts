@@ -13,6 +13,7 @@ import { StylistProvider } from '../../providers/stylist/stylist';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { UtilsProvider } from '../../providers/utils/utils';
 import { Moment } from 'moment';
+import { AvailabilitySlot } from '../../model/availability/availability.model';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -210,7 +211,7 @@ export class AvailabilityPage {
    * @param {any} optionobj
    * @memberof AvailabilityPage
    */
-  setSlotTaken(option, optionobj) {
+  setSlotTaken(option, optionobj: AvailabilitySlot[]) {
     optionobj.forEach(el => {
       if (option.time === el.time && option.date === el.date) {
         el.disabled = !option.disabled;

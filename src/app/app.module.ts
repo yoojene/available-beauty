@@ -35,7 +35,7 @@ import { ComponentsModule } from '../components/components.module';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { UserProvider } from '../providers/user/user';
 
-import { Firebase } from '@ionic-native/firebase';
+import { FCM } from '@ionic-native/fcm';
 
 import { API_CONFIG_VALUES } from '../config/api.config';
 import { FIREBASE_CONFIG_VALUES } from '../config/firebase.config';
@@ -113,7 +113,7 @@ import { FcmProvider } from '../providers/fcm/fcm';
     BookingProvider,
     PhotoProvider,
     MessagesProvider,
-    Firebase,
+    FCM,
     FcmProvider,
   ],
 })

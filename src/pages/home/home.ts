@@ -91,6 +91,8 @@ export class HomePage {
       .listenToNotifications()
       .pipe(
         tap(msg => {
+          console.log('msg');
+          console.log(msg);
           const toast = this.toastCtrl.create({
             message: msg.body,
             duration: 3000,

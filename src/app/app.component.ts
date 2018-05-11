@@ -45,7 +45,6 @@ export class AvailableBeautyApp {
       splashScreen.hide();
       this.watchGeoLocation();
       this.checkAuthState();
-      fcm.getToken();
     });
   }
 
@@ -61,6 +60,7 @@ export class AvailableBeautyApp {
         this.rootPage = 'LandingPage';
       } else {
         const uid = res.uid;
+        this.fcm.getToken();
         // Check if is Stylist or User
         this.user.checkIsStylist(uid).subscribe(res => {
           if (!res) {
