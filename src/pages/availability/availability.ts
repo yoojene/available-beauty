@@ -13,7 +13,6 @@ import { StylistProvider } from '../../providers/stylist/stylist';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { UtilsProvider } from '../../providers/utils/utils';
 import { Moment } from 'moment';
-import { AvailabilitySlot } from '../../model/availability/availability.model';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -29,13 +28,16 @@ import { AvailabilitySlot } from '../../model/availability/availability.model';
 })
 export class AvailabilityPage {
   availabilitySubHeader = 'Mark the times you are available';
+  morningText = 'morning';
+  afternoonText = 'afternoon';
+  eveningText = 'evening';
   showNext: boolean;
   dayOfWeekFmt: string = 'ddd Do MMM';
   availTimeFmt: string = 'HH:mm';
   today: any;
   morningStart: any = moment()
     .hour(8)
-    .minutes(30)
+    .minutes(0)
     .seconds(0);
 
   availableAMDates: any;
@@ -95,21 +97,22 @@ export class AvailabilityPage {
 
     // Generate the slots per schedule
     for (let y = 0; y < this.schedule.length; y++) {
-      let slots = [];
-      slots.push(
+      let morningSlots = [];
+      morningSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
             .hour(8)
-            .minutes(30)
+            .minutes(0)
             .seconds(0),
           this.availTimeFmt,
           30,
           'm',
-          6,
+          8,
           'morning'
         )
       );
-      slots.push(
+      let afternoonSlots = [];
+      afternoonSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
             .hour(12)
@@ -118,26 +121,31 @@ export class AvailabilityPage {
           this.availTimeFmt,
           30,
           'm',
-          6,
+          8,
           'afternoon'
         )
       );
-      slots.push(
+      let eveningSlots = [];
+      eveningSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
             .hour(16)
-            .minutes(30)
+            .minutes(0)
             .seconds(0),
           this.availTimeFmt,
           30,
           'm',
-          6,
+          8,
           'evening'
         )
       );
       // Collapse into single array
-      let merged = [].concat.apply([], slots);
-      this.schedule[y].slots = merged;
+      let morningMerged = [].concat.apply([], morningSlots);
+      this.schedule[y].morningSlots = morningMerged;
+      let afternoonMerged = [].concat.apply([], afternoonSlots);
+      this.schedule[y].afternoonSlots = afternoonMerged;
+      let eveningMerged = [].concat.apply([], eveningSlots);
+      this.schedule[y].eveningSlots = eveningMerged;
     }
 
     // This is a bit naff, ideally want to seed schedule from what's already taken, and not the otherway around
@@ -211,7 +219,7 @@ export class AvailabilityPage {
    * @param {any} optionobj
    * @memberof AvailabilityPage
    */
-  setSlotTaken(option, optionobj: AvailabilitySlot[]) {
+  setSlotTaken(option, optionobj) {
     optionobj.forEach(el => {
       if (option.time === el.time && option.date === el.date) {
         el.disabled = !option.disabled;
@@ -220,17 +228,43 @@ export class AvailabilityPage {
       }
     });
   }
+  // /**
+  //  * Mark all slots on the day taken
+  //  *
+  //  * @param {any} slot
+  //  * @memberof AvailabilityPage
+  //  */
+  // setAllSlotsTaken(slot) {
+  //   slot.slots.forEach(el => {
+  //     el.disabled = !el.disabled;
+  //   });
+  // }
+
   /**
-   * Mark all slots on the day taken
+   * Mark all slots for a sub group on the day taken
    *
    * @param {any} slot
+   * @param {any} subgroup
    * @memberof AvailabilityPage
    */
-  setAllSlotsTaken(slot) {
-    slot.slots.forEach(el => {
-      el.disabled = !el.disabled;
-    });
-  }
+  setAllSlotsTaken(slot, subgroup) {
+    if ((subgroup == 'morning') || (subgroup == 'all')) {
+      slot.morningSlots.forEach(el => {
+        el.disabled = !el.disabled;
+      });
+    }
+    if ((subgroup == 'afternoon') || (subgroup == 'all')) {
+      slot.afternoonSlots.forEach(el => {
+        el.disabled = !el.disabled;
+      });
+    }
+    if ((subgroup == 'evening') || (subgroup == 'all')) {
+      slot.eveningSlots.forEach(el => {
+        el.disabled = !el.disabled;
+      });
+    }
+
+ }  
 
   updateTakenSlots(bookedSlots) {
     console.log(bookedSlots);

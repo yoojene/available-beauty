@@ -164,7 +164,7 @@ export class AvailabilityProvider {
       },
     ];
     let loopInt = interval;
-    for (let x = 0; x < slot; x++) {
+    for (let x = 1; x < slot; x++) {
       slots.push({
         date: startTime.format('ddd Do MMM'),
         time: moment(startTime)

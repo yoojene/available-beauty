@@ -21,14 +21,29 @@
   <br>
   <ion-grid>
     <ion-row>
-      <button text-right ion-button round color="aubergine" (click)="setAllSlotsTaken(slot)"> {{slot.date}}</button>
+      <button text-right ion-button round color="aubergine" (click)="setAllSlotsTaken(slot, 'all')"> {{slot.date}}</button>
     </ion-row>
     <ion-row>
     </ion-row>
   </ion-grid>
+  <button item-end ion-button round color="aubergine" (click)="setAllSlotsTaken(slot, 'morning')"> {{morningText}}</button>
   <ion-buttons text-center>
-    <button *ngFor="let date of slot.slots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
-      (click)="setSlotTaken(date, slot.slots)">
+    <button *ngFor="let date of slot.morningSlots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+      (click)="setSlotTaken(date, slot.morningSlots)">
+      {{date.time}}
+    </button>
+  </ion-buttons>
+  <button item-end ion-button round color="aubergine" (click)="setAllSlotsTaken(slot, 'afternoon')"> {{afternoonText}}</button>
+  <ion-buttons text-center>
+    <button *ngFor="let date of slot.afternoonSlots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+      (click)="setSlotTaken(date, slot.afternoonSlots)">
+      {{date.time}}
+    </button>
+  </ion-buttons>
+  <button item-end ion-button round color="aubergine" (click)="setAllSlotsTaken(slot, 'evening')"> {{eveningText}}</button>
+  <ion-buttons text-center>
+    <button *ngFor="let date of slot.eveningSlots; let i = index" ion-button round [color]="date.disabled ? 'tonal' : 'aubergine'"
+      (click)="setSlotTaken(date, slot.eveningSlots)">
       {{date.time}}
     </button>
   </ion-buttons>
