@@ -15,7 +15,8 @@
       },
       "oauth_client": [
         {
-          "client_id": "625369331469-5d7s79lfkpei60335q42eqpo43clgami.apps.googleusercontent.com",
+          "client_id":
+            "625369331469-5d7s79lfkpei60335q42eqpo43clgami.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.available.availablebeauty",
@@ -23,7 +24,8 @@
           }
         },
         {
-          "client_id": "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
+          "client_id":
+            "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -40,14 +42,16 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "625369331469-pmq20aisjh665khr4jm4fisdv570lkp3.apps.googleusercontent.com",
+              "client_id":
+                "625369331469-pmq20aisjh665khr4jm4fisdv570lkp3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.available.beauty"
               }
             },
             {
-              "client_id": "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
+              "client_id":
+                "625369331469-oqvj72hnm3g1mgg3v2cbs50f73u0fd5f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
