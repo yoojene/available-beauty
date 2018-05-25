@@ -74,7 +74,9 @@ export class EditUserProfilePage implements AfterContentInit {
       name: [''],
       phoneNumber: [''],
       emailAddress: [''],
-      location: ['']
+      location: [''],
+      bannerImage: [''],
+      avatarImage: ['']
     });
   }
   logForm(){
@@ -131,7 +133,7 @@ export class EditUserProfilePage implements AfterContentInit {
   }
 
   doEditBanner() {
-    console.log('Getting photo from picker');
+    console.log('Getting banner from picker');
     this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
       this.photo
@@ -147,6 +149,24 @@ export class EditUserProfilePage implements AfterContentInit {
     });
 
     //UPDATE IMAGE ON PAGE
+  }
+
+  doEditAvatar() {
+    console.log('Getting avatar from picker');
+    this.photo.getOneLibraryPicture().then(res => {
+      let returnedPhoto: any = res;
+      this.photo
+        .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
+        .then(baseress => {
+          console.log(baseress);
+          this.photo.pushPhotoToStorage(baseress).then(stores => {
+            console.log(stores[0]);
+            this.monitorUploadProgress(stores[0]);
+            // Write stores to DB
+          });
+        });
+    });
+  
   }
 
   doSave() {

@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
+import { SearchProvider } from '../../providers/search/search';
 import { User } from '../../model/users/user.model';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
@@ -70,6 +71,38 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
+  hairText: string = 'Hair';
+  nailsText: string = 'Nails';
+  treatmentsText: string = 'Treatments';
+
+  beautyOptions: any = [
+    {
+      name: this.hairText
+    },
+    {
+      name: this.nailsText
+    },
+    {
+      name: this.treatmentsText
+    }
+  ];
+
+  todayText: string = 'Today';
+  tomorrowText: string = 'Tomorrow';
+  thisWeekText: string = 'This week';
+
+  dateOptions: any = [
+    {
+      name: this.todayText
+    },
+    {
+      name: this.tomorrowText
+    },
+    {
+      name: this.thisWeekText
+    }
+  ];
+
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
@@ -80,6 +113,7 @@ export class HomePage {
     private utils: UtilsProvider,
     private alertCtrl: AlertController,
     private booking: BookingProvider,
+    private search: SearchProvider,
     public fcm: FcmProvider,
     public toastCtrl: ToastController
   ) {}
@@ -122,7 +156,8 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    this.getUsers();
+    this.getUsers(ev.target.value);
+    
     // let searchModal = this.modalCtrl.create(SearchPage);
 
     // searchModal.onDidDismiss(data => {
@@ -268,15 +303,18 @@ export class HomePage {
     });
   }
 
-  private getUsers() {
-    this.user
-      .getStylistUsers()
-      .snapshotChanges()
-      .subscribe(actions => {
-        const values = this.utils.generateFirebaseKeyedValues(actions);
-        this.users = this.utils.addExpandedProperty(values);
-        console.log(this.users);
-      });
+  private getUsers(term: any) {
+    // this.user
+    //   .getStylistUsers()
+    //   .snapshotChanges()
+    //   .subscribe(actions => {
+    //     const values = this.utils.generateFirebaseKeyedValues(actions);
+    //     this.users = this.utils.addExpandedProperty(values);
+    //     console.log(this.users);
+    //   });
+
+      let searchResults = this.search.search(term);
+      console.log('search results = ' + searchResults);
   }
 
   public doTestFCM() {

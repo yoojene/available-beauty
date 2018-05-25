@@ -7,9 +7,30 @@
 
   </ion-navbar>
   <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
+  <ion-row>
+      <ion-col>
+        <button ion-button round item-start (tap)="doSomething()" >
+            <ion-icon name="funnel"></ion-icon> What
+        </button>
+        <ion-select [(ngModel)]="treatment">
+            <ion-option *ngFor="let option of beautyOptions">
+                {{option.name}}
+            </ion-option>
+        </ion-select>
+      </ion-col>
+      <ion-col>
+          <button ion-button round item-start (tap)="doSomething()" >
+              <ion-icon name="funnel"></ion-icon> When
+          </button>
+          <ion-select [(ngModel)]="date">
+              <ion-option *ngFor="let date of dateOptions">
+                  {{date.name}}
+              </ion-option>
+          </ion-select>
+      </ion-col>
+  </ion-row>
 </ion-header>
 
-<ion-content padding>
   <!-- <div class="search-item" (click)="showSearch()"> Search </div>
   <br> -->
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
@@ -35,6 +56,14 @@
         </div>
     </ion-maps>
     <br>
+    <ion-content padding>
+        <!-- <ion-label>Gaming</ion-label>
+        <ion-select [(ngModel)]="gaming">
+          <ion-option *ngFor="let option of beautyOptions"
+            ion-button round
+            [color]="option.disabled ? 'primary' : 'aubergine'"
+            value="option.name">{{option.name}}</ion-option>
+        </ion-select> -->
     <div>
       <ion-list>
           <ion-card *ngFor="let user of users" >
