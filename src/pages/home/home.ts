@@ -25,6 +25,7 @@ import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { FcmProvider } from '../../providers/fcm/fcm';
 import { tap } from 'rxjs/operators';
+import { SkillsProvider } from '../../providers/skills/skills';
 
 @IonicPage()
 @Component({
@@ -115,7 +116,8 @@ export class HomePage {
     private booking: BookingProvider,
     private search: SearchProvider,
     public fcm: FcmProvider,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    // private skills: SkillsProvider
   ) {}
 
   ionViewDidLoad() {
@@ -135,6 +137,10 @@ export class HomePage {
         })
       )
       .subscribe();
+
+      //TODO - Get skills from /skills
+      //this.beautyOptions = this.skills.getSkillGroups();
+
   }
 
   ngOnDestroy() {

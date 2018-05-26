@@ -6,6 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { UserProvider } from '../../providers/user/user';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { SearchPageModule } from '../search/search.module';
+import { SkillsProvider } from '../../providers/skills/skills';
 // import { SearchPage } from '../search/search';
 import { StylistReviewPageModule } from '../stylist-review/stylist-review.module';
 import { BookAvailabilityPageModule } from '../book-availability/book-availability.module';
