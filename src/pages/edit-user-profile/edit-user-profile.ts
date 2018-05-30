@@ -1,7 +1,12 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { StylistProvider } from '../../providers/stylist/stylist'; 
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ViewController,
+} from 'ionic-angular';
+import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import * as firebase from 'firebase';
 import { PhotoProvider } from '../../providers/photo/photo';
@@ -22,6 +27,8 @@ import { PhotoProvider } from '../../providers/photo/photo';
   templateUrl: 'edit-user-profile.html',
 })
 export class EditUserProfilePage implements AfterContentInit {
+  isStylist: boolean = false;
+
   stylistId: any;
   userId: any;
   stylistDetails: any;
@@ -46,20 +53,17 @@ export class EditUserProfilePage implements AfterContentInit {
 
   public loadProgress: any = 0;
   public downloadUrls: Array<any> = [];
-  
-  
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
+    public viewCtrl: ViewController,
     private stylist: StylistProvider,
     private updatedStylist: StylistProvider,
     private user: UserProvider,
     public photo: PhotoProvider,
-    private formBuilder: FormBuilder
-    //private utils: UtilsProvider
+    private formBuilder: FormBuilder //private utils: UtilsProvider
   ) {
-
     this.editUserForm = formBuilder.group({
       stylistName: [''],
       addressLine1: [''],
@@ -76,39 +80,49 @@ export class EditUserProfilePage implements AfterContentInit {
       emailAddress: [''],
       location: [''],
       bannerImage: [''],
-      avatarImage: ['']
+      avatarImage: [''],
     });
   }
-  logForm(){
+  logForm() {
     console.log('something');
   }
 
-
-  ngAfterContentInit() {
-
-  }
+  ngAfterContentInit() {}
 
   ionViewDidEnter() {
-    console.log('getting stylistID from current user ' + firebase.auth().currentUser.uid);
-
-    this.stylist
-    .getStylist(firebase.auth().currentUser.uid)
-    .snapshotChanges()
-    .subscribe(res => {
-      //let obj = { ...res[0] };
-      //this.stylistDetails = obj;
-      this.stylistId = res[0].key;
-      this.getDetails(this.stylistId);
-    });
+    console.log(
+      'getting stylistID from current user ' + firebase.auth().currentUser.uid
+    );
 
     this.user
-    .getUserById(firebase.auth().currentUser.uid)
-    .valueChanges()
-    .subscribe(res => {
-      this.userDetails = res;
-      console.log('Getting details of User Name ' + this.userDetails.name + ', User ID: ' + firebase.auth().currentUser.uid);
+      .getUserById(firebase.auth().currentUser.uid)
+      .valueChanges()
+      .subscribe(res => {
+        this.userDetails = res;
+        console.log(
+          'Getting details of User Name ' +
+            this.userDetails.name +
+            ', User ID: ' +
+            firebase.auth().currentUser.uid
+        );
+      });
+
+    this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      if (!res) {
+        this.isStylist = false;
+      } else {
+        this.isStylist = true;
+        this.stylist
+          .getStylist(firebase.auth().currentUser.uid)
+          .snapshotChanges()
+          .subscribe(res => {
+            //let obj = { ...res[0] };
+            //this.stylistDetails = obj;
+            this.stylistId = res[0].key;
+            this.getDetails(this.stylistId);
+          });
+      }
     });
-    
   }
 
   ionViewDidLoad() {
@@ -116,7 +130,6 @@ export class EditUserProfilePage implements AfterContentInit {
   }
 
   getDetails(stylistId: any) {
-
     console.log('getstylistprofile');
     this.stylist
       .getStylist(firebase.auth().currentUser.uid)
@@ -126,10 +139,10 @@ export class EditUserProfilePage implements AfterContentInit {
         let obj = { ...res[0] };
         this.stylistDetails = obj;
 
-        console.log('Got details of Stylist Name ' + this.stylistDetails.stylistName);
+        console.log(
+          'Got details of Stylist Name ' + this.stylistDetails.stylistName
+        );
       });
-
-
   }
 
   doEditBanner() {
@@ -166,35 +179,48 @@ export class EditUserProfilePage implements AfterContentInit {
           });
         });
     });
-  
   }
 
   doSave() {
-
     if (this.editUserForm.valid) {
       let updatedStylist = this.editUserForm.value;
       let updatedUser = this.editUserForm.value;
 
       console.log('stylist name = ' + updatedStylist.stylistName);
-      updatedStylist.baseLocation = this.stylistDetails.baseLocation;
-      updatedStylist.bannerImage = this.stylistDetails.bannerImage;
 
-      console.log(JSON.stringify(updatedStylist));
+      if (this.isStylist) {
+        // isStylist == true.  Is a Stylist
+        updatedStylist.baseLocation = this.stylistDetails.baseLocation;
+        updatedStylist.bannerImage = this.stylistDetails.bannerImage;
+        console.log(JSON.stringify(updatedStylist));
 
-      return Promise.all([
-        this.stylist.updateStylistProfile(this.stylistId, updatedStylist),
-        this.user.updateUserProfile(firebase.auth().currentUser.uid, updatedUser),
-        this.navCtrl.pop()
-      ]);
+        return Promise.all([
+          this.stylist.updateStylistProfile(this.stylistId, updatedStylist),
+          this.user.updateUserProfile(
+            firebase.auth().currentUser.uid,
+            updatedUser
+          ),
+          this.navCtrl.pop(),
+        ]);
+      } else {
+        // isStylist == false.  Is a user
+        return Promise.all([
+          this.user.updateUserProfile(
+            firebase.auth().currentUser.uid,
+            updatedUser
+          ),
+          this.navCtrl.pop(),
+        ]);
+      }
     } else {
       console.log('something invalid');
-    } 
+    }
 
     // this.stylist.updateStylistProfile(this.stylistId, this.stylistDetails).then(res => {
     //   console.log('Updating stylist: with new name ' + this.stylistDetails.stylistName, res);
     //   this.navCtrl.pop();
     // });
-    
+
     //  Create updateStylistProfile...
 
     //Do the same with user details

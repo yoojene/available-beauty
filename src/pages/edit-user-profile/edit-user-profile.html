@@ -50,7 +50,8 @@
           <ion-input formControlName="location" value="{{userDetails?.location}}"></ion-input>
         </ion-item>
 
-        <div>  <!--  ngIf user.isStylist = true -->
+        <div *ngIf="isStylist">  <!--  ngIf user.isStylist = true -->
+        <div>
         <ion-item>
           <ion-label color="primary">Stylist Details</ion-label>
         </ion-item>
@@ -99,19 +100,19 @@
             <!-- TODO : If mobile=true, then display block below??? -->
           <ion-item no-lines>
             <ion-label color="primary">{{mobileRange}}</ion-label>
-            <ion-input formControlName="mobileRange" type="number" value="{{stylistDetails?.mobileRange}}"></ion-input> 
+            <ion-input formControlName="mobileRange" type="number" value="{{stylistDetails?.mobileRange}}"></ion-input>
           </ion-item>
         </ion-row>
+    </div>
 
-        
         <div class="buttonsContainer">
           <ion-row>
-            <button class="cancel" ion-button round (click)="doCancel()">Cancel</button>
-            <button class="save" ion-button round  type="submit">Save</button>  <!--[disabled]="!userEditForm.valid"-->
+            <button class="save" ion-button round type="submit">Save</button>  <!--[disabled]="!userEditForm.valid"-->
+            <button class="cancel" ion-button round type="button" (click)="doCancel()">Cancel</button>
           </ion-row>
         </div>
       </form>
   </ion-list>
-  
+
 
 </ion-content>

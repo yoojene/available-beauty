@@ -129,7 +129,7 @@
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To allow image picker to select photos from library" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="~4.3.3" />
-    <engine name="ios" spec="~4.3.1" />
     <plugin name="cordova-plugin-fcm" spec="~2.1.2" />
     <engine name="android" spec="~6.3.0" />
+    <engine name="ios" spec="~4.3.1" />
 </widget>
