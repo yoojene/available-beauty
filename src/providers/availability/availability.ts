@@ -67,21 +67,6 @@ export class AvailabilityProvider {
     return availList$;
   }
 
-  // Legcay
-  getOld2AvailabilityById(stylistId, availId) {
-    console.log(stylistId);
-    console.log(availId);
-    return this.afdb.list(
-      `/stylistProfile/${stylistId}/availability/${availId}`
-    );
-  }
-  // Legacy
-  getOldBookedAvailability(stylistId: any) {
-    console.log(stylistId);
-    console.log(`/stylistProfile/${stylistId}/availability`);
-    return this.afdb.list(`/stylistProfile/${stylistId}/availability`);
-  }
-
   // New
   getAvailabilityById(availId) {
     console.log(availId);
