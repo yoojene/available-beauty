@@ -4,6 +4,7 @@ import { Platform } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
 import { AngularFireDatabase } from 'angularfire2/database';
 import firebase from 'firebase';
+import { Observable } from 'rxjs/Observable';
 
 /*
   Generated class for the FcmProvider provider.
@@ -70,6 +71,10 @@ export class FcmProvider {
   }
 
   public listenToNotifications() {
-    return this.firebaseNative.onNotification();
+    if (this.platform.is('cordova')) {
+      return this.firebaseNative.onNotification();
+    }
+
+    return Observable.of(false);
   }
 }
