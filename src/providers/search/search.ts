@@ -24,13 +24,14 @@ export class SearchProvider {
       .subscribe(res => console.log(res));
   }
 
-  public search(term) {
-
-    this.http.get('https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists')
-      .subscribe((data) => {
-        console.log('data', data);
-        return data;
-      })
+  public search(term): Observable<any> {
+    return this.http.get(
+      'https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists'
+    );
+    // .subscribe((data) => {
+    //   console.log('data', data);
+    //   return data;
+    // })
 
     // console.log('searching for: ' + term);
 
@@ -46,7 +47,5 @@ export class SearchProvider {
     // this.http.get(url, httpOptions).subscribe(res => {
     //   return res;
     // });
-
-
   }
 }

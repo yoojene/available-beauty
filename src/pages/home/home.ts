@@ -44,8 +44,6 @@ export class HomePage {
   private showMap: boolean = false;
   private mapButton: boolean = false;
 
-
-
   itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
 
   public stylist$: Observable<any>;
@@ -82,14 +80,14 @@ export class HomePage {
 
   beautyOptions: any = [
     {
-      name: this.hairText
+      name: this.hairText,
     },
     {
-      name: this.nailsText
+      name: this.nailsText,
     },
     {
-      name: this.treatmentsText
-    }
+      name: this.treatmentsText,
+    },
   ];
 
   todayText: string = 'Today';
@@ -98,14 +96,14 @@ export class HomePage {
 
   dateOptions: any = [
     {
-      name: this.todayText
+      name: this.todayText,
     },
     {
-      name: this.tomorrowText
+      name: this.tomorrowText,
     },
     {
-      name: this.thisWeekText
-    }
+      name: this.thisWeekText,
+    },
   ];
 
   constructor(
@@ -121,8 +119,7 @@ export class HomePage {
     private search: SearchProvider,
     public fcm: FcmProvider,
     public toastCtrl: ToastController,
-    public http: Http
-    // private skills: SkillsProvider
+    public http: Http // private skills: SkillsProvider
   ) {}
 
   ionViewDidLoad() {
@@ -143,9 +140,8 @@ export class HomePage {
       )
       .subscribe();
 
-      //TODO - Get skills from /skills
-      //this.beautyOptions = this.skills.getSkillGroups();
-
+    //TODO - Get skills from /skills
+    //this.beautyOptions = this.skills.getSkillGroups();
   }
 
   ngOnDestroy() {
@@ -167,8 +163,14 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    let users = this.getUsers(ev.target.value); 
-    
+    // let users =
+    this.getUsers(ev.target.value).subscribe(res => {
+      console.log(res._body);
+      console.log(JSON.parse(res._body));
+      this.users = JSON.parse(res._body);
+      // console.log(this.users);
+    });
+
     // let searchModal = this.modalCtrl.create(SearchPage);
 
     // searchModal.onDidDismiss(data => {
@@ -315,7 +317,7 @@ export class HomePage {
   }
 
   private getUsers(term: any) {
-      return this.search.search(term);
+    return this.search.search(term);
   }
 
   public doTestFCM() {
