@@ -18,6 +18,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
+import { AddStylistReviewPage } from '../add-stylist-review/add-stylist-review';
 
 /**
  * Generated class for the BookingsPage page.
@@ -32,36 +33,36 @@ import { BookAvailabilityPage } from '../book-availability/book-availability';
   templateUrl: 'bookings.html',
 })
 export class BookingsPage {
-  pendingBookingText = 'Pending Bookings';
-  noPendingBookingText = 'No Pending Bookings';
-  acceptedBookingText = 'Accepted Bookings';
-  noAcceptedBookingText = 'No Accepted Bookings';
-  pastBookingsText = 'Past Bookings';
+  public pendingBookingText = 'Pending Bookings';
+  public noPendingBookingText = 'No Pending Bookings';
+  public acceptedBookingText = 'Accepted Bookings';
+  public noAcceptedBookingText = 'No Accepted Bookings';
+  public pastBookingsText = 'Past Bookings';
 
-  bookingTitle = 'Booking';
-  stylistTitle = 'Stylist';
+  public bookingTitle = 'Booking';
+  public stylistTitle = 'Stylist';
 
-  stylist$: Observable<any>;
-  stylistId: any;
-  availabilities$: Observable<any>;
-  availabilities: any = [];
+  public stylist$: Observable<any>;
+  public stylistId: any;
+  public availabilities$: Observable<any>;
+  public availabilities: any = [];
 
-  bookings$: Observable<any>;
-  bookedavailbility$: Observable<any>;
-  bookedStylist$: Observable<any>;
+  public bookings$: Observable<any>;
+  public bookedavailbility$: Observable<any>;
+  public bookedStylist$: Observable<any>;
 
-  bookingUsers: any = [];
-  bookingUsers$: Observable<any>;
+  public bookingUsers: any = [];
+  public bookingUsers$: Observable<any>;
 
-  bookedUsername: string;
-  bookedDate: string;
+  public bookedUsername: string;
+  public bookedDate: string;
 
-  bookedDateAvailability: any = [];
-  bookedUserAvailability: any = [];
+  public bookedDateAvailability: any = [];
+  public bookedUserAvailability: any = [];
 
-  bookings = [];
+  public bookings = [];
 
-  bookedAvailability: any = [];
+  public bookedAvailability: any = [];
 
   public isStylist = false;
 
@@ -82,11 +83,11 @@ export class BookingsPage {
 
   // Lifecycle
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad BookingsPage');
   }
 
-  ionViewWillEnter() {
+  public ionViewWillEnter() {
     console.log(' booking view will enter ');
 
     this.availabilities = [];
@@ -97,6 +98,7 @@ export class BookingsPage {
     // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
       console.log(res);
+
       if (!res) {
         this.isStylist = false;
       } else {
@@ -118,7 +120,7 @@ export class BookingsPage {
     });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
@@ -134,12 +136,10 @@ export class BookingsPage {
   // Public
 
   /**
-   * Opens up UserProfile page in modal
-   *t
-   * @param {any} userId
-   * @memberof BookingsPage
+   * Opens up BookAvailability page in modal, showing chat between user and stylist
+   *
    */
-  onBookingTap(availId, bookId) {
+  public onBookingTap(availId, bookId) {
     const bookAvailModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: availId,
       bookId: bookId,
@@ -152,6 +152,21 @@ export class BookingsPage {
     });
 
     bookAvailModal.present();
+  }
+
+  public onPastBookingTap(availId, bookId) {
+    const reviewModal = this.modalCtrl.create(AddStylistReviewPage, {
+      availId: availId,
+      bookId: bookId,
+      stylist: this.stylistId,
+      userId: firebase.auth().currentUser.uid,
+    });
+
+    reviewModal.onDidDismiss(data => {
+      console.log('dismissed AddStylistReview', data);
+    });
+
+    reviewModal.present();
   }
 
   // Private

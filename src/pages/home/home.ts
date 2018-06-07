@@ -196,7 +196,7 @@ export class HomePage {
   }
 
   public openReviews(stylistId: any) {
-    let reviewModal = this.modalCtrl.create(StylistReviewPage, {
+    const reviewModal = this.modalCtrl.create(StylistReviewPage, {
       stylistId: stylistId,
     });
 
@@ -209,7 +209,7 @@ export class HomePage {
 
   public expandCard(user: any) {
     this.users.map(listItem => {
-      if (user == listItem) {
+      if (user === listItem) {
         listItem.expanded = !listItem.expanded;
 
         this.stylistUserId = user.key;

@@ -90,7 +90,7 @@
 
       <div *ngIf="pastbook.payload.val().status === 'ACCEPTED' && checkBookingIsInPast(pastbook.payload.val().bookedAvailSlot); then accepted"></div>
       <ng-template #accepted>
-        <ion-item (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
+        <ion-item (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
           Avail ID {{pastbook.payload.val().availabilityId}}
 
           <div *ngIf="bookedUserAvailability">
