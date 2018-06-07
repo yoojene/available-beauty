@@ -6,6 +6,8 @@ import {
   AlertController,
   ToastController,
 } from 'ionic-angular';
+import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
@@ -41,6 +43,8 @@ export class HomePage {
   public toggled: boolean = false;
   private showMap: boolean = false;
   private mapButton: boolean = false;
+
+
 
   itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
 
@@ -117,6 +121,7 @@ export class HomePage {
     private search: SearchProvider,
     public fcm: FcmProvider,
     public toastCtrl: ToastController,
+    public http: Http
     // private skills: SkillsProvider
   ) {}
 
@@ -162,7 +167,7 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    this.getUsers(ev.target.value);
+    let users = this.getUsers(ev.target.value); 
     
     // let searchModal = this.modalCtrl.create(SearchPage);
 
@@ -310,17 +315,7 @@ export class HomePage {
   }
 
   private getUsers(term: any) {
-    // this.user
-    //   .getStylistUsers()
-    //   .snapshotChanges()
-    //   .subscribe(actions => {
-    //     const values = this.utils.generateFirebaseKeyedValues(actions);
-    //     this.users = this.utils.addExpandedProperty(values);
-    //     console.log(this.users);
-    //   });
-
-      let searchResults = this.search.search(term);
-      console.log('search results = ' + searchResults);
+      return this.search.search(term);
   }
 
   public doTestFCM() {

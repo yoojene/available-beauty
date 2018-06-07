@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+import { Http } from '@angular/http';
 
 /*
   Generated class for the SearchProvider provider.
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 export class SearchProvider {
   searches$: Observable<any> = this.http.get('http://localhost:3004/search');
 
-  constructor(public http: HttpClient) {
+  constructor(public http: Http) {
     console.log('Hello SearchProvider Provider');
   }
 
@@ -24,20 +24,29 @@ export class SearchProvider {
       .subscribe(res => console.log(res));
   }
 
-  search(term) {
-    console.log('searching for: ' + term);
+  public search(term) {
 
-    let url = 'https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists'
-    let params: URLSearchParams = new URLSearchParams();
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Access-Control-Allow-Origin': '*'
+    this.http.get('https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists')
+      .subscribe((data) => {
+        console.log('data', data);
+        return data;
       })
-     };
 
-    this.http.get(url, httpOptions).subscribe(res => {
-      return res;
-    });
+    // console.log('searching for: ' + term);
+
+    // let url = 'https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists'
+    // let params: URLSearchParams = new URLSearchParams();
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type':  'application/json',
+    //     'Access-Control-Allow-Origin': '*'
+    //   })
+    //  };
+
+    // this.http.get(url, httpOptions).subscribe(res => {
+    //   return res;
+    // });
+
+
   }
 }
