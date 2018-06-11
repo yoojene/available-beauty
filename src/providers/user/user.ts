@@ -6,7 +6,7 @@ import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../model/users/user.model';
 
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { UtilsProvider } from '../utils/utils';
 
 @Injectable()
@@ -20,10 +20,8 @@ export class UserProvider {
   /**
    * Return users
    *
-   * @returns {Observable<User>}
-   * @memberof UserProvider
    */
-  public getStylistUsers() {
+  public getStylistUsers(): AngularFireList<User> {
     // return this.http.get<User>(this.config.endpointURL + this.config.usersPath);
     return this.afdb.list<User>('userProfile', ref => {
       return ref.orderByChild('isStylist').equalTo(true);
@@ -33,9 +31,6 @@ export class UserProvider {
    * Look up userId in /userProfile and check isStylist attribute.
    * If true return profile else false
    *
-   * @param {any} uid
-   * @returns
-   * @memberof UserProvider
    */
   public checkIsStylist(uid: any) {
     return this.afdb
@@ -81,7 +76,7 @@ export class UserProvider {
       user
     );
   }
-   /**
+  /**
    * Creates userProfile record in realtime DB
    *
    * @param {boolean} stylist Flag to denote whether user is stylist or not
@@ -91,38 +86,37 @@ export class UserProvider {
    * @memberof AuthProvider
    */
   public updateUserProfile(userId: any, user: User) {
-
     console.log('updating user ' + userId);
 
     // let userProfile;
     // if (!user) {
-      // this.storage.getStorage('geolocation').subscribe(res => {
-      //   this.geolocation = res;
+    // this.storage.getStorage('geolocation').subscribe(res => {
+    //   this.geolocation = res;
 
-        let userProfile = {
-          name: user.name,
-          emailAddress: user.emailAddress,
-        //  avatarImage: user.avatarImage,
-          phoneNumber: user.phoneNumber,
-          // homeLocation: user.homeLocation,
-          // isStylist: user.isStylist,
-        };
+    let userProfile = {
+      name: user.name,
+      emailAddress: user.emailAddress,
+      //  avatarImage: user.avatarImage,
+      phoneNumber: user.phoneNumber,
+      // homeLocation: user.homeLocation,
+      // isStylist: user.isStylist,
+    };
 
-        console.log('Updating user ' + userProfile.name);
+    console.log('Updating user ' + userProfile.name);
 
-        let userPayload = {};
-        userPayload[`userProfile/${userId}`] = userProfile;
+    let userPayload = {};
+    userPayload[`userProfile/${userId}`] = userProfile;
 
-        console.log('JSON USER CONTENT: ' + JSON.stringify(userPayload));
-    
-        return this.afdb.database
-          .ref()
-          .update(userPayload)
-          .then(res => console.log(res));
-      // } else {
-      //   console.log('no user object');
-      // }
-    }
+    console.log('JSON USER CONTENT: ' + JSON.stringify(userPayload));
+
+    return this.afdb.database
+      .ref()
+      .update(userPayload)
+      .then(res => console.log(res));
+    // } else {
+    //   console.log('no user object');
+    // }
+  }
 
   /**
    * Delete a user

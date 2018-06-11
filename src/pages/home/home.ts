@@ -163,28 +163,21 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    // let users =
+    /* Using Firebase Search function
     this.getUsers(ev.target.value).subscribe(res => {
       console.log(res._body);
       console.log(JSON.parse(res._body));
       this.users = JSON.parse(res._body);
-      // console.log(this.users);
-    });
+    });*/
 
-    // let searchModal = this.modalCtrl.create(SearchPage);
-
-    // searchModal.onDidDismiss(data => {
-    //   console.log('dismissed ', data);
-
-    // });
-
-    // searchModal.present();
+    /*  Just query RTDB for users */
+    this.getUsers();
   }
 
   public openProfile(user) {
     console.log(user);
     console.log('opent da modal');
-    let profileModal = this.modalCtrl.create(StylistProfilePage, {
+    const profileModal = this.modalCtrl.create(StylistProfilePage, {
       user: user,
     });
 
@@ -231,7 +224,7 @@ export class HomePage {
             .subscribe(res => (this.stylistReviews = res.length));
 
           this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
-            let avails = this.utils.generateFirebaseKeyedValues(actions);
+            const avails = this.utils.generateFirebaseKeyedValues(actions);
 
             this.availabilities = avails.filter(res => res.booked === false);
 
@@ -316,8 +309,21 @@ export class HomePage {
     });
   }
 
-  private getUsers(term: any) {
-    return this.search.search(term);
+  private getUsers(term?: any) {
+
+    /* Uncomment to use search function
+     return this.search.search(term);
+    */
+
+    /* This is the direct call to the RTDB*/
+    this.user
+      .getStylistUsers()
+      .snapshotChanges()
+      .subscribe(actions => {
+        const values = this.utils.generateFirebaseKeyedValues(actions);
+        this.users = this.utils.addExpandedProperty(values);
+        console.log(this.users);
+      });
   }
 
   public doTestFCM() {
