@@ -13,6 +13,7 @@ import { StylistProvider } from '../../providers/stylist/stylist';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { UtilsProvider } from '../../providers/utils/utils';
 import { Moment } from 'moment';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the AvailabilityPage page.
@@ -27,64 +28,67 @@ import { Moment } from 'moment';
   templateUrl: 'availability.html',
 })
 export class AvailabilityPage {
-  availabilitySubHeader = 'Mark the times you are available';
-  morningText = 'morning';
-  afternoonText = 'afternoon';
-  eveningText = 'evening';
-  showNext: boolean;
-  dayOfWeekFmt: string = 'ddd Do MMM';
-  availTimeFmt: string = 'HH:mm';
-  today: any;
-  morningStart: any = moment()
+  public availabilitySubHeader = 'Mark the times you are available';
+  public morningText = 'morning';
+  public afternoonText = 'afternoon';
+  public eveningText = 'evening';
+  public showNext: boolean;
+  public dayOfWeekFmt: string = 'ddd Do MMM';
+  public availTimeFmt: string = 'HH:mm';
+  public today: any;
+  public morningStart: any = moment()
     .hour(8)
     .minutes(0)
     .seconds(0);
 
-  availableAMDates: any;
-  availablePMDates: any;
-  availableEveDates: any;
+  public availableAMDates: any;
+  public availablePMDates: any;
+  public availableEveDates: any;
 
-  stylistId: string;
+  public stylistId: string;
 
-  schedule: any;
+  public schedule: any;
 
-  entryLoader: any;
+  public entryLoader: any;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public avail: AvailabilityProvider,
-    public stylist: StylistProvider,
+    public user: UserProvider,
     private _afdb: AngularFireDatabase,
     private _utils: UtilsProvider,
     private _loading: LoadingController
   ) {}
 
-  ionViewWillEnter() {
+  // Lifecycle
+  public ionViewWillEnter() {
     console.log('ionViewWillEnter');
+    this.stylistId = firebase.auth().currentUser.uid;
     this.entryLoader = this._loading.create();
     this.entryLoader.present().then(() => {
-      this.stylist
-        .getStylist(firebase.auth().currentUser.uid)
-        .snapshotChanges()
-        .subscribe(res => {
-          console.log('cmon');
-          this.stylistId = res[0].key;
-          console.log(this.stylistId);
-          this.generateAvailabilitySchedule();
-        });
+      // this.user
+      //   .getUserById(firebase.auth().currentUser.uid)
+      //   .snapshotChanges()
+      //   .subscribe(res => {
+      //     console.log('what is it');
+      //     console.log(res);
+      //     this.stylistId = res[0].key;
+      //     console.log(this.stylistId);
+      this.generateAvailabilitySchedule();
+      // });
     });
 
     this.doCheckShowNext();
   }
 
-  ionViewDidLoad() {}
+  // Private
+
   /**
    * Set up length of schedule on availability page and slot length/duration
    * Default is 1 day for 7 days ahead and 18 slots of 30m per day
-   * @private
-   * @memberof AvailabilityPage
    */
+
   private generateAvailabilitySchedule() {
     // Generate the schedule
     this.schedule = this.generateSchedule(
@@ -111,7 +115,7 @@ export class AvailabilityPage {
           'morning'
         )
       );
-      let afternoonSlots = [];
+      const afternoonSlots = [];
       afternoonSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
@@ -125,7 +129,7 @@ export class AvailabilityPage {
           'afternoon'
         )
       );
-      let eveningSlots = [];
+      const eveningSlots = [];
       eveningSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
@@ -140,23 +144,27 @@ export class AvailabilityPage {
         )
       );
       // Collapse into single array
-      let morningMerged = [].concat.apply([], morningSlots);
+      const morningMerged = [].concat.apply([], morningSlots);
       this.schedule[y].morningSlots = morningMerged;
-      let afternoonMerged = [].concat.apply([], afternoonSlots);
+      const afternoonMerged = [].concat.apply([], afternoonSlots);
       this.schedule[y].afternoonSlots = afternoonMerged;
-      let eveningMerged = [].concat.apply([], eveningSlots);
+      const eveningMerged = [].concat.apply([], eveningSlots);
       this.schedule[y].eveningSlots = eveningMerged;
     }
 
+    console.log(this.schedule);
+
     // This is a bit naff, ideally want to seed schedule from what's already taken, and not the otherway around
-    let stylistId = this.stylistId;
+    const stylistId = this.stylistId;
     console.log(stylistId);
 
     this.avail
       .getStylistAvailability(stylistId)
       .snapshotChanges()
       .subscribe(res => {
-        let results = this._utils.generateFirebaseKeyedValues(res);
+        // console.log(res);
+        const results = this._utils.generateFirebaseKeyedValues(res);
+        console.log(results);
         results.forEach(res => {
           this.schedule.forEach(sched => {
             sched.slots.forEach(el => {
@@ -171,7 +179,7 @@ export class AvailabilityPage {
     this.entryLoader.dismiss();
   }
 
-  goToHome() {
+  public goToHome() {
     console.log('go to home');
     console.log(this.navCtrl.length());
     if (this.navCtrl.length() === 1) {
@@ -184,22 +192,20 @@ export class AvailabilityPage {
   /**
    * Create the parent schedule object
    *
-   * @param {any} startDate - Date to start schedule
-   * @param {any} dateFmt - moment date/time format
-   * @param {any} interval 1
-   * @param {any} dateUnit - moment date format
-   * @param {any} runsFor - how long the schedule runs for
-   * @returns
-   * @memberof AvailabilityPage
+   * @param startDate - Date to start schedule
+   * @param dateFmt - moment date/time format
+   * @param interval 1
+   * @param dateUnit - moment date format
+   * @param runsFor - how long the schedule runs for
    */
-  generateSchedule(
+  private generateSchedule(
     startDate: Moment,
     dateFmt: string,
     interval: number,
     dateUnit: moment.unitOfTime.DurationConstructor,
     runsFor: number
   ) {
-    let schedule = [{ date: startDate.format(dateFmt), unit: dateUnit }];
+    const schedule = [{ date: startDate.format(dateFmt), unit: dateUnit }];
     let loopInt = interval;
     for (let x = 0; x < runsFor; x++) {
       schedule.push({
@@ -210,16 +216,18 @@ export class AvailabilityPage {
       });
       loopInt = loopInt + interval;
     }
+
     return schedule;
   }
+
+  // Public
   /**
    * Mark the given slot taken
    *
-   * @param {any} option
-   * @param {any} optionobj
-   * @memberof AvailabilityPage
+   * @param option
+   * @param optionobj
    */
-  setSlotTaken(option, optionobj) {
+  public setSlotTaken(option, optionobj) {
     optionobj.forEach(el => {
       if (option.time === el.time && option.date === el.date) {
         el.disabled = !option.disabled;
@@ -243,30 +251,28 @@ export class AvailabilityPage {
   /**
    * Mark all slots for a sub group on the day taken
    *
-   * @param {any} slot
-   * @param {any} subgroup
-   * @memberof AvailabilityPage
+   * @param slot
+   * @param subgroup
    */
-  setAllSlotsTaken(slot, subgroup) {
-    if ((subgroup == 'morning') || (subgroup == 'all')) {
+  public setAllSlotsTaken(slot, subgroup) {
+    if (subgroup === 'morning' || subgroup === 'all') {
       slot.morningSlots.forEach(el => {
         el.disabled = !el.disabled;
       });
     }
-    if ((subgroup == 'afternoon') || (subgroup == 'all')) {
+    if (subgroup === 'afternoon' || subgroup === 'all') {
       slot.afternoonSlots.forEach(el => {
         el.disabled = !el.disabled;
       });
     }
-    if ((subgroup == 'evening') || (subgroup == 'all')) {
+    if (subgroup === 'evening' || subgroup === 'all') {
       slot.eveningSlots.forEach(el => {
         el.disabled = !el.disabled;
       });
     }
+  }
 
- }  
-
-  updateTakenSlots(bookedSlots) {
+  private updateTakenSlots(bookedSlots) {
     console.log(bookedSlots);
     console.log(this.schedule);
 
@@ -275,7 +281,7 @@ export class AvailabilityPage {
     });
   }
 
-  doCheckShowNext() {
+  private doCheckShowNext() {
     if (this.navCtrl.length() === 2) {
       console.log(';showing');
       this.showNext = true;
@@ -285,12 +291,12 @@ export class AvailabilityPage {
     }
   }
 
-  doShowPeriod(period) {
+  private doShowPeriod(period) {
     // For filtering am/pm/eve if required
     console.log(period);
 
     console.log(period._elementRef.nativeElement.name);
-    let filtered = this.availableAMDates.filter(el => {
+    const filtered = this.availableAMDates.filter(el => {
       return el.period === period._elementRef.nativeElement.name;
     });
 

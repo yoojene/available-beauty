@@ -66,13 +66,14 @@ export class AvailableBeautyApp {
           if (!res) {
             this.rootPage = 'TabsPage';
           } else {
-            this.stylist
-              .getStylist(uid)
+            this.user
+              .getUserById(uid)
               .valueChanges()
               .subscribe(res => {
                 console.log(res);
-                if (res && res.length > 0) {
-                  // Has a stylistProfile
+                if (!res.hasOwnProperty('stylistProfileComplete')) {
+                  // Temporarily reversed this check
+                  console.log('profile setup');
                   this.rootPage = 'AvailabilityPage';
                 } else {
                   this.rootPage = 'StylistRegisterPage';

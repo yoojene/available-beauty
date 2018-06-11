@@ -44,7 +44,7 @@ export class HomePage {
   private showMap = false;
   private mapButton = false;
 
-  public itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
+  public itemExpandHeight = 400; // TODO: this needs to be dynamic based on device size
 
   public stylist$: Observable<any>;
   public stylistReviews: number;
@@ -200,59 +200,51 @@ export class HomePage {
     this.users.map(listItem => {
       if (user === listItem) {
         listItem.expanded = !listItem.expanded;
-
+        console.log(user);
         this.stylistUserId = user.key;
 
-        this.stylist$ = this.stylist
-          .getStylist(this.stylistUserId)
+        this.stylistAvail$ = this.avail
+          .getStylistAvailability(user.key)
           .snapshotChanges();
 
-        this.stylist$.subscribe(res => {
-          this.stylistId = res[0].key;
+        this.stylist
+          .getStylistReview(user.key)
+          .valueChanges()
+          .subscribe(res => (this.stylistReviews = res.length));
 
-          this.stylistAvail$ = this.avail
-            .getStylistAvailability(res[0].key)
-            .snapshotChanges();
+        this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
+          const avails = this.utils.generateFirebaseKeyedValues(actions);
 
-          this.stylist
-            .getStylistReview(res[0].key)
-            .valueChanges()
-            .subscribe(res => (this.stylistReviews = res.length));
+          this.availabilities = avails.filter(res => res.booked === false);
 
-          this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
-            const avails = this.utils.generateFirebaseKeyedValues(actions);
+          this.availabilities.sort((a, b) => {
+            return a.datetime - b.datetime;
+          });
 
-            this.availabilities = avails.filter(res => res.booked === false);
+          this.availabilities = this.availabilities.filter(el => {
+            return el.datetime >= moment().unix();
+          });
 
-            this.availabilities.sort((a, b) => {
-              return a.datetime - b.datetime;
-            });
+          console.log('filtered availabilities rrrrr');
+          console.log(this.availabilities);
 
-            this.availabilities = this.availabilities.filter(el => {
-              return el.datetime >= moment().unix();
-            });
-
-            console.log('filtered availabilities rrrrr');
-            console.log(this.availabilities);
-
-            this.availabilities.forEach(el => {
-              // TODO group availabilities by day / month and display
-              return (
-                (el.origdatetime = el.datetime) &&
-                (el.day = moment.unix(el.datetime).format('ddd Do')) &&
-                (el.month = moment.unix(el.datetime).format('MMM')) &&
-                (el.datetime = moment
-                  .unix(el.datetime)
-                  .format('ddd Do MMM HH:mm'))
-              );
-            });
+          this.availabilities.forEach(el => {
+            // TODO group availabilities by day / month and display
+            return (
+              (el.origdatetime = el.datetime) &&
+              (el.day = moment.unix(el.datetime).format('ddd Do')) &&
+              (el.month = moment.unix(el.datetime).format('MMM')) &&
+              (el.datetime = moment
+                .unix(el.datetime)
+                .format('ddd Do MMM HH:mm'))
+            );
           });
         });
+        // });
       } else {
         listItem.expanded = false;
         this.availabilities = null;
       }
-      
 
       return listItem;
     });
