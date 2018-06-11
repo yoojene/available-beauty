@@ -40,11 +40,11 @@ export class HomePage {
   public reviewsText = 'Reviews >';
   public lat: number;
   public long: number;
-  public toggled: boolean = false;
-  private showMap: boolean = false;
-  private mapButton: boolean = false;
+  public toggled = false;
+  private showMap = false;
+  private mapButton = false;
 
-  itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
+  public itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
 
   public stylist$: Observable<any>;
   public stylistReviews: number;
@@ -53,16 +53,11 @@ export class HomePage {
   /**
    * /stylistProfile key
    *
-   * @type {number}
-   * @memberof HomePage
    */
   public stylistId: number;
 
   /**
    * /userProfile key for a give /stylistProfile
-   *
-   * @type {number}
-   * @memberof HomePage
    */
   public stylistUserId: number;
 
@@ -74,11 +69,11 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
-  hairText: string = 'Hair';
-  nailsText: string = 'Nails';
-  treatmentsText: string = 'Treatments';
+  public hairText = 'Hair';
+  public nailsText = 'Nails';
+  public treatmentsText = 'Treatments';
 
-  beautyOptions: any = [
+  public beautyOptions: any = [
     {
       name: this.hairText,
     },
@@ -90,11 +85,11 @@ export class HomePage {
     },
   ];
 
-  todayText: string = 'Today';
-  tomorrowText: string = 'Tomorrow';
-  thisWeekText: string = 'This week';
+  public todayText = 'Today';
+  public tomorrowText = 'Tomorrow';
+  public thisWeekText = 'This week';
 
-  dateOptions: any = [
+  public dateOptions: any = [
     {
       name: this.todayText,
     },
@@ -122,7 +117,8 @@ export class HomePage {
     public http: Http // private skills: SkillsProvider
   ) {}
 
-  ionViewDidLoad() {
+  // Lifecycle
+  public ionViewDidLoad() {
     this.getGeoLocation();
 
     this.fcm
@@ -144,13 +140,13 @@ export class HomePage {
     //this.beautyOptions = this.skills.getSkillGroups();
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     console.log('ngOnDestroy');
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
 
-  //-- Public
+  // Public
 
   public toggleMap() {
     if (!this.showMap) {
@@ -256,6 +252,7 @@ export class HomePage {
         listItem.expanded = false;
         this.availabilities = null;
       }
+      
 
       return listItem;
     });
@@ -272,7 +269,7 @@ export class HomePage {
 
     this.bookingId = result;
 
-    let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
+    const bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: avail.key,
       stylist: this.stylistId,
       userId: this.uid,
@@ -289,12 +286,17 @@ export class HomePage {
   public toggleFavourite() {
     if (!this.toggled) {
       this.toggled = true;
+
       return;
     }
     this.toggled = false;
   }
 
-  //--- Private
+  public doTestFCM() {
+    this.fcm.getToken();
+  }
+
+  // Private
 
   private getGeoLocation() {
     this.storage.getStorage('geolocation').subscribe(res => {
@@ -310,7 +312,6 @@ export class HomePage {
   }
 
   private getUsers(term?: any) {
-
     /* Uncomment to use search function
      return this.search.search(term);
     */
@@ -324,9 +325,5 @@ export class HomePage {
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
       });
-  }
-
-  public doTestFCM() {
-    this.fcm.getToken();
   }
 }
