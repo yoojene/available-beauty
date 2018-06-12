@@ -21,11 +21,11 @@ import { FcmProvider } from '../providers/fcm/fcm';
 })
 export class AvailableBeautyApp {
   @ViewChild('#myNav') nav: NavController;
-  rootPage: string = 'LandingPage'; // This needs to be updated once logged in / registered to be TabsPage
-  stylistParam: any;
+  public rootPage: string = 'LandingPage'; // This needs to be updated once logged in / registered to be TabsPage
+  public stylistParam: any;
 
-  lat: number;
-  long: number;
+  public lat: number;
+  public long: number;
 
   constructor(
     platform: Platform,
@@ -48,11 +48,11 @@ export class AvailableBeautyApp {
     });
   }
 
-  watchGeoLocation() {
+  private watchGeoLocation() {
     this.location.watchGeoLocation();
   }
 
-  checkAuthState() {
+  private checkAuthState() {
     console.log('checking auth state....');
     this.afAuth.authState.subscribe(res => {
       if (!res) {

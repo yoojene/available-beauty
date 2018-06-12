@@ -97,26 +97,9 @@ export class BookingsPage {
     this.bookedAvailability = [];
     // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
-      console.log(res);
-
-      if (!res) {
-        this.isStylist = false;
-      } else {
-        this.isStylist = true;
-      }
-
-      if (this.isStylist) {
-        this.stylist
-          .getStylist(firebase.auth().currentUser.uid)
-          .snapshotChanges()
-          .subscribe(res => {
-            this.stylistId = res[0].key;
-            this.getBookings(this.stylistId, this.isStylist);
-          });
-      } else {
-        console.log(firebase.auth().currentUser.uid);
-        this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
-      }
+      console.log('res ', res);
+      !res ? (this.isStylist = false) : (this.isStylist = true);
+      this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
     });
   }
 
@@ -171,9 +154,8 @@ export class BookingsPage {
 
   // Private
 
-  private getBookings(stylistOrUserId: any, isStylist: boolean) {
+  private getBookings(stylistOrUserId: any, isStylist?: boolean) {
     console.log('gettttBookings => ', stylistOrUserId);
-    // let uid = firebase.auth().currentUser.uid;
     if (isStylist) {
       this.bookings$ = this.book
         .getStylistBookings(stylistOrUserId)
@@ -209,23 +191,17 @@ export class BookingsPage {
             availId: i.availabilityId,
             userName: this.bookedUsername,
           });
-
-          // console.log(this.bookedUserAvailability);
         });
 
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
-          let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          const date = this.utils.getFirebaseRealtimeDbKeyedValueById(
             res,
             'datetime'
           );
 
           this.bookedDate = moment.unix(date).format('ddd Do MMM HH:mm');
 
-          if (moment().unix() < date) {
-            this.isPast = false;
-          } else {
-            this.isPast = true;
-          }
+          moment().unix() < date ? (this.isPast = false) : (this.isPast = true);
 
           this.bookedDateAvailability.push({
             availId: i.availabilityId,
