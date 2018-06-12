@@ -101,7 +101,7 @@ export class AvailabilityPage {
 
     // Generate the slots per schedule
     for (let y = 0; y < this.schedule.length; y++) {
-      let morningSlots = [];
+      const morningSlots = [];
       morningSlots.push(
         this.avail.generateAvailabilitySlots(
           moment(this.schedule[y].date, this.dayOfWeekFmt)
@@ -162,13 +162,22 @@ export class AvailabilityPage {
       .getStylistAvailability(stylistId)
       .snapshotChanges()
       .subscribe(res => {
-        // console.log(res);
         const results = this._utils.generateFirebaseKeyedValues(res);
         console.log(results);
-        results.forEach(res => {
+        results.forEach(resres => {
           this.schedule.forEach(sched => {
-            sched.slots.forEach(el => {
-              if (el.epoch === res.datetime) {
+            sched.morningSlots.forEach(el => {
+              if (el.epoch === resres.datetime) {
+                el.disabled = true;
+              }
+            });
+            sched.afternoonSlots.forEach(el => {
+              if (el.epoch === resres.datetime) {
+                el.disabled = true;
+              }
+            });
+            sched.eveningSlots.forEach(el => {
+              if (el.epoch === resres.datetime) {
                 el.disabled = true;
               }
             });
@@ -283,7 +292,7 @@ export class AvailabilityPage {
 
   private doCheckShowNext() {
     if (this.navCtrl.length() === 2) {
-      console.log(';showing');
+      console.log('showing');
       this.showNext = true;
     } else {
       console.log('not showing');

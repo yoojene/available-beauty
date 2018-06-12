@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import {
   Availability,
   AvailabilitySlot,
 } from '../../model/availability/availability.model';
 import { StylistProvider } from '../stylist/stylist';
-import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 
@@ -20,70 +19,22 @@ export class AvailabilityProvider {
     console.log('Hello AvailabilityProvider Provider');
   }
 
-  // Legacy
-  getAvailabilities() {
-    return this.afdb.list('availability');
-  }
-
-  // Legacy
-  getOldAvailabilityById(avail) {
-    console.log('calling getAvailabilityById()');
-    console.log(avail);
-    console.log(JSON.stringify(avail));
-
-    let availIds = [];
-    // let availList$;
-    avail.forEach(el => {
-      return availIds.push(el.availabilityId);
-    });
-
-    let availList$;
-
-    availIds.forEach(el => {
-      console.log(el);
-
-      availList$ = this.afdb
-        .list<Availability>(`availability`, ref => {
-          return ref.orderByKey().equalTo(el);
-          // .orderByChild('booked')
-          // .equalTo(true);
-        })
-        .valueChanges()
-        .subscribe(res => {
-          console.log(res);
-          res.forEach((el: any) => {
-            console.log(el);
-            console.log(el.booked);
-            if (el.booked === true) {
-              console.log('found booked');
-              return this.stylist.getStylistById(el);
-              // return availList$;
-            }
-          });
-        });
-    });
-
-    console.log(availList$);
-    return availList$;
-  }
-
   // New
-  getAvailabilityById(availId) {
+  public getAvailabilityById(availId): AngularFireList<{}> {
     console.log(availId);
+
     return this.afdb.list(`/availability/${availId}`);
   }
 
   /**
    * Get availabilities for a stylist
    *
-   * @param {*} stylistId
-   * @returns
-   * @memberof AvailabilityProvider
+   * @paramstylistId
    */
-  getStylistAvailability(stylistId: any) {
+  public getStylistAvailability(stylistId: any): AngularFireList<{}> {
     console.log(stylistId);
-    return this.afdb.list(`availability`, ref => {
-      console.log(ref);
+
+    return this.afdb.list('availability', ref => {
       return ref.orderByChild('stylistId').equalTo(stylistId);
     });
   }
@@ -91,25 +42,23 @@ export class AvailabilityProvider {
   /**
    * Update /availability in realtime DB
    *
-   * @param {number} slot Unix time
-   * @param {string} stylistId
-   * @returns
-   * @memberof AvailabilityProvider
+   * @param slot Unix time
+   * @param stylistId
    */
-  setAvailabilityTaken(slot: number, stylistId: string) {
+  public setAvailabilityTaken(slot: number, stylistId: string) {
     console.log('setAvailabilityTaken');
-    let availData = {
+    const availData = {
       stylistId: stylistId,
       datetime: slot,
       booked: false,
     };
 
-    let availKey = this.afdb.database
+    const availKey = this.afdb.database
       .ref()
-      .child(`/availability/`)
+      .child('/availability/')
       .push().key;
 
-    let availPayload = {};
+    const availPayload = {};
     availPayload[`/availability/${availKey}`] = availData;
 
     console.log(availPayload);
@@ -123,23 +72,22 @@ export class AvailabilityProvider {
   /**
    * Create stylist availability slots
    *
-   * @param {any} startTime - 8:30
-   * @param {any} format - HH:mm
-   * @param {any} interval - 30
-   * @param {any} unit -  m
-   * @param {any} slot number of slots (6) - 6 slots of 30m intervals
-   * @param {any} period one of morning, afternoon, evening
-   * @memberof AvailabilityProvider
+   * @param startTime - 8:30
+   * @param format - HH:mm
+   * @param interval - 30
+   * @param unit -  m
+   * @param slot number of slots (6) - 6 slots of 30m intervals
+   * @param period one of morning, afternoon, evening
    */
-  generateAvailabilitySlots(
+  public generateAvailabilitySlots(
     startTime: Moment,
     format: string,
     interval: any,
     unit: string,
     slot: number,
     period: string
-  ) {
-    let slots: AvailabilitySlot[] = [
+  ): AvailabilitySlot[] {
+    const slots: AvailabilitySlot[] = [
       {
         date: startTime.format('ddd Do MMM'),
         time: startTime.format(format),
@@ -163,6 +111,7 @@ export class AvailabilityProvider {
       });
       loopInt = loopInt + interval;
     }
+
     return slots;
   }
 }
