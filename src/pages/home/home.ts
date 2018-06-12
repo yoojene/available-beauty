@@ -159,15 +159,15 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    /* Using Firebase Search function
+    /* Using Firebase Search function */
     this.getUsers(ev.target.value).subscribe(res => {
       console.log(res._body);
       console.log(JSON.parse(res._body));
       this.users = JSON.parse(res._body);
-    });*/
+    });
 
-    /*  Just query RTDB for users */
-    this.getUsers();
+    /*  Just query RTDB for users
+    this.getUsers(); */
   }
 
   public openProfile(user) {
@@ -304,11 +304,10 @@ export class HomePage {
   }
 
   private getUsers(term?: any) {
-    /* Uncomment to use search function
-     return this.search.search(term);
-    */
+    /* Uncomment to use search function*/
+    return this.search.search(term);
 
-    /* This is the direct call to the RTDB*/
+    /* This is the direct call to the RTDB
     this.user
       .getStylistUsers()
       .snapshotChanges()
@@ -316,6 +315,6 @@ export class HomePage {
         const values = this.utils.generateFirebaseKeyedValues(actions);
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
-      });
+      });*/
   }
 }
