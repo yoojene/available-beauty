@@ -42,6 +42,10 @@ export class BookingsPage {
   public bookingTitle = 'Booking';
   public stylistTitle = 'Stylist';
 
+  public usernameText = 'Name';
+  public stylistnameText = 'Stylist';
+  public bookingDateText = 'Booking Date';
+
   public stylist$: Observable<any>;
   public stylistId: any;
   public availabilities$: Observable<any>;
