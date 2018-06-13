@@ -84,14 +84,34 @@
 
           <div *ngFor="let bsa of bookedStylistAvailability">
             <div *ngIf="bsa.availId === accbook.payload.val().availabilityId">
-              <div *ngIf="!isStylist">  {{stylistnameText}} {{bsa.userName}}</div>
+              <div *ngIf="!isStylist">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                       {{stylistnameText}}
+                    </ion-col>
+                    <ion-col>
+                     {{bsa.userName}}
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
             </div>
           </div>
 
           <div *ngIf="bookedDateAvailability">
             <div *ngFor="let bda of bookedDateAvailability">
               <div *ngIf="bda.availId === accbook.payload.val().availabilityId">
-                 {{bookingDateText}} {{bda.bookedDate}}
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                       {{bookingDateText}}
+                    </ion-col>
+                    <ion-col>
+                       {{bda.bookedDate}}
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
             </div>
           </div>
@@ -115,20 +135,51 @@
           Avail ID {{pastbook.payload.val().availabilityId}}
         <div *ngFor="let bua of bookedUserAvailability">
           <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
-            <div *ngIf="isStylist"> {{bua.userName}}</div>
+            <div *ngIf="isStylist">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    {{usernameText}}
+                  </ion-col>
+                  <ion-col>
+                     {{bua.userName}}
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
           </div>
         </div>
 
         <div *ngFor="let bsa of bookedStylistAvailability">
           <div *ngIf="bsa.availId === pastbook.payload.val().availabilityId">
-            <div *ngIf="!isStylist"> {{bsa.userName}}</div>
+            <div *ngIf="!isStylist">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      {{stylistnameText}}
+                    </ion-col>
+                    <ion-col>
+                     {{bsa.userName}}
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+            </div>
           </div>
         </div>
 
           <div *ngIf="bookedDateAvailability">
             <div *ngFor="let bda of bookedDateAvailability">
               <div *ngIf="bda.availId === pastbook.payload.val().availabilityId">
-                {{bda.bookedDate}}
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      {{bookingDateText}}
+                    </ion-col>
+                    <ion-col>
+                      {{bda.bookedDate}}
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
             </div>
           </div>
