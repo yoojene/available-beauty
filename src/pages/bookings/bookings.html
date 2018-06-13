@@ -26,21 +26,28 @@
 
               Avail ID {{pendbook.payload.val().availabilityId}}
 
-              <div *ngIf="bookedUserAvailability">
                 <div *ngFor="let bua of bookedUserAvailability">
                   <div *ngIf="bua.availId === pendbook.payload.val().availabilityId">
-                    {{bua.userName}}
-                  </div>
+                   <div *ngIf="isStylist"> {{bua.userName}}</div>
                 </div>
-
               </div>
+
+                  <div *ngFor="let bsa of bookedStylistAvailability">
+                    <div *ngIf="bsa.availId === pendbook.payload.val().availabilityId">
+                      <div *ngIf="!isStylist"> {{bsa.userName}}</div>
+                    </div>
+                  </div>
+
+
               <div *ngIf="bookedDateAvailability">
                 <div *ngFor="let bda of bookedDateAvailability">
+
                   <div *ngIf="bda.availId === pendbook.payload.val().availabilityId">
                     {{bda.bookedDate}}
                   </div>
                 </div>
               </div>
+
           </ion-item>
         </ng-template>
 
@@ -58,15 +65,18 @@
         <ng-template #accepted>
         <ion-item (click)="onBookingTap(accbook.payload.val().availabilityId, accbook.key)">
            Avail ID {{accbook.payload.val().availabilityId}}
-
-          <div *ngIf="bookedUserAvailability">
-            <div *ngFor="let bua of bookedUserAvailability">
-              <div *ngIf="bua.availId === accbook.payload.val().availabilityId">
-                 {{bua.userName}}
-              </div>
+          <div *ngFor="let bua of bookedUserAvailability">
+            <div *ngIf="bua.availId === accbook.payload.val().availabilityId">
+              <div *ngIf="isStylist"> {{bua.userName}}</div>
             </div>
-
           </div>
+
+          <div *ngFor="let bsa of bookedStylistAvailability">
+            <div *ngIf="bsa.availId === accbook.payload.val().availabilityId">
+              <div *ngIf="!isStylist"> {{bsa.userName}}</div>
+            </div>
+          </div>
+
           <div *ngIf="bookedDateAvailability">
             <div *ngFor="let bda of bookedDateAvailability">
               <div *ngIf="bda.availId === accbook.payload.val().availabilityId">
@@ -92,15 +102,18 @@
       <ng-template #accepted>
         <ion-item (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
           Avail ID {{pastbook.payload.val().availabilityId}}
-
-          <div *ngIf="bookedUserAvailability">
-            <div *ngFor="let bua of bookedUserAvailability">
-              <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
-                {{bua.userName}}
-              </div>
-            </div>
-
+        <div *ngFor="let bua of bookedUserAvailability">
+          <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
+            <div *ngIf="isStylist"> {{bua.userName}}</div>
           </div>
+        </div>
+
+        <div *ngFor="let bsa of bookedStylistAvailability">
+          <div *ngIf="bsa.availId === pastbook.payload.val().availabilityId">
+            <div *ngIf="!isStylist"> {{bsa.userName}}</div>
+          </div>
+        </div>
+
           <div *ngIf="bookedDateAvailability">
             <div *ngFor="let bda of bookedDateAvailability">
               <div *ngIf="bda.availId === pastbook.payload.val().availabilityId">

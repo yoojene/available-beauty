@@ -52,13 +52,18 @@ export class BookingsPage {
   public bookedStylist$: Observable<any>;
 
   public bookingUsers: any = [];
+  public bookingStylists: any = [];
   public bookingUsers$: Observable<any>;
+  public bookingStylists$: Observable<any>;
 
   public bookedUsername: string;
+  public bookedname: string;
   public bookedDate: string;
 
   public bookedDateAvailability: any = [];
   public bookedUserAvailability: any = [];
+  public bookedStylistAvailability: any = [];
+  public bookedStylistname: any = [];
 
   public bookings = [];
 
@@ -95,10 +100,12 @@ export class BookingsPage {
     this.bookedUserAvailability = [];
     this.bookedDateAvailability = [];
     this.bookedAvailability = [];
+    this.bookedStylistAvailability = [];
     // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
       console.log('res ', res);
       !res ? (this.isStylist = false) : (this.isStylist = true);
+
       this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
     });
   }
@@ -114,6 +121,7 @@ export class BookingsPage {
     this.bookedUserAvailability = [];
     this.bookedDateAvailability = [];
     this.bookedAvailability = [];
+    this.bookedStylistAvailability = [];
   }
 
   // Public
@@ -156,6 +164,7 @@ export class BookingsPage {
 
   private getBookings(stylistOrUserId: any, isStylist?: boolean) {
     console.log('gettttBookings => ', stylistOrUserId);
+    console.log('isStylist => ', isStylist);
     if (isStylist) {
       this.bookings$ = this.book
         .getStylistBookings(stylistOrUserId)
@@ -175,6 +184,10 @@ export class BookingsPage {
           .getUserListById(i.userId)
           .snapshotChanges();
 
+        this.bookingStylists$ = this.user
+          .getUserListById(i.stylistId)
+          .snapshotChanges();
+
         this.availabilities$ = this.avail
           .getAvailabilityById(i.availabilityId)
           .snapshotChanges();
@@ -187,11 +200,30 @@ export class BookingsPage {
             'name'
           );
 
+          console.log(this.bookedUsername);
+
           this.bookedUserAvailability.push({
             availId: i.availabilityId,
             userName: this.bookedUsername,
           });
         });
+        this.bookingStylists$.takeUntil(this.destroy$).subscribe(res => {
+          console.log(res);
+
+          this.bookedStylistname = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'name'
+          );
+
+          console.log(this.bookedStylistname);
+
+          this.bookedStylistAvailability.push({
+            availId: i.availabilityId,
+            userName: this.bookedStylistname,
+          });
+        });
+
+        console.log(this.bookedStylistAvailability);
 
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
           const date = this.utils.getFirebaseRealtimeDbKeyedValueById(
