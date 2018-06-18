@@ -45,6 +45,8 @@ export class BookingsPage {
   public usernameText = 'Name';
   public stylistnameText = 'Stylist';
   public bookingDateText = 'Booking Date';
+  public chatText = 'Chat';
+  public reviewText = 'Review';
 
   public stylist$: Observable<any>;
   public stylistId: any;
