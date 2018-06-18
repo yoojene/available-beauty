@@ -150,11 +150,7 @@ export class UserProvider {
 
         const userPayload = {};
 
-        if (isEdit) {
-          userPayload[`userProfile/${userId}`] = userProfile;
-        } else {
-          userPayload[`userProfile/${userId}`] = combined;
-        }
+        userPayload[`userProfile/${userId}`] = combined;
 
         return this.afdb.database
           .ref()

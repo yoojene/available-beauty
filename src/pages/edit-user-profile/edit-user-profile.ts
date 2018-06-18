@@ -195,10 +195,9 @@ export class EditUserProfilePage implements AfterContentInit {
       if (this.isStylist) {
         // isStylist == true.  Is a Stylist
         updatedUser.baseLocation = this.userDetails.baseLocation; // Not sure we need this now?
-
-        updatedUser.bannerImage = this.userDetails.bannerImage;
+        // updatedUser.bannerImage = this.userDetails.bannerImage // This needs not to be undefined
         console.log('is a stylist');
-        console.log(JSON.stringify(updatedUser));
+        console.log(updatedUser);
       }
       this.user
         .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
