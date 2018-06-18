@@ -121,21 +121,24 @@ export class HomePage {
   public ionViewDidLoad() {
     this.getGeoLocation();
 
-    this.fcm
-      .listenToNotifications()
-      .pipe(
-        tap(msg => {
-          console.log('msg');
-          console.log(msg);
-          const toast = this.toastCtrl.create({
-            message: msg.body,
-            duration: 3000,
-          });
-          toast.present();
-        })
-      )
-      .subscribe();
+//  PHILIP LEAPER - removed below due to error
 
+    // this.fcm
+    //   .listenToNotifications()
+    //   .pipe(
+    //     tap(msg => {
+    //       console.log('msg');
+    //       console.log(msg);
+    //       const toast = this.toastCtrl.create({
+    //         message: msg.body,
+    //         duration: 3000,
+    //       });
+    //       toast.present();
+    //     })
+    //   )
+    //   .subscribe();
+
+    
     //TODO - Get skills from /skills
     //this.beautyOptions = this.skills.getSkillGroups();
   }
