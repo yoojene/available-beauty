@@ -1,10 +1,9 @@
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 
-import {App} from 'ionic-angular';
+import { App } from 'ionic-angular';
 
 import * as authActions from './auth.actions';
 
@@ -14,13 +13,16 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 
-import { LoginSuccessAction, RegisterSuccessAction, RegisterErrorAction } from './auth.actions';
+import {
+  LoginSuccessAction,
+  RegisterSuccessAction,
+  RegisterErrorAction,
+} from './auth.actions';
 
-import {AuthProvider} from '../../providers/auth/auth';
-import {UserProvider} from '../../providers/user/user';
+import { AuthProvider } from '../../providers/auth/auth';
+import { UserProvider } from '../../providers/user/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppState } from '../app.state';
-
 
 @Injectable()
 export class AuthEffects {
@@ -53,25 +55,25 @@ export class AuthEffects {
       console.log(action);
 
       let payload = (action as any).payload;
-      console.log( (action as any).payload);
+      console.log((action as any).payload);
 
       // Call service to register with API
-      this.user.addUser(payload)
-      .map(res => {console.log(res);
-       new RegisterSuccessAction({res});
-      })
-        // new RegisterSuccessAction({res})})
-      .subscribe(
-        res => {
-          console.log(res);
-          // thisthis.store.dispatch(new RegisterSuccessAction());
-        },
-        (err: HttpErrorResponse) => {
-          console.error(err);
+      // this.user.addUser(payload)
+      // .map(res => {console.log(res);
+      //  new RegisterSuccessAction({res});
+      // })
+      // new RegisterSuccessAction({res})})
+      // .subscribe(
+      //   res => {
+      //     console.log(res);
+      //     // thisthis.store.dispatch(new RegisterSuccessAction());
+      //   },
+      //   (err: HttpErrorResponse) => {
+      //     console.error(err);
 
-          // this.store.dispatch(new RegisterErrorAction(err));
-        }
-      )
+      //     // this.store.dispatch(new RegisterErrorAction(err));
+      //   }
+      // )
     });
 
   @Effect()
@@ -80,10 +82,9 @@ export class AuthEffects {
     .map(action => {
       let payload = (action as any).payload;
 
-      console.log('registerSuccess Effect')
+      console.log('registerSuccess Effect');
 
       this.app.getActiveNav().push('HomePage');
-
     });
 
   // @Effect({dispatch: false})
@@ -99,4 +100,3 @@ export class AuthEffects {
   //    return Observable.of(new LoginSuccessAction(payload));
   //  });
 }
-

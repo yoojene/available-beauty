@@ -87,9 +87,11 @@ export class EditUserProfilePage implements AfterContentInit {
     console.log('something');
   }
 
-  ngAfterContentInit() {}
+  //Lifecycle
 
-  ionViewDidEnter() {
+  public ngAfterContentInit() {}
+
+  public ionViewDidEnter() {
     console.log(
       'getting stylistID from current user ' + firebase.auth().currentUser.uid
     );
@@ -108,44 +110,47 @@ export class EditUserProfilePage implements AfterContentInit {
       });
 
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      console.log(res);
       if (!res) {
         this.isStylist = false;
       } else {
         this.isStylist = true;
-        this.stylist
-          .getStylist(firebase.auth().currentUser.uid)
-          .snapshotChanges()
-          .subscribe(res => {
-            //let obj = { ...res[0] };
-            //this.stylistDetails = obj;
-            this.stylistId = res[0].key;
-            this.getDetails(this.stylistId);
-          });
+        // this.stylist
+        //   .getStylist(firebase.auth().currentUser.uid)
+        //   .snapshotChanges()
+        //   .subscribe(res => {
+        //     //let obj = { ...res[0] };
+        //     //this.stylistDetails = obj;
+        //     this.stylistId = res[0].key;
+        //     this.getDetails(this.stylistId);
+        //   });
       }
     });
   }
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad EditUserProfilePage');
   }
 
-  getDetails(stylistId: any) {
-    console.log('getstylistprofile');
-    this.stylist
-      .getStylist(firebase.auth().currentUser.uid)
-      .valueChanges()
-      .subscribe(res => {
-        console.log(res);
-        let obj = { ...res[0] };
-        this.stylistDetails = obj;
+  // getDetails(stylistId: any) {
+  //   console.log('getstylistprofile');
+  //   this.stylist
+  //     .getStylist(firebase.auth().currentUser.uid)
+  //     .valueChanges()
+  //     .subscribe(res => {
+  //       console.log(res);
+  //       let obj = { ...res[0] };
+  //       this.stylistDetails = obj;
 
-        console.log(
-          'Got details of Stylist Name ' + this.stylistDetails.stylistName
-        );
-      });
-  }
+  //       console.log(
+  //         'Got details of Stylist Name ' + this.stylistDetails.stylistName
+  //       );
+  //     });
+  // }
 
-  doEditBanner() {
+  // Public
+
+  public doEditBanner() {
     console.log('Getting banner from picker');
     this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
@@ -164,7 +169,7 @@ export class EditUserProfilePage implements AfterContentInit {
     //UPDATE IMAGE ON PAGE
   }
 
-  doEditAvatar() {
+  public doEditAvatar() {
     console.log('Getting avatar from picker');
     this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
@@ -181,49 +186,24 @@ export class EditUserProfilePage implements AfterContentInit {
     });
   }
 
-  doSave() {
+  public doSave() {
     if (this.editUserForm.valid) {
-      let updatedStylist = this.editUserForm.value;
-      let updatedUser = this.editUserForm.value;
+      const updatedUser = this.editUserForm.value;
 
-      console.log('stylist name = ' + updatedStylist.stylistName);
+      console.log('stylist name = ' + updatedUser.stylistName);
 
       if (this.isStylist) {
         // isStylist == true.  Is a Stylist
-        updatedStylist.baseLocation = this.stylistDetails.baseLocation;
-        updatedStylist.bannerImage = this.stylistDetails.bannerImage;
-        console.log(JSON.stringify(updatedStylist));
+        updatedUser.baseLocation = this.userDetails.baseLocation; // Not sure we need this now?
 
-        return Promise.all([
-          this.stylist.updateStylistProfile(this.stylistId, updatedStylist),
-          this.user.updateUserProfile(
-            firebase.auth().currentUser.uid,
-            updatedUser
-          ),
-          this.navCtrl.pop(),
-        ]);
-      } else {
-        // isStylist == false.  Is a user
-        return Promise.all([
-          this.user.updateUserProfile(
-            firebase.auth().currentUser.uid,
-            updatedUser
-          ),
-          this.navCtrl.pop(),
-        ]);
+        updatedUser.bannerImage = this.userDetails.bannerImage;
+        console.log('is a stylist');
+        console.log(JSON.stringify(updatedUser));
       }
-    } else {
-      console.log('something invalid');
+      this.user
+        .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
+        .then(() => this.navCtrl.pop());
     }
-
-    // this.stylist.updateStylistProfile(this.stylistId, this.stylistDetails).then(res => {
-    //   console.log('Updating stylist: with new name ' + this.stylistDetails.stylistName, res);
-    //   this.navCtrl.pop();
-    // });
-
-    //  Create updateStylistProfile...
-
-    //Do the same with user details
   }
 
   doCancel() {
@@ -240,8 +220,7 @@ export class EditUserProfilePage implements AfterContentInit {
         'state_changed',
         (snapshot: any) => {
           this.loadProgress = (
-            snapshot.bytesTransferred /
-            snapshot.totalBytes *
+            (snapshot.bytesTransferred / snapshot.totalBytes) *
             100
           ).toFixed(2);
           // this.loadProgress.push(prog);

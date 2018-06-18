@@ -5,6 +5,7 @@ import {
   NavParams,
   ActionSheetController,
   Platform,
+  Slides,
 } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
@@ -23,7 +24,7 @@ import { PhotoProvider } from '../../providers/photo/photo';
 import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
-import { Slides } from 'ionic-angular';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the StylistRegisterPage page.
@@ -38,7 +39,7 @@ import { Slides } from 'ionic-angular';
   templateUrl: 'stylist-register.html',
 })
 export class StylistRegisterPage {
-  @ViewChild(Slides) slides: Slides;
+  @ViewChild(Slides) public slides: Slides;
   public pageSubheader = 'OK, now enter some details to set up your profile..';
   public stylistNameLabel = 'Stylist Name';
   public stylistHeaderLabel = 'Enter a Salon or Stylist name';
@@ -72,7 +73,7 @@ export class StylistRegisterPage {
   public showAddressForm: boolean;
   private coords: any;
   public loadProgress: any = 0;
-  public downloadUrls: Array<any> = [];
+  public downloadUrls = [];
   public stylistKey: any;
 
   public activeSlideIdx: any = 0;
@@ -91,7 +92,8 @@ export class StylistRegisterPage {
     public camera: Camera,
     public actionSheetCtrl: ActionSheetController,
     public photo: PhotoProvider,
-    public afdb: AngularFireDatabase
+    public afdb: AngularFireDatabase,
+    public user: UserProvider
   ) {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: [
@@ -114,7 +116,9 @@ export class StylistRegisterPage {
     });
   }
 
-  ionViewDidLoad() {
+  // Lifecycle
+
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad StylistRegisterPage');
 
     this.slides.lockSwipeToNext(true);
@@ -147,10 +151,12 @@ export class StylistRegisterPage {
         console.log(action.payload.val());
       });
   }
+
+  // Public
+
   /**
    * Use current coordinates to lookup address and populate form
    *
-   * @memberof StylistRegisterPage
    */
   public useCurrentAddress() {
     console.log('using current address!');
@@ -193,7 +199,6 @@ export class StylistRegisterPage {
   /**
    * Use address string to lookup coordinates and populate form.
    *
-   * @memberof StylistRegisterPage
    */
   public findAddress() {
     console.log('finding address');
@@ -240,39 +245,41 @@ export class StylistRegisterPage {
       // Do it for mobileweb
     }
   }
+
   /**
-   * Submit stylist
+   * Submit stylist details
    *
-   * @memberof StylistRegisterPage
    */
   public onSubmitStylistRegForm() {
     console.log(this.stylistRegForm.value);
 
-    this.stylist.addStylistProfile(this.stylistRegForm.value).then(res => {
-      console.log('Registered stylist!', res);
-      // this.stylist
-      //   .updateStylistProfile('galleryImages', this.downloadUrls)
-      //   .then(res => {
-      console.log('updated image refs');
-      this.storage.setStorage('stylistRegistered', true);
-      this.navCtrl.push('TabsPage', { isStylist: true });
-      // });
-    });
+    this.user
+      .updateUserProfile(
+        firebase.auth().currentUser.uid,
+        this.stylistRegForm.value,
+        false
+      )
+      .then(res => {
+        console.log('Registered updated user - was stylist!', res);
+        console.log('updated image refs');
+        this.storage.setStorage('stylistRegistered', true);
+        this.navCtrl.push('TabsPage', { isStylist: true });
+        // });
+      });
   }
   /**
    * Camera / Library action sheet
    *
-   * @memberof StylistRegisterPage
    */
   public showImageActionSheet() {
-    let actionSheet = this.actionSheetCtrl.create({
+    const actionSheet = this.actionSheetCtrl.create({
       title: 'Select Image Source',
       buttons: [
         {
           text: 'Load from Library',
           handler: () => {
             this.photo.getLibraryPictures().then(res => {
-              let photos: any = res;
+              const photos: any = res;
               photos.forEach(el => {
                 this.photo
                   .getBase64Data(el.photoFullPath, el.path)
@@ -321,8 +328,7 @@ export class StylistRegisterPage {
         'state_changed',
         (snapshot: any) => {
           this.loadProgress = (
-            snapshot.bytesTransferred /
-            snapshot.totalBytes *
+            (snapshot.bytesTransferred / snapshot.totalBytes) *
             100
           ).toFixed(2);
           // this.loadProgress.push(prog);
@@ -335,6 +341,7 @@ export class StylistRegisterPage {
             case firebase.storage.TaskState.RUNNING: // or 'running'
               console.log('Upload is running');
               break;
+            default:
           }
           // return progress;
         },
@@ -350,25 +357,25 @@ export class StylistRegisterPage {
     });
   }
 
-  goBack() {
+  public goBack() {
     this.navCtrl.push('LoginPage');
   }
 
   // Slides
 
-  next() {
+  public next() {
     this.slides.lockSwipeToNext(false);
     this.slides.slideNext();
     this.slides.lockSwipeToNext(true);
   }
 
-  back() {
+  public back() {
     this.slides.lockSwipeToPrev(false);
     this.slides.slidePrev();
     this.slides.lockSwipeToPrev(true);
   }
 
-  onSlideChange(e) {
+  public onSlideChange(e) {
     // console.log(e);
 
     console.log(this.slides.getActiveIndex());
@@ -376,14 +383,14 @@ export class StylistRegisterPage {
     this.activeSlideIdx = this.slides.getActiveIndex();
   }
 
-  setMobile(value) {
+  public setMobile(value) {
     this.stylistRegForm.controls['mobile'].setValue(value);
     if (!value) {
       this.next();
     }
   }
 
-  takePhoto() {
+  public takePhoto() {
     this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
       console.log(res);
       this.photo.getBase64Data(res).then(baseres => {
@@ -395,9 +402,9 @@ export class StylistRegisterPage {
     });
   }
 
-  selectPhoto() {
+  public selectPhoto() {
     this.photo.getLibraryPictures().then(res => {
-      let photos: any = res;
+      const photos: any = res;
       photos.forEach(el => {
         this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
           console.log(baseress);
@@ -412,7 +419,7 @@ export class StylistRegisterPage {
     });
   }
 
-  checkDisabled() {
+  public checkDisabled() {
     let required = false;
 
     switch (this.activeSlideIdx) {
@@ -439,12 +446,13 @@ export class StylistRegisterPage {
             : false;
         }
         break;
-      case 4: // Location
-        break;
-      case 5: // Mobile Stylist
-        break;
-      case 6: // Gallery Images
-        break;
+      // case 4: // Location
+      //   break;
+      // case 5: // Mobile Stylist
+      //   break;
+      // case 6: // Gallery Images
+      //   break;
+      default:
     }
 
     return required;

@@ -2,10 +2,11 @@ import { Injectable, Inject } from '@angular/core';
 import { Response } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
 import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../model/users/user.model';
-
+import firebase from 'firebase';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { UtilsProvider } from '../utils/utils';
 
@@ -61,23 +62,8 @@ export class UserProvider {
     // });
   }
 
-  // OLD *****
   /**
-   * Add a new user
-   *
-   * @param {any} user
-   * @returns
-   * @memberof UserProvider
-   */
-  public addUser(user: any) {
-    console.log(user);
-    return this.http.post<User>(
-      this.config.endpointURL + this.config.usersPath,
-      user
-    );
-  }
-  /**
-   * Creates userProfile record in realtime DB
+   * OLD Creates userProfile record in realtime DB
    *
    * @param {boolean} stylist Flag to denote whether user is stylist or not
    * @param {any} newUser FirebaseUser returned from native createUserWithEmailAndPassword()
@@ -85,7 +71,7 @@ export class UserProvider {
    * @returns
    * @memberof AuthProvider
    */
-  public updateUserProfile(userId: any, user: User) {
+  public updateUserProfileOld(userId: any, user: User) {
     console.log('updating user ' + userId);
 
     // let userProfile;
@@ -117,16 +103,63 @@ export class UserProvider {
     //   console.log('no user object');
     // }
   }
-
   /**
-   * Delete a user
+   * update userProfile in RTDB
    *
-   * @param {any} userId
-   * @returns
-   * @memberof UserProvider
+   * @param userId
+   * @param userObj
+   * @param isEdit true if on EditProfilePage, false if on StylistRegisterPage
    */
-  public deleteUser(userId) {
-    // When would we do this?  Account delete only?
-    return this.http.delete(this.config.endpointURL + this.config.usersPath);
+  public updateUserProfile(userId: any, userObj: any, isEdit: boolean) {
+    console.log('updateUserProfile to promise');
+
+    console.log(userId);
+    console.log(userObj);
+    const userProfile = {
+      stylistName: userObj.stylistName,
+      mobile: userObj.mobile,
+      mobileRange: userObj.mobileRange,
+      bio: userObj.bio,
+      baseLocation: userObj.baseLocation,
+      addressLine1: userObj.addressLine1,
+      addressTownCity: userObj.addressTownCity,
+      addressLine2: userObj.addressLine2,
+      addressCounty: userObj.addressCounty,
+      addressPostcode: userObj.addressPostcode,
+      bannerImage: null,
+      galleryImages: null,
+      isStylist: true,
+    };
+
+    if (userObj.loadImages) {
+      // TODO need to make sure this works for EditUserProfile.  Current flag is for StylistRegister
+      userProfile.galleryImages = userObj.galleryImages;
+      userProfile.bannerImage = userObj.bannerImage;
+    }
+
+    return this.getUserById(userId)
+      .valueChanges()
+      .take(1)
+      .toPromise()
+      .then((userres: any) => {
+        const existUser = userres;
+
+        const combined = { ...userProfile, ...existUser };
+
+        console.log(combined);
+
+        const userPayload = {};
+
+        if (isEdit) {
+          userPayload[`userProfile/${userId}`] = userProfile;
+        } else {
+          userPayload[`userProfile/${userId}`] = combined;
+        }
+
+        return this.afdb.database
+          .ref()
+          .update(userPayload)
+          .then(res => console.log(res));
+      });
   }
 }
