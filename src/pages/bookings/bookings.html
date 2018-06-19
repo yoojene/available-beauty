@@ -131,7 +131,7 @@
 
       <div *ngIf="pastbook.payload.val().status === 'ACCEPTED' && checkBookingIsInPast(pastbook.payload.val().bookedAvailSlot); then accepted"></div>
       <ng-template #accepted>
-        <ion-item (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
+        <ion-item>
           Avail ID {{pastbook.payload.val().availabilityId}}
         <div *ngFor="let bua of bookedUserAvailability">
           <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
@@ -183,15 +183,12 @@
               </div>
             </div>
           </div>
- <button ion-button>
+          <button ion-button (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
               {{chatText}}
-
           </button>
-          <button ion-button>
+          <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
             {{reviewText}}
           </button>
-
-
         </ion-item>
       </ng-template>
 
