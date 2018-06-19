@@ -69,22 +69,8 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
-  public hairText = 'Hair';
-  public nailsText = 'Nails';
-  public treatmentsText = 'Treatments';
-
-  public beautyOptions: any = [
-    {
-      name: this.hairText,
-    },
-    {
-      name: this.nailsText,
-    },
-    {
-      name: this.treatmentsText,
-    },
-  ];
-
+  public beautyOptions: any;
+  
   public todayText = 'Today';
   public tomorrowText = 'Tomorrow';
   public thisWeekText = 'This week';
@@ -114,7 +100,8 @@ export class HomePage {
     private search: SearchProvider,
     public fcm: FcmProvider,
     public toastCtrl: ToastController,
-    public http: Http // private skills: SkillsProvider
+    public http: Http,
+    private skills: SkillsProvider
   ) {}
 
   // Lifecycle
@@ -138,9 +125,14 @@ export class HomePage {
     //   )
     //   .subscribe();
 
-    
-    //TODO - Get skills from /skills
-    //this.beautyOptions = this.skills.getSkillGroups();
+
+    //Get skills from /skills
+    console.log("skills: " + this.skills.getSkillGroups());
+     
+    this.skills.getSkillGroups().snapshotChanges().subscribe( res => {
+      this.beautyOptions = res;
+
+    });
   }
 
   public ngOnDestroy() {

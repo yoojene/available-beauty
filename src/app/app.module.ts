@@ -54,6 +54,7 @@ import { BookingProvider } from '../providers/booking/booking';
 import { PhotoProvider } from '../providers/photo/photo';
 import { MessagesProvider } from '../providers/messages/messages';
 import { FcmProvider } from '../providers/fcm/fcm';
+import { SkillsProvider } from '../providers/skills/skills';
 
 @NgModule({
   declarations: [
@@ -115,6 +116,7 @@ import { FcmProvider } from '../providers/fcm/fcm';
     MessagesProvider,
     FCM,
     FcmProvider,
+    SkillsProvider
   ],
 })
 export class AppModule {}

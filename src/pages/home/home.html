@@ -7,28 +7,44 @@
 
   </ion-navbar>
   <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
-  <ion-row>
-      <ion-col>
-        <button ion-button round item-start (tap)="doSomething()" >
-            <ion-icon name="funnel"></ion-icon> What
-        </button>
-        <ion-select [(ngModel)]="treatment">
-            <ion-option *ngFor="let option of beautyOptions">
-                {{option.name}}
-            </ion-option>
-        </ion-select>
-      </ion-col>
-      <ion-col>
-          <button ion-button round item-start (tap)="doSomething()" >
-              <ion-icon name="funnel"></ion-icon> When
-          </button>
-          <ion-select [(ngModel)]="date">
-              <ion-option *ngFor="let date of dateOptions">
-                  {{date.name}}
-              </ion-option>
-          </ion-select>
-      </ion-col>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-auto>
+  <!--<ion-list>
+    <ion-item>-->
+      <button ion-button icon-start small round>
+        <ion-icon name="cut"></ion-icon>
+        What
+      </button>
+      </ion-col><ion-col>
+      <!--<ion-label>Treatment</ion-label>-->
+      <ion-select [(ngModel)]="treatment" interface="popover">
+          <ion-option *ngFor="let option of beautyOptions; let o = index" value="{{o}}">
+              {{option.key}}
+          </ion-option>
+      </ion-select>
+    </ion-col>
   </ion-row>
+    <!--</ion-item>
+    <ion-item>-->
+  <ion-row>
+    <ion-col col-auto>
+      <button ion-button icon-start small round>
+        <ion-icon name="alarm"></ion-icon>
+        When
+      </button>
+    </ion-col><ion-col>
+      <!--<ion-label>Date</ion-label>-->
+      <ion-select [(ngModel)]="date" interface="popover">
+          <ion-option *ngFor="let date of dateOptions; let d = index" value="{{d}}">
+              {{date.name}}
+          </ion-option>
+      </ion-select>
+  <!--</ion-item>
+</ion-list>-->
+    </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-header>
 
   <!-- <div class="search-item" (click)="showSearch()"> Search </div>
