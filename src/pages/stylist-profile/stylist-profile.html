@@ -15,19 +15,15 @@
 
 <ion-content class="page-stylist-profile" padding>
   <ion-card>
-
-    <!-- <img src="{{user.avatarImage}}"> -->
     <ion-card-title no-padding>
-
-      <div *ngFor="let stylist of stylist$ | async">
+      <div>
         <ion-row>
           <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button"
             name="heart" (click)="toggleHeart()">
           </ion-icon>
         </ion-row>
-        <!-- <img src="{{stylist.bannerImage}}"> -->
         <ion-slides pager autoplay="3000" speed="500" loop>
-          <ion-slide *ngFor="let img of stylist.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-stylist-profile--slide-background">
+          <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-stylist-profile--slide-background">
             <ion-row>
               <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button"
                 name="heart" (click)="toggleHeart()">
@@ -41,46 +37,18 @@
       </ion-item>
     </ion-card-title>
     <ion-card-content no-padding>
-      <div *ngFor="let style of stylist$ | async">
+      <div>
         <ion-item text-wrap>
-          {{style.bio}}
+          {{user.bio}}
         </ion-item>
 
       <ion-item>
         {{user.emailAddress}}
       </ion-item>
       <ion-item>
-        <star-rating [rating]="style.stylistRating"></star-rating>
+        <star-rating [rating]="user.stylistRating"></star-rating>
       </ion-item>
         </div>
-
-      <!-- <ion-list-header>
-        <h2>{{availabilityHeader}}</h2>
-      </ion-list-header>
-
-      <ion-list radio-group>
-        <ion-item *ngFor="let avail of availabilities">
-          <ion-label *ngIf="avail.booked === false">
-            {{avail.datetime}}
-          </ion-label>
-          <ion-radio
-            *ngIf="avail.booked === false"
-            value="{{avail.key}}"
-            (ionSelect)="onAvailSelected($event)">
-          </ion-radio>
-          <ion-icon item-end
-            *ngIf="avail.booked === true"
-            name="checkmark-circle">
-          </ion-icon>
-        </ion-item>
-      </ion-list>
-
-      <ion-item>
-        <button ion-button (click)="doBooking()">
-          {{bookText}}
-        </button>
-      </ion-item> -->
-
     </ion-card-content>
   </ion-card>
 </ion-content>

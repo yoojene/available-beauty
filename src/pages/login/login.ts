@@ -40,11 +40,11 @@ import { UserProvider } from '../../providers/user/user';
 })
 export class LoginPage {
   public loginForm: any;
-  public invalidLogin: boolean = false;
+  public invalidLogin = false;
   public error: string;
   private loginType: string;
   private isStylist: boolean;
-  private stylistRegistered: boolean = false;
+  private stylistRegistered = false;
 
   public loading: Loading;
 
@@ -72,7 +72,9 @@ export class LoginPage {
     });
   }
 
-  ionViewDidLoad() {
+  // Lifecycle
+
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
     console.log(this.navParams.get('loginType'));
 
@@ -93,13 +95,13 @@ export class LoginPage {
 
     console.log(this.isStylist);
   }
-
-  openResetPassword() {
+  // Public
+  public openResetPassword() {
     let passModal = this.modal.create('PasswordPage');
     passModal.present();
   }
 
-  onLoginSubmit() {
+  public onLoginSubmit() {
     const userEmail = this.loginForm.value.email;
     const userPassword = this.loginForm.value.password;
 
@@ -110,14 +112,17 @@ export class LoginPage {
         .doNativeLogin(userEmail, userPassword)
         .then(res => {
           console.log(res);
-
-          let uid = res.uid;
+          const uid = res.uid;
+          console.log(uid);
           this.user
             .getUserById(uid)
             .valueChanges()
-            .subscribe((res: any) => {
+            .subscribe((userres: any) => {
+              console.log(userres);
               this.loading.dismiss().catch();
-              this.navCtrl.push('TabsPage', { isStylist: res.isStylist });
+              this.navCtrl.push('TabsPage', {
+                isStylist: userres.isStylist,
+              });
             });
         })
         .catch(err => {
@@ -130,7 +135,7 @@ export class LoginPage {
     });
   }
 
-  onFacebookTap() {
+  public onFacebookTap() {
     let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
@@ -151,7 +156,7 @@ export class LoginPage {
     });
   }
 
-  onGoogleTap() {
+  public onGoogleTap() {
     let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
@@ -171,7 +176,7 @@ export class LoginPage {
     });
   }
 
-  onTwitterTap() {
+  public onTwitterTap() {
     let loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
@@ -191,7 +196,7 @@ export class LoginPage {
     });
   }
 
-  openRegisterPage() {
+  public openRegisterPage() {
     let regModal = this.modal.create('RegisterPage', {
       isStylist: this.isStylist,
     });
@@ -200,18 +205,16 @@ export class LoginPage {
   /**
    * Reset boolean for server side error display
    *
-   * @memberof LoginPage
    */
-  onEmailFocus() {
+  public onEmailFocus() {
     this.invalidLogin = false;
   }
   /**
    * Toggle password or text input
    *
-   * @param {any} input
-   * @memberof LoginPage
+   * @param input
    */
-  showPassword(input) {
+  public showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
   }
 

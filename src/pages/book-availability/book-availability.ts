@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ViewController,
+} from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
@@ -8,6 +13,10 @@ import { AvailabilityProvider } from '../../providers/availability/availability'
 import { UtilsProvider } from '../../providers/utils/utils';
 import { UserProfilePage } from '../user-profile/user-profile';
 import { UserProvider } from '../../providers/user/user';
+import { BookingProvider } from '../../providers/booking/booking';
+import { BookingStatus } from '../../model/booking/booking.model';
+import { StylistReviewPage } from '../stylist-review/stylist-review';
+import { AddStylistReviewPage } from '../add-stylist-review/add-stylist-review';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -23,8 +32,13 @@ import { UserProvider } from '../../providers/user/user';
 })
 export class BookAvailabilityPage {
   public acceptBookingText = 'Accept';
-  public rejectBookingText = 'Reject';
-  
+  public cancelBookingText = 'Cancel';
+  public acceptedText = 'Accepted Booking';
+  public pastAcceptedText = 'Past Booking';
+  public pendingText = 'Pending Booking';
+  public cancelledText = 'Cancelled Booking';
+  public reviewText = 'Leave a Review';
+
   isStylist: boolean;
   availableDate: any;
   booking: any = {};
@@ -37,6 +51,10 @@ export class BookAvailabilityPage {
   userId: string;
   stylistId: number;
   availability: any;
+  bookingId: any;
+
+  bookingStatus: any;
+  bookedDate: any;
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +62,9 @@ export class BookAvailabilityPage {
     public msg: MessagesProvider,
     public utils: UtilsProvider,
     public avail: AvailabilityProvider,
-    private user: UserProvider
+    private user: UserProvider,
+    private bookingProvider: BookingProvider,
+    private viewCtrl: ViewController
   ) {}
 
   // Lifecycle
@@ -66,10 +86,29 @@ export class BookAvailabilityPage {
     this.availability = this.navParams.get('availId');
     this.stylistId = this.navParams.get('stylist');
     this.userId = this.navParams.get('userId');
+    this.bookingId = this.navParams.get('bookId');
 
     console.log(this.availability);
     console.log(this.stylistId);
     console.log(this.userId);
+    console.log('bookingId is ', this.bookingId);
+
+    this.bookingProvider
+      .getBookingById(this.bookingId)
+      .snapshotChanges()
+      .subscribe(res => {
+        console.log(res);
+        this.bookingStatus = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'status'
+        );
+        this.bookedDate = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          res,
+          'bookedAvailSlot'
+        );
+        console.log('bookingStatus');
+        console.log(this.bookingStatus);
+      });
 
     this.avail
       .getAvailabilityById(this.availability)
@@ -159,6 +198,39 @@ export class BookAvailabilityPage {
     this.booking.bookMessage = '';
   }
 
-  public acceptBooking() {}
-  public rejectBooking() {}
+  public async doAcceptBooking() {
+    // set bookings{bookingId}/status = 'ACCEPTED'
+    if (this.isStylist) {
+      // Just stylists?
+      await this.bookingProvider.doBookingStatusChange(
+        this.bookingId,
+        BookingStatus.accepted
+      );
+
+      this.viewCtrl.dismiss();
+    }
+  }
+
+  public async cancelBooking() {
+    // set bookings{bookingId}/status = 'CANCELLED'
+    await this.bookingProvider.doBookingStatusChange(
+      this.bookingId,
+      BookingStatus.cancelled
+    );
+
+    this.viewCtrl.dismiss();
+  }
+
+  public doLeaveReview() {
+    console.log('review');
+
+    this.navCtrl.push(AddStylistReviewPage);
+  }
+
+  public checkBookingIsInPast(bookingDate) {
+    return this.bookingProvider.checkBookingIsInPast(bookingDate);
+  }
+  public checkBookingIsInFuture(bookingDate) {
+    return this.bookingProvider.checkBookingIsInFuture(bookingDate);
+  }
 }

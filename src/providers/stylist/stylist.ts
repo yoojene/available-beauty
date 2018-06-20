@@ -80,43 +80,40 @@ export class StylistProvider {
       .then(res => console.log(res));
   }
 
-  //  Make copy of above, and instead of creating new key, use exiting passed in
-
-  updateStylistProfile(stylistId: any, stylist: Stylist) {
-    console.log('addStylistProfile ' + stylist);
-
-    let stylistProfile = {
-      userId: firebase.auth().currentUser.uid,
-      stylistName: stylist.stylistName,
-      mobile: stylist.mobile,
-      mobileRange: stylist.mobileRange,
-      bio: stylist.bio,
-      baseLocation: stylist.baseLocation,
-      addressLine1: stylist.addressLine1,
-      addressLine2: stylist.addressLine2,
-      addressTownCity: stylist.addressTownCity,
-      addressCounty: stylist.addressCounty,
-      addressPostcode: stylist.addressPostcode,
-      bannerImage: stylist.bannerImage,
-      //galleryImages: null,
+  public async addStylistReview(
+    stylistId: any,
+    userId: any,
+    review: any,
+    starRating: any
+  ) {
+    const reviewData = {
+      stylistId: stylistId,
+      userId: userId,
+      reviewText: review,
+      starRating: starRating,
     };
 
-    // if (stylist.loadImages) {
-    //   stylistProfile.galleryImages = stylist.galleryImages;
-    // }
-
-    let stylistPayload = {};
-    stylistPayload[`stylistProfile/${stylistId}`] = stylistProfile;
-
-    return this.afdb.database
+    const reviewKey = this.afdb.database
       .ref()
-      .update(stylistPayload)
-      .then(res => console.log(res));
+      .child(`/stylistProfile/${stylistId}/reviews/`)
+      .push().key;
+
+    let reviewPayload = {};
+    reviewPayload[
+      `/stylistProfile/${stylistId}/reviews/${reviewKey}`
+    ] = reviewData;
+
+    console.log(reviewPayload);
+
+    const result = await this.afdb.database.ref().update(reviewPayload);
+
+    console.log(result);
+
+    return result;
   }
 
   getStylistReview(stylistId: any) {
     console.log(stylistId);
     return this.afdb.list<Review>(`stylistProfile/${stylistId}/reviews`);
   }
-
 }

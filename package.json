@@ -27,6 +27,7 @@
     "@ionic-native/camera": "4.5.2",
     "@ionic-native/core": "4.3.2",
     "@ionic-native/facebook": "^4.3.3",
+    "@ionic-native/fcm": "4.7.0",
     "@ionic-native/file": "4.5.2",
     "@ionic-native/geolocation": "^4.4.2",
     "@ionic-native/google-maps": "^4.4.2",
@@ -46,6 +47,7 @@
     "angularfire2": "5.0.0-rc.3",
     "com.synconset.imagepicker": "~2.1.8",
     "cordova-android": "6.3.0",
+    "cordova-android-play-services-gradle-release": "1.4.1",
     "cordova-ios": "4.5.4",
     "cordova-plugin-add-swift-support": "1.7.2",
     "cordova-plugin-buildinfo": "~2.0.1",
@@ -54,6 +56,7 @@
     "cordova-plugin-device": "1.1.4",
     "cordova-plugin-facebook4": "~1.7.4",
     "cordova-plugin-file": "5.0.0",
+    "cordova-plugin-firebase": "^1.0.5",
     "cordova-plugin-geolocation": "4.0.0",
     "cordova-plugin-googlemaps": "~2.1.1",
     "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
@@ -70,7 +73,7 @@
     "ionicons": "3.0.0",
     "libphonenumber-js": "1.0.8",
     "moment": "2.20.1",
-    "rxjs": "5.4.3",
+    "rxjs": "5.5.0",
     "sw-toolbox": "3.6.0",
     "twitter-connect-plugin": "https://github.com/chroa/twitter-connect-plugin",
     "zone.js": "0.8.18"
@@ -78,7 +81,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.0.1",
     "ionic": "3.20.0",
-    "typescript": "2.8.0-dev.20180302"
+    "typescript": "2.8.3"
   },
   "description": "An app to find salons, stylists and hairdressers available now and close to you",
   "cordova": {

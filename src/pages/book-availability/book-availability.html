@@ -26,6 +26,10 @@
   <br>
   <br> Enter any additional comments for the user below </div>
 
+  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInFuture(bookedDate)">{{acceptedText}}</h2>
+  <h2 class="page-book-availability--accepted" text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInPast(bookedDate)">{{pastAcceptedText}}</h2>
+  <h2 class="page-book-availability--pending" text-center *ngIf="bookingStatus === 'PENDING'">{{pendingText}}</h2>
+  <h2 class="page-book-availability--cancelled" text-center *ngIf="bookingStatus === 'CANCELLED'">{{cancelledText}}</h2>
 </div>
   <ion-list no-padding>
       <div *ngFor="let msg of chatmsgs">
@@ -35,6 +39,7 @@
   <br>
   <br>
   <br>
+<div class="page-book-availability--message-and-buttons-container">
   <form class="page-book-availability--message-container" no-padding (submit)="onSubmitBookForm($event)">
     <ion-item class="page-book-availability--message-entry">
       <ion-textarea required [(ngModel)]="booking.bookMessage" name="bookingMessage" placeholder="Write Message"></ion-textarea>
@@ -44,10 +49,46 @@
     </ion-item>
   </form>
 
-  <div *ngIf="isStylist" text-center>
-      <button (click)="acceptBooking()" ion-button round> {{acceptBookingText}} </button>
-      <button (click)="rejectBooking()" ion-button round> {{rejectBookingText}} </button>
+  <!--PENDING Booking in past - Pending Booking section-->
+  <div text-center *ngIf="bookingStatus==='PENDING'">
+      <button
+        *ngIf="isStylist"
+        (click)="doAcceptBooking()"
+        ion-button
+        round
+        > {{acceptBookingText}}
+      </button>
+      <button
+        (click)="cancelBooking()"
+        [disabled]="bookingStatus==='CANCELLED'"
+        ion-button
+        round
+      > {{cancelBookingText}}
+    </button>
   </div>
+  <!--ACCEPTED Booking in future - Accepted Booking section-->
+  <div text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInFuture(bookedDate)">
+    <button
+      (click)="cancelBooking()"
+      [disabled]="bookingStatus==='PENDING' || bookingStatus==='CANCELLED'"
+      ion-button
+      round
+    > {{cancelBookingText}}
+  </button>
+  </div>
+
+
+  <!--ACCEPTED Booking in past - Past Booking section-->
+  <div text-center *ngIf="bookingStatus === 'ACCEPTED' && checkBookingIsInPast(bookedDate)">
+      <button
+        *ngIf="isStylist"
+        (click)="doLeaveReview()"
+        ion-button
+        round
+        > {{reviewText}}
+      </button>
+  </div>
+</div>
 </div>
 </ion-content>
 

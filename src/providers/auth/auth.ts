@@ -303,11 +303,10 @@ export class AuthProvider {
   /**
    * Creates userProfile record in realtime DB
    *
-   * @param {boolean} stylist Flag to denote whether user is stylist or not
-   * @param {any} newUser FirebaseUser returned from native createUserWithEmailAndPassword()
-   * @param {any} user user details from RegisterPage component
+   * @param stylist Flag to denote whether user is stylist or not
+   * @param newUser FirebaseUser returned from native createUserWithEmailAndPassword()
+   * @param user user details from RegisterPage component
    * @returns
-   * @memberof AuthProvider
    */
   private addUserProfile(stylist: boolean, newUser: any, user?: any) {
     // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
@@ -324,7 +323,7 @@ export class AuthProvider {
       this.storage.getStorage('geolocation').subscribe(res => {
         this.geolocation = res;
 
-        let userProfile = {
+        userProfile = {
           name: userParam.displayName,
           emailAddress: userParam.email,
           avatarImage: userParam.photoURL,
@@ -356,11 +355,7 @@ export class AuthProvider {
 
   /**
    * Create the userProfile in Realtime DB with default avatar
-   *
-   * @private
-   * @param {any} user
-   * @returns
-   * @memberof AuthProvider
+   * @param user
    */
   private createNativeUserProfile(user) {
     return firebase
@@ -369,7 +364,7 @@ export class AuthProvider {
       .child('default-images/no-avatar.png')
       .getDownloadURL()
       .then(url => {
-        let userProfile = {
+        const userProfile = {
           name: user.displayName,
           emailAddress: user.emailAddress,
           avatarImage: url,

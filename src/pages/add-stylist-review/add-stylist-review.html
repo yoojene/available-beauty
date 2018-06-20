@@ -1,0 +1,33 @@
+<!--
+  Generated template for the AddStylistReviewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="slides.isBeginning()">
+    <ion-buttons start *ngIf=!slides.isBeginning()>
+      <button ion-button clear color="aubergine" (click)="back()"> Back</button>
+    </ion-buttons>
+    <ion-title></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-slides (ionSlideDidChange)="onSlideChange($event)">
+    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <h3> {{pageSubheader}} </h3>
+    </ion-slide>
+    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <h3> {{ratingTextHeader}} </h3>
+    </ion-slide>
+    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <h3> {{reviewTextHeader}} </h3>
+    </ion-slide>
+  </ion-slides>
+  <button block round ion-button (click)="next()" color="aubergine" [disabled]="false">
+    {{nextButtonText}}
+  </button>
+</ion-content>

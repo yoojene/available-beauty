@@ -12,14 +12,13 @@ import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { Stylist } from '../../model/stylist/stylist.model';
-import { AngularFireDatabase } from 'angularfire2/database';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
-import { UserProfilePage } from '../user-profile/user-profile';
 import { Subject } from 'rxjs/Subject';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
+import { AddStylistReviewPage } from '../add-stylist-review/add-stylist-review';
 
 /**
  * Generated class for the BookingsPage page.
@@ -34,33 +33,51 @@ import { BookAvailabilityPage } from '../book-availability/book-availability';
   templateUrl: 'bookings.html',
 })
 export class BookingsPage {
-  pendingBookingText = 'Pending Bookings';
-  noPendingBookingText = 'No Pending Bookings';
-  acceptedBookingText = 'Accepted Bookings';
-  noAcceptedBookingText = 'No Accepted Bookings';
+  public pendingBookingText = 'Pending Bookings';
+  public noPendingBookingText = 'No Pending Bookings';
+  public acceptedBookingText = 'Accepted Bookings';
+  public noAcceptedBookingText = 'No Accepted Bookings';
+  public pastBookingsText = 'Past Bookings';
 
-  bookingTitle = 'Booking';
-  stylistTitle = 'Stylist';
+  public bookingTitle = 'Booking';
+  public stylistTitle = 'Stylist';
 
-  stylist$: Observable<any>;
-  stylistId: any;
-  availabilities$: Observable<any>;
-  availabilities: any = [];
+  public usernameText = 'Name';
+  public stylistnameText = 'Stylist';
+  public bookingDateText = 'Booking Date';
+  public chatText = 'Chat';
+  public reviewText = 'Leave a Review';
 
-  bookings$: Observable<any>;
-  bookedavailbility$: Observable<any>;
-  bookedStylist$: Observable<any>;
+  public stylist$: Observable<any>;
+  public stylistId: any;
+  public availabilities$: Observable<any>;
+  public availabilities: any = [];
 
-  bookingUsers: any = [];
-  bookingUsers$: Observable<any>;
+  public bookings$: Observable<any>;
+  public bookedavailbility$: Observable<any>;
+  public bookedStylist$: Observable<any>;
 
-  bookedUsername: string;
-  bookedDate: string;
+  public bookingUsers: any = [];
+  public bookingStylists: any = [];
+  public bookingUsers$: Observable<any>;
+  public bookingStylists$: Observable<any>;
 
-  bookedDateAvailability: any = [];
-  bookedUserAvailability: any = [];
+  public bookedUsername: string;
+  public bookedname: string;
+  public bookedDate: string;
 
-  bookings = [];
+  public bookedDateAvailability: any = [];
+  public bookedUserAvailability: any = [];
+  public bookedStylistAvailability: any = [];
+  public bookedStylistname: any = [];
+
+  public bookings = [];
+
+  public bookedAvailability: any = [];
+
+  public isStylist = false;
+
+  public isPast = false;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -72,45 +89,57 @@ export class BookingsPage {
     private avail: AvailabilityProvider,
     private stylist: StylistProvider,
     private user: UserProvider,
-    private afdb: AngularFireDatabase,
     private utils: UtilsProvider
   ) {}
 
   // Lifecycle
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad BookingsPage');
   }
 
-  ionViewDidEnter() {
+  public ionViewWillEnter() {
+    console.log(' booking view will enter ');
+
     this.availabilities = [];
     this.bookingUsers = [];
-    this.stylist
-      .getStylist(firebase.auth().currentUser.uid)
-      .snapshotChanges()
-      .subscribe(res => {
-        this.stylistId = res[0].key;
-        this.getBookings(this.stylistId);
-      });
+    this.bookedUserAvailability = [];
+    this.bookedDateAvailability = [];
+    this.bookedAvailability = [];
+    this.bookedStylistAvailability = [];
+    // TOOO this is all a bit of a mess.  Need a better way to find out if stylist or not, generally
+    this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
+      console.log('res ', res);
+      !res ? (this.isStylist = false) : (this.isStylist = true);
+
+      this.getBookings(firebase.auth().currentUser.uid, this.isStylist);
+    });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
+  }
+
+  public ionViewWillLeave() {
+    this.availabilities = [];
+    this.bookingUsers = [];
+    this.bookedUserAvailability = [];
+    this.bookedDateAvailability = [];
+    this.bookedAvailability = [];
+    this.bookedStylistAvailability = [];
   }
 
   // Public
 
   /**
-   * Opens up UserProfile page in modal
-   *t
-   * @param {any} userId
-   * @memberof BookingsPage
+   * Opens up BookAvailability page in modal, showing chat between user and stylist
+   *
    */
-  onBookingTap(availId) {
-    console.log(availId);
+  public onBookingTap(availId, bookId) {
     const bookAvailModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: availId,
+      bookId: bookId,
       stylist: this.stylistId,
       userId: firebase.auth().currentUser.uid,
     });
@@ -122,13 +151,35 @@ export class BookingsPage {
     bookAvailModal.present();
   }
 
+  public onPastBookingTap(availId, bookId) {
+    const reviewModal = this.modalCtrl.create(AddStylistReviewPage, {
+      availId: availId,
+      bookId: bookId,
+      stylist: this.stylistId,
+      userId: firebase.auth().currentUser.uid,
+    });
+
+    reviewModal.onDidDismiss(data => {
+      console.log('dismissed AddStylistReview', data);
+    });
+
+    reviewModal.present();
+  }
+
   // Private
 
-  private getBookings(stylist) {
-    console.log('gettttBookings => ', stylist);
-    let uid = firebase.auth().currentUser.uid;
-
-    this.bookings$ = this.book.getStylistBookings(stylist).snapshotChanges();
+  private getBookings(stylistOrUserId: any, isStylist?: boolean) {
+    console.log('gettttBookings => ', stylistOrUserId);
+    console.log('isStylist => ', isStylist);
+    if (isStylist) {
+      this.bookings$ = this.book
+        .getStylistBookings(stylistOrUserId)
+        .snapshotChanges();
+    } else {
+      this.bookings$ = this.book
+        .getUserBookings(stylistOrUserId)
+        .snapshotChanges();
+    }
 
     this.bookings$.takeUntil(this.destroy$).subscribe(actions => {
       this.bookings = this.utils.generateFirebaseKeyedValues(actions);
@@ -137,6 +188,10 @@ export class BookingsPage {
       this.bookings.forEach(i => {
         this.bookingUsers$ = this.user
           .getUserListById(i.userId)
+          .snapshotChanges();
+
+        this.bookingStylists$ = this.user
+          .getUserListById(i.stylistId)
           .snapshotChanges();
 
         this.availabilities$ = this.avail
@@ -151,30 +206,72 @@ export class BookingsPage {
             'name'
           );
 
+          console.log(this.bookedUsername);
+
           this.bookedUserAvailability.push({
             availId: i.availabilityId,
             userName: this.bookedUsername,
           });
+        });
+        this.bookingStylists$.takeUntil(this.destroy$).subscribe(res => {
+          console.log(res);
 
-          console.log(this.bookedUserAvailability);
+          this.bookedStylistname = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'name'
+          );
+
+          console.log(this.bookedStylistname);
+
+          this.bookedStylistAvailability.push({
+            availId: i.availabilityId,
+            userName: this.bookedStylistname,
+          });
         });
 
+        console.log(this.bookedStylistAvailability);
+
         this.availabilities$.takeUntil(this.destroy$).subscribe(res => {
-          console.log(res);
-          let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+          const date = this.utils.getFirebaseRealtimeDbKeyedValueById(
             res,
             'datetime'
           );
+
           this.bookedDate = moment.unix(date).format('ddd Do MMM HH:mm');
+
+          moment().unix() < date ? (this.isPast = false) : (this.isPast = true);
 
           this.bookedDateAvailability.push({
             availId: i.availabilityId,
             bookedDate: this.bookedDate,
+            isPast: this.isPast,
           });
 
+          console.log('this.bookedDateAvailability');
           console.log(this.bookedDateAvailability);
         });
       });
     });
+  }
+
+  public checkBookingIsInPast(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate < moment().unix()) {
+        // booking in past
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  public checkBookingIsInFuture(bookingDate) {
+    if (bookingDate) {
+      if (bookingDate > moment().unix()) {
+        // booking in future
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

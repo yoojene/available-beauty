@@ -7,9 +7,46 @@
 
   </ion-navbar>
   <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-auto>
+  <!--<ion-list>
+    <ion-item>-->
+      <button ion-button icon-start small round>
+        <ion-icon name="cut"></ion-icon>
+        What
+      </button>
+      </ion-col><ion-col>
+      <!--<ion-label>Treatment</ion-label>-->
+      <ion-select [(ngModel)]="treatment" interface="popover">
+          <ion-option *ngFor="let option of beautyOptions; let o = index" value="{{o}}">
+              {{option.key}}
+          </ion-option>
+      </ion-select>
+    </ion-col>
+  </ion-row>
+    <!--</ion-item>
+    <ion-item>-->
+  <ion-row>
+    <ion-col col-auto>
+      <button ion-button icon-start small round>
+        <ion-icon name="alarm"></ion-icon>
+        When
+      </button>
+    </ion-col><ion-col>
+      <!--<ion-label>Date</ion-label>-->
+      <ion-select [(ngModel)]="date" interface="popover">
+          <ion-option *ngFor="let date of dateOptions; let d = index" value="{{d}}">
+              {{date.name}}
+          </ion-option>
+      </ion-select>
+  <!--</ion-item>
+</ion-list>-->
+    </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-header>
 
-<ion-content padding>
   <!-- <div class="search-item" (click)="showSearch()"> Search </div>
   <br> -->
     <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
@@ -35,6 +72,14 @@
         </div>
     </ion-maps>
     <br>
+    <ion-content padding>
+        <!-- <ion-label>Gaming</ion-label>
+        <ion-select [(ngModel)]="gaming">
+          <ion-option *ngFor="let option of beautyOptions"
+            ion-button round
+            [color]="option.disabled ? 'primary' : 'aubergine'"
+            value="option.name">{{option.name}}</ion-option>
+        </ion-select> -->
     <div>
       <ion-list>
           <ion-card *ngFor="let user of users" >
@@ -59,16 +104,16 @@
 
               <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
                 <br>
-                <div *ngIf="stylist$ | async; let stylists">
-                    <div *ngFor="let style of stylists" text-wrap #stylest>
+                <div>
+                    <div text-wrap>
                       <ion-slides pager autoplay="3000" speed="500" loop>
-                        <ion-slide *ngFor="let img of style.payload.val().galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
+                        <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
                         </ion-slide>
                       </ion-slides>
-                      <div *ngIf="style.payload.val().stylistRating; let starRating;">
+                      <div *ngIf="user.stylistRating; let starRating;">
                         <ion-item>
                           <star-rating [rating]="starRating"></star-rating>
-                         <div (click)="openReviews(style.payload.key)">  {{stylistReviews}} {{reviewsText}} </div>
+                         <div (click)="openReviews(user.key)">  {{stylistReviews}} {{reviewsText}} </div>
                           <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                         </ion-item>
                       </div>

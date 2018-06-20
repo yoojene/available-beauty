@@ -22,103 +22,43 @@ import { BookingProvider } from '../../providers/booking/booking';
   templateUrl: 'stylist-profile.html',
 })
 export class StylistProfilePage implements OnDestroy {
-  availabilityHeader: string = 'Availability';
-  bookText: string = 'Book';
-  id: number;
-  user: any;
-  toggled: boolean = false;
+  public availabilityHeader = 'Availability';
+  public bookText = 'Book';
+  public id: number;
+  public user: any;
+  public toggled = false;
 
-  stylist$: Observable<any>;
-  availability$: Observable<any>;
-  availabilities: any;
-  stylists: any;
+  public availability$: Observable<any>;
+  public availabilities: any;
+  public stylists: any;
 
-  stylistId: any;
+  public stylistId: any;
 
-  selectedAvailability: any;
-  destroy$: Subject<any> = new Subject();
+  public selectedAvailability: any;
+  public destroy$: Subject<any> = new Subject();
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private events: Events,
-    private stylist: StylistProvider,
-    private afdb: AngularFireDatabase,
-    private avail: AvailabilityProvider,
-    private utils: UtilsProvider,
-    private booking: BookingProvider
-  ) {
-    // this.id = navParams.get('id');
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.user = navParams.get('user');
-
-    // events.subscribe('change-stylist-profile-tab', (tab, id, param) => {
-    //   this.id = id;
-    //   this.user = param;
-    // });
   }
 
-  ionViewDidEnter() {
+  public ionViewDidEnter() {
     console.log('ionViewDidEnter ProfilePage');
 
-    if (this.user) {
-      this.getStylistDetails(this.user.key);
-    }
+    // if (this.user) {
+    //   this.getStylistDetails(this.user.key);
+    // }
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     console.log('ngOnDestroy');
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
 
-  /**
-   * Get the stylist related to the user selected and the stylistId
-   * Then get the availabilities for that StylistId
-   *
-   * @param {any} key
-   * @memberof StylistProfilePage
-   */
-  getStylistDetails(key) {
-    console.log(key);
-
-    this.stylist$ = this.stylist.getStylist(key).valueChanges();
-
-    console.log(this.stylist$);
-
-    this.stylist
-      .getStylist(key)
-      .snapshotChanges()
-      .takeUntil(this.destroy$)
-      .subscribe(actions => {
-        let stylists = this.utils.generateFirebaseKeyedValues(actions);
-
-        console.log(stylists);
-
-        this.stylists = stylists;
-        this.stylistId = stylists[0].key;
-        console.log(this.stylistId);
-
-        this.avail
-          .getStylistAvailability(this.stylistId)
-          .snapshotChanges()
-          .takeUntil(this.destroy$)
-          .subscribe(actions => {
-            let avails = this.utils.generateFirebaseKeyedValues(actions);
-
-            console.log(avails);
-            this.availabilities = avails;
-            this.availabilities.forEach(el => {
-              return (el.datetime = moment
-                .unix(el.datetime)
-                .format('ddd Do h:mm'));
-            });
-          });
-      });
-  }
-
-  toggleHeart() {
+  public toggleHeart() {
     if (!this.toggled) {
       this.toggled = true;
+
       return;
     }
     this.toggled = false;

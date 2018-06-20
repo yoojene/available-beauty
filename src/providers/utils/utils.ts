@@ -23,7 +23,6 @@ export class UtilsProvider {
       item.key = act.key;
       return returnArr.push(item);
     });
-    console.log(returnArr);
     return returnArr;
   }
 
@@ -51,7 +50,7 @@ export class UtilsProvider {
       .map(a => {
         return a.payload.val();
       });
-    return returnValue;
+    return returnValue[0];
   }
   /**
    * Controls expanded-item component

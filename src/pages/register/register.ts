@@ -31,12 +31,13 @@ import { StorageProvider } from '../../providers/storage/storage';
 export class RegisterPage {
   public registerForm: any;
   public regError: any;
-  public invalidReg: boolean = false;
+  public invalidReg = false;
   private coords: any;
 
-  public passwordError: string = 'Passwords do not match';
-  public minLengthError: string = 'Passwords must be 6 characters or more';
-  public termsConditionsText: any = '<p> By signing up you agree to the <a href="">Terms and Conditions</a> and <a href=""> Privacy Policy</a></p>';
+  public passwordError = 'Passwords do not match';
+  public minLengthError = 'Passwords must be 6 characters or more';
+  public termsConditionsText: any =
+    '<p> By signing up you agree to the <a href="">Terms and Conditions</a> and <a href=""> Privacy Policy</a></p>';
 
   constructor(
     public navCtrl: NavController,
@@ -68,7 +69,9 @@ export class RegisterPage {
     );
   }
 
-  ionViewDidLoad() {
+  // Lifecycle
+
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
     console.log(this.navParams.get('isStylist'));
 
@@ -77,12 +80,14 @@ export class RegisterPage {
       .subscribe(res => (this.coords = res));
   }
 
-  doRegister() {
+  // Public
+
+  public doRegister() {
     console.log(this.registerForm.value);
 
     if (this.registerForm.valid) {
       console.log(this.coords);
-      let user = this.registerForm.value;
+      const user = this.registerForm.value;
       user.homeLocation = this.coords;
       user.isStylist = this.navParams.get('isStylist');
       console.log(user);
@@ -115,10 +120,9 @@ export class RegisterPage {
   /**
    * Toggle password or text input
    *
-   * @param {any} input
-   * @memberof RegisterPage
+   * @param input
    */
-  showPassword(input) {
+  public showPassword(input) {
     input.type = input.type === 'password' ? 'text' : 'password';
   }
 }

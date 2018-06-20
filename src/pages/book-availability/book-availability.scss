@@ -5,6 +5,12 @@ page-book-availability {
       padding: 0%;
     }
 
+    &--message-and-buttons-container {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
     &--message-container {
       position: relative;
       // top: 20px;
@@ -16,6 +22,16 @@ page-book-availability {
     }
     &--message-entry.item-ios.item-block > .item-inner > button {
       margin-top: 20px;
+    }
+
+    &--accepted {
+      color: green;
+    }
+    &--pending {
+      color: rgb(128, 119, 0);
+    }
+    &--cancelled {
+      color: red;
     }
   }
 }

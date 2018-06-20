@@ -4,13 +4,17 @@ import {
   IonicPage,
   ModalController,
   AlertController,
+  ToastController,
 } from 'ionic-angular';
+import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
 import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
 import { SearchPage } from '../search/search';
+import { SearchProvider } from '../../providers/search/search';
 import { User } from '../../model/users/user.model';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
@@ -21,6 +25,9 @@ import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
+import { FcmProvider } from '../../providers/fcm/fcm';
+import { tap } from 'rxjs/operators';
+import { SkillsProvider } from '../../providers/skills/skills';
 
 @IonicPage()
 @Component({
@@ -33,11 +40,11 @@ export class HomePage {
   public reviewsText = 'Reviews >';
   public lat: number;
   public long: number;
-  public toggled: boolean = false;
-  private showMap: boolean = false;
-  private mapButton: boolean = false;
+  public toggled = false;
+  private showMap = false;
+  private mapButton = false;
 
-  itemExpandHeight: number = 400; // TODO: this needs to be dynamic based on device size
+  public itemExpandHeight = 400; // TODO: this needs to be dynamic based on device size
 
   public stylist$: Observable<any>;
   public stylistReviews: number;
@@ -46,16 +53,11 @@ export class HomePage {
   /**
    * /stylistProfile key
    *
-   * @type {number}
-   * @memberof HomePage
    */
   public stylistId: number;
 
   /**
    * /userProfile key for a give /stylistProfile
-   *
-   * @type {number}
-   * @memberof HomePage
    */
   public stylistUserId: number;
 
@@ -67,6 +69,24 @@ export class HomePage {
 
   public destroy$: Subject<any> = new Subject();
 
+  public beautyOptions: any;
+  
+  public todayText = 'Today';
+  public tomorrowText = 'Tomorrow';
+  public thisWeekText = 'This week';
+
+  public dateOptions: any = [
+    {
+      name: this.todayText,
+    },
+    {
+      name: this.tomorrowText,
+    },
+    {
+      name: this.thisWeekText,
+    },
+  ];
+
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
@@ -76,20 +96,52 @@ export class HomePage {
     private modalCtrl: ModalController,
     private utils: UtilsProvider,
     private alertCtrl: AlertController,
-    private booking: BookingProvider
+    private booking: BookingProvider,
+    private search: SearchProvider,
+    public fcm: FcmProvider,
+    public toastCtrl: ToastController,
+    public http: Http,
+    private skills: SkillsProvider
   ) {}
 
-  ionViewDidLoad() {
+  // Lifecycle
+  public ionViewDidLoad() {
     this.getGeoLocation();
+
+//  PHILIP LEAPER - removed below due to error
+
+    // this.fcm
+    //   .listenToNotifications()
+    //   .pipe(
+    //     tap(msg => {
+    //       console.log('msg');
+    //       console.log(msg);
+    //       const toast = this.toastCtrl.create({
+    //         message: msg.body,
+    //         duration: 3000,
+    //       });
+    //       toast.present();
+    //     })
+    //   )
+    //   .subscribe();
+
+
+    //Get skills from /skills
+    console.log("skills: " + this.skills.getSkillGroups());
+     
+    this.skills.getSkillGroups().snapshotChanges().subscribe( res => {
+      this.beautyOptions = res;
+
+    });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     console.log('ngOnDestroy');
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
 
-  //-- Public
+  // Public
 
   public toggleMap() {
     if (!this.showMap) {
@@ -102,21 +154,21 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    this.getUsers();
-    // let searchModal = this.modalCtrl.create(SearchPage);
+    /* Using Firebase Search function */
+    this.getUsers(ev.target.value).subscribe(res => {
+      console.log(res._body);
+      console.log(JSON.parse(res._body));
+      this.users = JSON.parse(res._body);
+    });
 
-    // searchModal.onDidDismiss(data => {
-    //   console.log('dismissed ', data);
-
-    // });
-
-    // searchModal.present();
+    /*  Just query RTDB for users
+    this.getUsers(); */
   }
 
   public openProfile(user) {
     console.log(user);
     console.log('opent da modal');
-    let profileModal = this.modalCtrl.create(StylistProfilePage, {
+    const profileModal = this.modalCtrl.create(StylistProfilePage, {
       user: user,
     });
 
@@ -128,7 +180,7 @@ export class HomePage {
   }
 
   public openReviews(stylistId: any) {
-    let reviewModal = this.modalCtrl.create(StylistReviewPage, {
+    const reviewModal = this.modalCtrl.create(StylistReviewPage, {
       stylistId: stylistId,
     });
 
@@ -141,55 +193,49 @@ export class HomePage {
 
   public expandCard(user: any) {
     this.users.map(listItem => {
-      if (user == listItem) {
+      if (user === listItem) {
         listItem.expanded = !listItem.expanded;
-
+        console.log(user);
         this.stylistUserId = user.key;
 
-        this.stylist$ = this.stylist
-          .getStylist(this.stylistUserId)
+        this.stylistAvail$ = this.avail
+          .getStylistAvailability(user.key)
           .snapshotChanges();
 
-        this.stylist$.subscribe(res => {
-          this.stylistId = res[0].key;
+        this.stylist
+          .getStylistReview(user.key)
+          .valueChanges()
+          .subscribe(res => (this.stylistReviews = res.length));
 
-          this.stylistAvail$ = this.avail
-            .getStylistAvailability(res[0].key)
-            .snapshotChanges();
+        this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
+          const avails = this.utils.generateFirebaseKeyedValues(actions);
 
-          this.stylist
-            .getStylistReview(res[0].key)
-            .valueChanges()
-            .subscribe(res => (this.stylistReviews = res.length));
+          this.availabilities = avails.filter(res => res.booked === false);
 
-          this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
-            let avails = this.utils.generateFirebaseKeyedValues(actions);
+          this.availabilities.sort((a, b) => {
+            return a.datetime - b.datetime;
+          });
 
-            this.availabilities = avails.filter(res => res.booked === false);
+          this.availabilities = this.availabilities.filter(el => {
+            return el.datetime >= moment().unix();
+          });
 
-            this.availabilities.sort((a, b) => {
-              return a.datetime - b.datetime;
-            });
+          console.log('filtered availabilities rrrrr');
+          console.log(this.availabilities);
 
-            this.availabilities = this.availabilities.filter(el => {
-              return el.datetime >= moment().unix();
-            });
-
-            console.log('filtered availabilities rrrrr');
-            console.log(this.availabilities);
-
-            this.availabilities.forEach(el => {
-              // TODO group availabilities by day / month and display
-              return (
-                (el.day = moment.unix(el.datetime).format('ddd Do')) &&
-                (el.month = moment.unix(el.datetime).format('MMM')) &&
-                (el.datetime = moment
-                  .unix(el.datetime)
-                  .format('ddd Do MMM HH:mm'))
-              );
-            });
+          this.availabilities.forEach(el => {
+            // TODO group availabilities by day / month and display
+            return (
+              (el.origdatetime = el.datetime) &&
+              (el.day = moment.unix(el.datetime).format('ddd Do')) &&
+              (el.month = moment.unix(el.datetime).format('MMM')) &&
+              (el.datetime = moment
+                .unix(el.datetime)
+                .format('ddd Do MMM HH:mm'))
+            );
           });
         });
+        // });
       } else {
         listItem.expanded = false;
         this.availabilities = null;
@@ -199,16 +245,22 @@ export class HomePage {
     });
   }
 
-  public bookAvailability(avail) {
+  public async bookAvailability(avail) {
     // Make pending booking
-    this.booking
-      .makePendingBooking(avail.key, this.stylistId, this.uid)
-      .then(res => (this.bookingId = res));
+    const result = await this.booking.makePendingBooking(
+      avail.key,
+      avail.origdatetime,
+      this.stylistId,
+      this.uid
+    );
 
-    let bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
+    this.bookingId = result;
+
+    const bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: avail.key,
       stylist: this.stylistId,
       userId: this.uid,
+      bookId: this.bookingId,
     });
 
     bookingModal.onDidDismiss(data => {
@@ -221,12 +273,17 @@ export class HomePage {
   public toggleFavourite() {
     if (!this.toggled) {
       this.toggled = true;
+
       return;
     }
     this.toggled = false;
   }
 
-  //--- Private
+  public doTestFCM() {
+    this.fcm.getToken();
+  }
+
+  // Private
 
   private getGeoLocation() {
     this.storage.getStorage('geolocation').subscribe(res => {
@@ -241,7 +298,11 @@ export class HomePage {
     });
   }
 
-  private getUsers() {
+  private getUsers(term?: any) {
+    /* Uncomment to use search function*/
+    return this.search.search(term);
+
+    /* This is the direct call to the RTDB
     this.user
       .getStylistUsers()
       .snapshotChanges()
@@ -249,6 +310,6 @@ export class HomePage {
         const values = this.utils.generateFirebaseKeyedValues(actions);
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
-      });
+      });*/
   }
 }

@@ -72,7 +72,7 @@ export class MessagesProvider {
 
   public addChat(userId, stylistId, availabilityId) {
     const chatData = {
-      creationDate: moment().valueOf(),
+      creationDate: moment().unix(),
       stylistId: stylistId,
       userId: userId,
       availabilityId: availabilityId,
@@ -95,7 +95,7 @@ export class MessagesProvider {
 
   public addMessageForUser(chatId, msg) {
     let messageData = {
-      messageDate: moment().valueOf(),
+      messageDate: moment().unix(),
       messageSender: firebase.auth().currentUser.displayName,
       messageText: msg,
       senderUid: firebase.auth().currentUser.uid,
