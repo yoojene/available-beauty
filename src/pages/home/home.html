@@ -106,7 +106,7 @@
                 <br>
                 <div>
                     <div text-wrap>
-                      <ion-slides pager autoplay="3000" speed="500" loop>
+                      <ion-slides *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
                         <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
                         </ion-slide>
                       </ion-slides>
