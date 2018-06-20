@@ -13,3 +13,23 @@
   </ion-row>
 </ion-grid>
 </div>
+<div *ngIf="!rating">
+<ion-grid>
+  <ion-row>
+      <ion-col *ngFor="let rate of initialRating; let i = index">
+        <ion-icon
+          [ngClass]="rate.selected ? 'icon icon-ios ion-ios-star': 'icon icon-ios ion-ios-star-outline'"
+          aria-label="star"
+          (click)="toggleStar(i, rate)"
+          >
+        </ion-icon>
+      </ion-col>
+      <!-- <ion-col>
+
+         class="icon icon-ios ion-ios-star-outline"
+        <ion-icon *ngIf="remainder" class="icon icon-ios ion-ios-star-half" aria-label="star">
+        </ion-icon>
+      </ion-col> -->
+  </ion-row>
+</ion-grid>
+</div>

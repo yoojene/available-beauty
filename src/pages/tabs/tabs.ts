@@ -13,7 +13,7 @@ import {
   Platform,
   IonicPage,
   Events,
-  Tabs
+  Tabs,
 } from 'ionic-angular';
 import { StorageProvider } from '../../providers/storage/storage';
 import { AvailabilityPage } from '../availability/availability';
@@ -21,7 +21,7 @@ import { AvailabilityPage } from '../availability/availability';
 @IonicPage()
 @Component({
   selector: 'page-tabs',
-  templateUrl: 'tabs.html'
+  templateUrl: 'tabs.html',
 })
 export class TabsPage {
   @ViewChild(Tabs) tabs: Tabs;

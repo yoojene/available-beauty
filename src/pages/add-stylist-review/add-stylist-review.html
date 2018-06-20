@@ -22,9 +22,11 @@
     </ion-slide>
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{ratingTextHeader}} </h3>
+      <star-rating></star-rating>
     </ion-slide>
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{reviewTextHeader}} </h3>
+    <ion-textarea></ion-textarea>
     </ion-slide>
   </ion-slides>
   <button block round ion-button (click)="next()" color="aubergine" [disabled]="false">
