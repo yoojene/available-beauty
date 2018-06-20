@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Skills } from '../../model/skills/skills.model';
-import * as moment from 'moment';
 
 @Injectable()
 export class SkillsProvider {
@@ -17,8 +16,8 @@ export class SkillsProvider {
    * @memberof SkillsProvider
    */
 
-  public getSkillGroups() {
-    return this.afdb.list('skills');
+  public getSkillGroups(): AngularFireList<{}> {
+    return this.afdb.list<Skills>('skills');
   }
 
   //  Other methods required:
