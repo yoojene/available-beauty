@@ -22,7 +22,7 @@
             name="heart" (click)="toggleHeart()">
           </ion-icon>
         </ion-row>
-        <ion-slides pager autoplay="3000" speed="500" loop>
+        <ion-slides *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
           <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-stylist-profile--slide-background">
             <ion-row>
               <ion-icon [ngStyle]="{'color': toggled===true ? 'red' : 'white'}" class="page-stylist-profile--stylist-profile-card-button"
