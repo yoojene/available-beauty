@@ -61,11 +61,10 @@ export class StarRatingComponent implements AfterContentInit {
 
   public toggleStar(index: number, rate: any) {
     this.initialRating.forEach(el => {
-      if (rate.number === el.number) {
+      if (rate.number >= el.number) {
         el.selected = !rate.selected;
       }
     });
-
     // TODO: Need to toggle any earlier stars if for example 3rd is chosen.
     // 1 and 2 automatically need updating
   }
