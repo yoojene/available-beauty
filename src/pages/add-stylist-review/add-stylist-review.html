@@ -16,6 +16,7 @@
 </ion-header>
 
 <ion-content padding>
+    <form (ngSubmit)="onReviewSubmit()">
   <ion-slides (ionSlideDidChange)="onSlideChange($event)">
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{pageSubheader}} </h3>
@@ -28,10 +29,20 @@
     </ion-slide>
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{reviewTextHeader}} </h3>
-    <ion-textarea></ion-textarea>
+    <p>
+      {{reviewTextSubHeader}}
+    </p>
+
+    <div class="page-stylist-review--stylist-review-text">
+      <ion-textarea [(ngModel)]="review.text" name="reviewtext"></ion-textarea>
+    </div>
     </ion-slide>
   </ion-slides>
-  <button block round ion-button (click)="next()" color="aubergine" [disabled]="false">
+  <button *ngIf="slides.isEnd()" block round ion-button color="aubergine" [disabled]="false">
+    {{submitButtonText}}
+  </button>
+  </form>
+  <button *ngIf="!slides.isEnd()" block round ion-button (click)="next()" color="aubergine" [disabled]="false">
     {{nextButtonText}}
   </button>
 </ion-content>

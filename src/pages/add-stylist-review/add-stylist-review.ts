@@ -6,6 +6,7 @@ import {
   Slides,
   ViewController,
 } from 'ionic-angular';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the AddStylistReviewPage page.
@@ -25,28 +26,40 @@ export class AddStylistReviewPage {
   public pageSubheader = "Let's find out how the booking went..";
   public ratingTextHeader = 'Select a star rating';
   public reviewTextHeader = 'Enter some feedback for the Stylist';
+  public reviewTextSubHeader =
+    'What did you like? What went well? What could be improved?';
   public nextButtonText = 'Next';
+  public submitButtonText = 'Finish';
+
+  private stylistId: any;
+  private availId: any;
+
+  public review: any = {};
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public viewCtrl: ViewController
+    public viewCtrl: ViewController,
+    public user: UserProvider
   ) {}
 
   // Lifecycle
 
   public ionViewDidLoad() {
     console.log('ionViewDidLoad AddStylistReviewPage');
+
+    console.log(this.navParams.data);
+
+    this.stylistId = this.navParams.get('stylistId');
+    this.availId = this.navParams.get('availId');
+
+    console.log(this.stylistId); // Should refactor to Sender and Receiver from User and Stylist
   }
 
   // Public
 
   public onSlideChange(e) {
-    // console.log(e);
-
     console.log(this.slides.getActiveIndex());
-
-    // this.activeSlideIdx = this.slides.getActiveIndex();
   }
 
   public next() {
@@ -64,11 +77,33 @@ export class AddStylistReviewPage {
   public goBack() {
     this.viewCtrl.dismiss();
   }
+
   /**
    *
    * Emitted from StarRating component
    */
   public onRatingSelect(ev) {
-    console.log(ev);
+    this.review.total = ev.total;
+  }
+  /**
+   *
+   * Submit review
+   */
+  public async onReviewSubmit() {
+    this.review.receiverUid = this.stylistId;
+
+    console.log(this.review);
+    // TODO Do we want to associate the Review with the availability slot as well as the stylist? Send availability ID tp /reviews
+
+    try {
+      await this.user.addReview(
+        this.stylistId,
+        this.review.text,
+        this.review.total
+      );
+    } catch (err) {
+      console.error(err);
+    }
+    this.viewCtrl.dismiss({ availId: this.availId, status: 'REVIEWED' });
   }
 }

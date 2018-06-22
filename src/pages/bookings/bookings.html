@@ -186,7 +186,7 @@
           <button ion-button (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
               {{chatText}}
           </button>
-          <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
+          <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.payload.val().stylistId, pastbook.key)">
             {{reviewText}}
           </button>
         </ion-item>

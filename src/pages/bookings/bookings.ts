@@ -151,16 +151,18 @@ export class BookingsPage {
     bookAvailModal.present();
   }
 
-  public onPastBookingTap(availId, bookId) {
+  public onPastBookingTap(availId, stylistId, bookId) {
     const reviewModal = this.modalCtrl.create(AddStylistReviewPage, {
       availId: availId,
       bookId: bookId,
-      stylist: this.stylistId,
+      stylistId: stylistId,
       userId: firebase.auth().currentUser.uid,
     });
 
     reviewModal.onDidDismiss(data => {
       console.log('dismissed AddStylistReview', data);
+
+      // TODO update booking with a new status REVIEWED or similar
     });
 
     reviewModal.present();

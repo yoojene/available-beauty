@@ -4,6 +4,12 @@ page-add-stylist-review {
       padding-top: 20%;
       text-align: center;
     }
+
+    &--stylist-review-text {
+      border: 1px solid lightgrey;
+      height: 150px;
+      margin-top: 25px;
+    }
   }
 
   ion-icon {

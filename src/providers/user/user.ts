@@ -160,9 +160,10 @@ export class UserProvider {
   }
 
   public async addReview(receiverUid: any, review: any, starRating: any) {
+    // TODO Do we want to associate the Review with the availability slot as well as the stylist?
     const reviewData = {
-      senderUid: firebase.auth().currentUser.uid,
-      receiverUid: receiverUid,
+      senderUid: firebase.auth().currentUser.uid, // User
+      receiverUid: receiverUid, // Mostly the Stylist but could be the user too
       reviewText: review,
       starRating: starRating,
     };
