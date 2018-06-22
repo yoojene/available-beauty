@@ -22,7 +22,9 @@
     </ion-slide>
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{ratingTextHeader}} </h3>
-      <star-rating></star-rating>
+      <star-rating
+       (chosenRating)="onRatingSelect($event)"
+       ></star-rating>
     </ion-slide>
     <ion-slide class="page-stylist-review--stylist-review-slide">
     <h3> {{reviewTextHeader}} </h3>

@@ -1,4 +1,10 @@
-import { Component, Input, AfterContentInit, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  AfterContentInit,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 /**
  * Generated class for the StarRatingComponent component.
  *
@@ -11,6 +17,7 @@ import { Component, Input, AfterContentInit, ElementRef } from '@angular/core';
 })
 export class StarRatingComponent implements AfterContentInit {
   @Input() public rating: any;
+  @Output() public chosenRating = new EventEmitter();
 
   text: string;
 
@@ -42,7 +49,7 @@ export class StarRatingComponent implements AfterContentInit {
     },
   ];
 
-  constructor(private elementRef: ElementRef) {
+  constructor() {
     console.log('startRating Component loaded');
   }
 
@@ -65,7 +72,22 @@ export class StarRatingComponent implements AfterContentInit {
         el.selected = !rate.selected;
       }
     });
+
+    let total = { total: 0 };
+    let calcRating;
+
+    this.initialRating.filter(el => {
+      if (el.selected === true) {
+        total.total += 1;
+        calcRating = { ...total, ...el };
+      }
+      return calcRating;
+    });
+
+    this.chosenRating.emit(calcRating);
+
     // TODO: Need to toggle any earlier stars if for example 3rd is chosen.
     // 1 and 2 automatically need updating
+    // This sort of works, unless you go RTL
   }
 }

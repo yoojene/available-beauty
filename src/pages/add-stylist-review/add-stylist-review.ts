@@ -21,6 +21,7 @@ import {
 })
 export class AddStylistReviewPage {
   @ViewChild(Slides) public slides: Slides;
+  // tslint:disable-next-line:quotemark
   public pageSubheader = "Let's find out how the booking went..";
   public ratingTextHeader = 'Select a star rating';
   public reviewTextHeader = 'Enter some feedback for the Stylist';
@@ -62,5 +63,12 @@ export class AddStylistReviewPage {
 
   public goBack() {
     this.viewCtrl.dismiss();
+  }
+  /**
+   *
+   * Emitted from StarRating component
+   */
+  public onRatingSelect(ev) {
+    console.log(ev);
   }
 }

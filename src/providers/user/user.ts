@@ -158,4 +158,29 @@ export class UserProvider {
           .then(res => console.log(res));
       });
   }
+
+  public async addReview(receiverUid: any, review: any, starRating: any) {
+    const reviewData = {
+      senderUid: firebase.auth().currentUser.uid,
+      receiverUid: receiverUid,
+      reviewText: review,
+      starRating: starRating,
+    };
+
+    const reviewKey = this.afdb.database
+      .ref()
+      .child(`reviews/`)
+      .push().key;
+
+    let reviewPayload = {};
+    reviewPayload[`/reviews/${reviewKey}`] = reviewData;
+
+    console.log(reviewPayload);
+
+    const result = await this.afdb.database.ref().update(reviewPayload);
+
+    console.log(result);
+
+    return result;
+  }
 }
