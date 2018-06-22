@@ -183,12 +183,14 @@
               </div>
             </div>
           </div>
-          <button ion-button (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
+          <div text-center>
+            <button ion-button (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
               {{chatText}}
-          </button>
-          <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.payload.val().stylistId, pastbook.key)">
-            {{reviewText}}
-          </button>
+            </button>
+            <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.payload.val().stylistId, pastbook.key)">
+              {{reviewText}}
+            </button>
+          </div>
         </ion-item>
       </ng-template>
 
