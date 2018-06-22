@@ -10,15 +10,13 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/concatMap';
 import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
-import { StylistProvider } from '../../providers/stylist/stylist';
-import { Stylist } from '../../model/stylist/stylist.model';
 import { Availability } from '../../model/availability/availability.model';
 import { UserProvider } from '../../providers/user/user';
 import { UtilsProvider } from '../../providers/utils/utils';
 import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
-import { AddStylistReviewPage } from '../add-stylist-review/add-stylist-review';
+import { AddReviewPage } from '../add-review/add-review';
 
 /**
  * Generated class for the BookingsPage page.
@@ -87,7 +85,6 @@ export class BookingsPage {
     private modalCtrl: ModalController,
     private book: BookingProvider,
     private avail: AvailabilityProvider,
-    private stylist: StylistProvider,
     private user: UserProvider,
     private utils: UtilsProvider
   ) {}
@@ -152,7 +149,7 @@ export class BookingsPage {
   }
 
   public onPastBookingTap(availId, stylistId, bookId) {
-    const reviewModal = this.modalCtrl.create(AddStylistReviewPage, {
+    const reviewModal = this.modalCtrl.create(AddReviewPage, {
       availId: availId,
       bookId: bookId,
       stylistId: stylistId,
@@ -160,7 +157,7 @@ export class BookingsPage {
     });
 
     reviewModal.onDidDismiss(data => {
-      console.log('dismissed AddStylistReview', data);
+      console.log('dismissed AddReview page', data);
 
       // TODO update booking with a new status REVIEWED or similar
     });

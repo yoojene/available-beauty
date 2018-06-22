@@ -1,5 +1,5 @@
 <!--
-  Generated template for the AddStylistReviewPage page.
+  Generated template for the AddReviewPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -18,22 +18,22 @@
 <ion-content padding>
     <form (ngSubmit)="onReviewSubmit()">
   <ion-slides (ionSlideDidChange)="onSlideChange($event)">
-    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <ion-slide class="page-add-review--stylist-review-slide">
     <h3> {{pageSubheader}} </h3>
     </ion-slide>
-    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <ion-slide class="page-add-review--stylist-review-slide">
     <h3> {{ratingTextHeader}} </h3>
       <star-rating
        (chosenRating)="onRatingSelect($event)"
        ></star-rating>
     </ion-slide>
-    <ion-slide class="page-stylist-review--stylist-review-slide">
+    <ion-slide class="page-add-review--stylist-review-slide">
     <h3> {{reviewTextHeader}} </h3>
     <p>
       {{reviewTextSubHeader}}
     </p>
 
-    <div class="page-stylist-review--stylist-review-text">
+    <div class="page-add-review--stylist-review-text">
       <ion-textarea [(ngModel)]="review.text" name="reviewtext"></ion-textarea>
     </div>
     </ion-slide>

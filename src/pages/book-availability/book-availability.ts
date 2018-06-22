@@ -16,7 +16,7 @@ import { UserProvider } from '../../providers/user/user';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookingStatus } from '../../model/booking/booking.model';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
-import { AddStylistReviewPage } from '../add-stylist-review/add-stylist-review';
+import { AddReviewPage } from '../add-review/add-review';
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -224,7 +224,7 @@ export class BookAvailabilityPage {
   public doLeaveReview() {
     console.log('review');
 
-    this.navCtrl.push(AddStylistReviewPage);
+    this.navCtrl.push(AddReviewPage);
   }
 
   public checkBookingIsInPast(bookingDate) {

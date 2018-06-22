@@ -9,7 +9,7 @@ import {
 import { UserProvider } from '../../providers/user/user';
 
 /**
- * Generated class for the AddStylistReviewPage page.
+ * Generated class for the AddReviewPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -17,10 +17,10 @@ import { UserProvider } from '../../providers/user/user';
 
 @IonicPage()
 @Component({
-  selector: 'page-add-stylist-review',
-  templateUrl: 'add-stylist-review.html',
+  selector: 'page-add-review',
+  templateUrl: 'add-review.html',
 })
-export class AddStylistReviewPage {
+export class AddReviewPage {
   @ViewChild(Slides) public slides: Slides;
   // tslint:disable-next-line:quotemark
   public pageSubheader = "Let's find out how the booking went..";
@@ -46,7 +46,7 @@ export class AddStylistReviewPage {
   // Lifecycle
 
   public ionViewDidLoad() {
-    console.log('ionViewDidLoad AddStylistReviewPage');
+    console.log('ionViewDidLoad AddReviewPage');
 
     console.log(this.navParams.data);
 
