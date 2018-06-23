@@ -24,8 +24,8 @@ export class SearchProvider {
       .subscribe(res => console.log(res));
   }
 
-  public search(term): Observable<any> {
-    return this.http.get('https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists?term=' + term);
+  public search(term, lat, long, radius): Observable<any> {
+    return this.http.get('https://us-central1-available-beauty-1511287868565.cloudfunctions.net/searchStylists?term=' + term + '&lat=' + lat + '&long=' + long + '&radius=' + radius);
     // .subscribe((data) => {
     //   console.log('data', data.text());
     //   return data.text();

@@ -301,7 +301,7 @@ export class HomePage {
 
   private getUsers(term?: any) {
     /* Uncomment to use search function
-    return this.search.search(term);
+    return this.search.search(term, this.lat, this.long, 100);
 */
     /* This is the direct call to the RTDB*/ 5;
     this.user
