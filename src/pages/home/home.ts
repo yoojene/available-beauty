@@ -50,11 +50,6 @@ export class HomePage {
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
-  /**
-   * /stylistProfile key
-   *
-   */
-  public stylistId: number;
 
   /**
    * /userProfile key for a give /stylistProfile
@@ -251,7 +246,7 @@ export class HomePage {
     const result = await this.booking.makePendingBooking(
       avail.key,
       avail.origdatetime,
-      this.stylistId,
+      avail.stylistId,
       this.uid
     );
 
@@ -259,7 +254,7 @@ export class HomePage {
 
     const bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
       availId: avail.key,
-      stylist: this.stylistId,
+      stylist: avail.stylistId,
       userId: this.uid,
       bookId: this.bookingId,
     });
