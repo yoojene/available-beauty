@@ -41,12 +41,11 @@ export class HomePage {
   public lat: number;
   public long: number;
   public toggled = false;
-  private showMap = false;
+  public showMap = false;
   private mapButton = false;
 
   public itemExpandHeight = 400; // TODO: this needs to be dynamic based on device size
 
-  public stylist$: Observable<any>;
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;

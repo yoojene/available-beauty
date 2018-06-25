@@ -6,7 +6,11 @@
     </ion-title>
 
   </ion-navbar>
+  <!--SEARCH BAR -->
   <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
+
+
+  <!--WHAT / WHEN / SELECT TREATMENT TYPE -->
   <ion-grid>
     <ion-row>
       <ion-col col-auto>
@@ -47,32 +51,7 @@
 </ion-grid>
 </ion-header>
 
-  <!-- <div class="search-item" (click)="showSearch()"> Search </div>
-  <br> -->
-    <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%" >
-      <!--Custom HTML marker-->
-      <!-- lat="lat" lng="long" -->
-      <!-- <ion-marker lat="40.717317" lng="-73.995284" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
-      <!-- <ion-marker lat="{{lat}}" lng="{{long}}" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
-
-      <!--Custom icon marker-->
-      <!-- <ion-marker lat="40.718217" lng="-73.991434" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
-      <!-- <ion-marker lat="{{lat}}" lng="{long}}" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
-
-      <!--Normal marker-->
-      <!-- <ion-marker lat="40.718417" lng="-73.996734" label="Y" title="Normal Marker"></ion-marker> -->
-      <ion-marker lat="{{lat}}" lng="{{long}}" label="Y" title="Me"></ion-marker>
-      <div *ngFor="let stylist of stylists$ | async">
-        <ion-marker
-          lat="{{stylist.baseLocation[0]}}"
-          lng="{{stylist.baseLocation[1]}}"
-          label="{{stylist.name[0]}}"
-          title="{{stylist.name}}">
-        </ion-marker>
-        </div>
-    </ion-maps>
-    <br>
-    <ion-content padding>
+<ion-content padding>
         <!-- <ion-label>Gaming</ion-label>
         <ion-select [(ngModel)]="gaming">
           <ion-option *ngFor="let option of beautyOptions"
@@ -80,7 +59,28 @@
             [color]="option.disabled ? 'primary' : 'aubergine'"
             value="option.name">{{option.name}}</ion-option>
         </ion-select> -->
+
+  <!--MAP VIEW -->
+  <ion-maps *ngIf="showMap" mapStyle="standard" lat="{{lat}}" lng="{{long}}" height="50%">
+    <!--Custom HTML marker-->
+    <!-- lat="lat" lng="long" -->
+    <!-- <ion-marker lat="40.717317" lng="-73.995284" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
+    <!-- <ion-marker lat="{{lat}}" lng="{{long}}" parentClass="heart" customHTML="<div class='outline'></div>"></ion-marker> -->
+
+    <!--Custom icon marker-->
+    <!-- <ion-marker lat="40.718217" lng="-73.991434" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
+    <!-- <ion-marker lat="{{lat}}" lng="{long}}" title="Custom icon" iconUrl="http://icons.iconarchive.com/icons/paomedia/small-n-flat/48/map-marker-icon.png"></ion-marker> -->
+
+    <!--Normal marker-->
+    <!-- <ion-marker lat="40.718417" lng="-73.996734" label="Y" title="Normal Marker"></ion-marker> -->
+    <ion-marker lat="{{lat}}" lng="{{long}}" label="Y" title="Me"></ion-marker>
+    <div *ngFor="let user of users">
+      <ion-marker lat="{{user.baseLocation[0]}}" lng="{{user.baseLocation[1]}}" label="{{user.name[0]}}" title="{{user.name}}">
+      </ion-marker>
+    </div>
+  </ion-maps>
     <div>
+      <!--STYLIST CARD LIST -->
       <ion-list>
           <ion-card *ngFor="let user of users" >
             <ion-card-content>
@@ -140,6 +140,7 @@
           </ion-card>
       </ion-list>
     </div>
+    <!-- SHOW MAP FAB BUTTON -->
     <ion-fab right bottom>
       <button ion-fab [disabled]="!mapButton" (click)="toggleMap()" color="aubergine">
         <ion-icon name="pin"></ion-icon>
