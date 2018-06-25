@@ -3,17 +3,13 @@ import {
   NavController,
   IonicPage,
   ModalController,
-  AlertController,
   ToastController,
 } from 'ionic-angular';
-import { HttpModule } from '@angular/http';
 import { Http } from '@angular/http';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
-import { Stylist } from '../../model/stylist/stylist.model';
 import { StorageProvider } from '../../providers/storage/storage';
-import { SearchPage } from '../search/search';
 import { SearchProvider } from '../../providers/search/search';
 import { User } from '../../model/users/user.model';
 import { UtilsProvider } from '../../providers/utils/utils';
@@ -26,7 +22,6 @@ import { BookAvailabilityPage } from '../book-availability/book-availability';
 import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { FcmProvider } from '../../providers/fcm/fcm';
-import { tap } from 'rxjs/operators';
 import { SkillsProvider } from '../../providers/skills/skills';
 
 @IonicPage()
@@ -42,7 +37,7 @@ export class HomePage {
   public long: number;
   public toggled = false;
   public showMap = false;
-  private mapButton = false;
+  public mapButton = false;
 
   public itemExpandHeight = 400; // TODO: this needs to be dynamic based on device size
 
@@ -89,7 +84,6 @@ export class HomePage {
     private user: UserProvider,
     private modalCtrl: ModalController,
     private utils: UtilsProvider,
-    private alertCtrl: AlertController,
     private booking: BookingProvider,
     private search: SearchProvider,
     public fcm: FcmProvider,
@@ -296,7 +290,7 @@ export class HomePage {
   private getUsers(term?: any) {
     /* Uncomment to use search function*/
     var skill = document.getElementById('treatment');
-    var date =  document.getElementById('date');
+    var date = document.getElementById('date');
     return this.search.search(term, this.lat, this.long, 100, skill, date);
 
     /* This is the direct call to the RTDB
