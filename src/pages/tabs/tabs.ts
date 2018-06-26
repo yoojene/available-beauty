@@ -28,6 +28,7 @@ export class TabsPage {
 
   showTabs: boolean;
   showkeyboard: boolean;
+  hasRealProfile: boolean = false;
 
   tab1Root: any;
   tab1Title: any;

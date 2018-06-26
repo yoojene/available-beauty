@@ -48,6 +48,8 @@ export class LoginPage {
 
   public loading: Loading;
 
+  public loginHeaderText = 'Login to book beauty...';
+
   constructor(
     public store: Store<AppState>,
     public formBuilder: FormBuilder,

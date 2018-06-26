@@ -17,6 +17,7 @@ import * as moment from 'moment';
 import { Subject } from 'rxjs/Subject';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
 import { AddReviewPage } from '../add-review/add-review';
+import { LoginPage } from '../login/login';
 
 /**
  * Generated class for the BookingsPage page.
@@ -97,6 +98,22 @@ export class BookingsPage {
 
   public ionViewWillEnter() {
     console.log(' booking view will enter ');
+
+    firebase.auth().onAuthStateChanged(e => {
+      console.log('auth state changed ', e);
+
+      if (e.isAnonymous === true) {
+        this.navCtrl.push(LoginPage);
+
+        // const loginModal = this.modalCtrl.create(LoginPage);
+
+        // loginModal.onDidDismiss(data => {
+        //   console.log('dismissed bookingAvailPageModal', data);
+        // });
+
+        // loginModal.present();
+      }
+    });
 
     this.availabilities = [];
     this.bookingUsers = [];
