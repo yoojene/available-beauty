@@ -42,13 +42,13 @@ export class LoginPage {
   public loginForm: any;
   public invalidLogin = false;
   public error: string;
-  private loginType: string;
-  private isStylist: boolean;
+  public isStylist = false;
   private stylistRegistered = false;
 
   public loading: Loading;
 
-  public loginHeaderText = 'Login to book beauty...';
+  public userLoginHeaderText = 'Login to book beauty...';
+  public stylistLoginHeaderText = 'Login to advertise beauty...';
 
   constructor(
     public store: Store<AppState>,
@@ -76,27 +76,17 @@ export class LoginPage {
 
   // Lifecycle
 
-  public ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-    console.log(this.navParams.get('loginType'));
+  public ionViewWillLoad() {
+    console.log('ionViewWillLoad LoginPage');
+    this.isStylist = this.navParams.get('isStylist');
+  }
 
-    this.loginType = this.navParams.get('loginType');
+  public ionViewDidLoad() {
     this.storage
       .getStorage('stylistRegistered')
       .subscribe(res => (this.stylistRegistered = res));
-
-    // TODO this is not good to determine who is a Stylist!
-    switch (this.loginType) {
-      case 'Looking':
-        this.isStylist = false;
-        break;
-      case 'Offering':
-        this.isStylist = true;
-        break;
-    }
-
-    console.log(this.isStylist);
   }
+
   // Public
   public openResetPassword() {
     let passModal = this.modal.create('PasswordPage');

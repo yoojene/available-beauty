@@ -12,7 +12,8 @@
 
 <ion-content class="page-login">
     <div class="page-login--login-container">
-      <h1>{{loginHeaderText}}</h1>
+      <h1 *ngIf="!isStylist">{{userLoginHeaderText}}</h1>
+      <h1 *ngIf="isStylist">{{stylistLoginHeaderText}}</h1>
       <form [formGroup]="loginForm" (submit)="onLoginSubmit()">
         <ion-item>
           <ion-input

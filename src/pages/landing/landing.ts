@@ -19,14 +19,14 @@ import * as firebase from 'firebase';
   templateUrl: 'landing.html',
 })
 export class LandingPage {
-  backgrounds = [
+  public backgrounds = [
     'assets/img/background/background-1.jpg',
     'assets/img/background/man-studio-portrait-light-90764.jpeg',
     'assets/img/background/pexels-photo-556665_1.jpg',
     'assets/img/background/pexels-photo-97218_1.jpg',
   ];
 
-  tourSlides: any = [
+  public tourSlides: any = [
     {
       slideText: 'Find salons and beauty specialists available near to you',
     },
@@ -38,25 +38,26 @@ export class LandingPage {
     },
   ];
 
-  lookingTitle = 'Looking for Beauty';
-  offeringTitle = 'Offering Beauty';
+  public lookingTitle = 'Looking for Beauty';
+  public offeringTitle = 'Offering Beauty';
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
-  ionViewDidLoad() {
+  // Lifecycle
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad LandingPage');
   }
 
-  openPage(el) {
+  // Public
+  public async openPage(el) {
     console.log(el);
     const type = el._elementRef.nativeElement.name;
 
     if (type === 'Looking') {
-      // this.nav.setNav('Tabs', { loginType: type});
-      firebase.auth().signInAnonymously();
-      this.navCtrl.setRoot('TabsPage', { loginType: type });
+      await firebase.auth().signInAnonymously();
+      this.navCtrl.setRoot('TabsPage', { isStylist: false });
     } else {
-      this.navCtrl.push('LoginPage', { loginType: type });
+      this.navCtrl.push('LoginPage', { isStylist: true });
     }
   }
 }

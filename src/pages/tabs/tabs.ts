@@ -6,6 +6,7 @@ import { HomePage } from '../home/home';
 import { BookingsPage } from '../bookings/bookings';
 import { StylistProfilePage } from '../stylist-profile/stylist-profile';
 import { UserProfilePage } from '../user-profile/user-profile';
+import firebase from 'firebase';
 
 import {
   NavParams,
@@ -26,22 +27,23 @@ import { AvailabilityPage } from '../availability/availability';
 export class TabsPage {
   @ViewChild(Tabs) tabs: Tabs;
 
-  showTabs: boolean;
-  showkeyboard: boolean;
-  hasRealProfile: boolean = false;
+  public showTabs: boolean;
+  public showkeyboard: boolean;
+  public hasRealProfile: boolean = false;
+  public isStylist: boolean;
+  public anonymousUser: boolean;
 
-  tab1Root: any;
-  tab1Title: any;
-  tabTitle: any;
-  tabIcon: any;
-  tab1Icon: any;
+  public tab1Root: any;
+  public tab1Title: any;
+  public tabTitle: any;
+  public tabIcon: any;
+  public tab1Icon: any;
 
-  tab3Root: any = BookingsPage;
-  tab4Root: any = UserProfilePage;
-  tab1Params = { id: 0 };
-  // tab2Params = { id: 1, user: '' };
-  tab3Params = { id: 2 };
-  tab4Params = { id: 3 };
+  public tab3Root: any = BookingsPage;
+  public tab4Root: any = UserProfilePage;
+  public tab1Params = { id: 0 };
+  public tab3Params = { id: 2 };
+  public tab4Params = { id: 3 };
 
   constructor(
     private _platform: Platform,
@@ -51,9 +53,15 @@ export class TabsPage {
     private events: Events,
     private storage: StorageProvider
   ) {
-    let param = navParams.get('isStylist');
-    console.log(param);
-    if (param) {
+    firebase.auth().onAuthStateChanged(e => {
+      if (e.isAnonymous === true) {
+        this.anonymousUser = true;
+      } else {
+        this.anonymousUser = false;
+      }
+    });
+    this.isStylist = navParams.get('isStylist');
+    if (this.isStylist) {
       this.tab1Root = AvailabilityPage;
       this.tab1Title = 'Availability';
       this.tabTitle = this.tab1Title;

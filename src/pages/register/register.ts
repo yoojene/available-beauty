@@ -16,6 +16,8 @@ import {
 import { AuthProvider } from '../../providers/auth/auth';
 import { StorageProvider } from '../../providers/storage/storage';
 
+import firebase from 'firebase';
+
 /**
  * Generated class for the RegisterPage page.
  *
@@ -84,6 +86,7 @@ export class RegisterPage {
 
   public doRegister() {
     console.log(this.registerForm.value);
+    console.log(firebase.auth().currentUser);
 
     if (this.registerForm.valid) {
       console.log(this.coords);

@@ -23,6 +23,7 @@ import * as firebase from 'firebase';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { FcmProvider } from '../../providers/fcm/fcm';
 import { SkillsProvider } from '../../providers/skills/skills';
+import { LoginPage } from '../login/login';
 
 @IonicPage()
 @Component({
@@ -44,6 +45,8 @@ export class HomePage {
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
+
+  private anonymousUser: boolean = true;
 
   /**
    * /userProfile key for a give /stylistProfile
@@ -95,6 +98,14 @@ export class HomePage {
   // Lifecycle
   public ionViewDidLoad() {
     this.getGeoLocation();
+
+    firebase.auth().onAuthStateChanged(e => {
+      if (e.isAnonymous === true) {
+        this.anonymousUser = true;
+      } else {
+        this.anonymousUser = false;
+      }
+    });
 
     //  PHILIP LEAPER - removed below due to error
 
@@ -235,6 +246,9 @@ export class HomePage {
   }
 
   public async bookAvailability(avail) {
+    if (this.anonymousUser) {
+      return this.navCtrl.push(LoginPage, { isStylist: false });
+    }
     // Make pending booking
     const result = await this.booking.makePendingBooking(
       avail.key,
