@@ -41,6 +41,8 @@ export class RegisterPage {
   public termsConditionsText: any =
     '<p> By signing up you agree to the <a href="">Terms and Conditions</a> and <a href=""> Privacy Policy</a></p>';
 
+  private isStylist: boolean;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -75,7 +77,7 @@ export class RegisterPage {
 
   public ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
-    console.log(this.navParams.get('isStylist'));
+    this.isStylist = this.navParams.get('isStylist');
 
     this.storage
       .getStorage('geolocation')
@@ -83,23 +85,15 @@ export class RegisterPage {
   }
 
   // Public
-
   public doRegister() {
     console.log(this.registerForm.value);
-    console.log(firebase.auth().currentUser);
 
     if (this.registerForm.valid) {
-      console.log(this.coords);
       const user = this.registerForm.value;
       user.homeLocation = this.coords;
       user.isStylist = this.navParams.get('isStylist');
-      console.log(user);
-      console.log(JSON.stringify(user));
-
-      // this.store.dispatch(new RegisterAction(user));
-
       this.auth
-        .doRegister(user)
+        .doRegister(user, this.isStylist)
         .then(res => {
           console.log('User Registered : ' + JSON.stringify(res));
           if (user.isStylist) {

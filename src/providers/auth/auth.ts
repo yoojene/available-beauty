@@ -223,21 +223,44 @@ export class AuthProvider {
   // Registration
 
   /**
-   * Register account in Firebase
+   * Register account in Firebase.
    *
-   * @param {any} user
+   * @param user user form information
+   * @param isStylist is a user or stylist being registered
    * @returns
    * @memberof AuthProvider
    */
-  public doRegister(user: any): Promise<any> {
-    return this.afauth.auth
-      .createUserWithEmailAndPassword(user.emailAddress, user.password)
-      .then(newUser => {
-        return Promise.all([
-          this.updateUserProfile(newUser, user),
-          this.addUserProfile(user.isStylist, newUser, user),
-        ]);
-      });
+  public async doRegister(user: any, isStylist: boolean): Promise<any> {
+    let newUser;
+
+    if (!isStylist) {
+      // Anonymous user account should now be linked with a real account
+      const nativeCred = firebase.auth.EmailAuthProvider.credential(
+        user.emailAddress,
+        user.password
+      );
+
+      try {
+        await this.linkAnonymousAccount(nativeCred);
+      } catch (err) {
+        console.error(err);
+        // TODO handle link error failure
+      }
+      newUser = firebase.auth().currentUser;
+    } else {
+      // Registering stylist, use angularfire createUserWithEmailAndPassword()
+      console.log('Stylist - Create the user');
+      newUser = await this.afauth.auth.createUserWithEmailAndPassword(
+        user.emailAddress,
+        user.password
+      );
+    }
+
+    // Update the Firebase Auth user profile with the display name and add /userProfile to RTDB
+    return Promise.all([
+      this.updateUserProfile(newUser, user),
+      this.addUserProfile(user.isStylist, newUser, user),
+    ]);
   }
 
   // Password Reset
@@ -283,10 +306,8 @@ export class AuthProvider {
   /**
    * Wrapper for Firebase user.updateProfile object
    *
-   * @param {any} firebaseUser
-   * @param {any} user
-   * @returns
-   * @memberof AuthProvider
+   * @param firebaseUser
+   * @param user
    */
   private updateUserProfile(firebaseUser, user) {
     console.log(firebaseUser);
@@ -296,6 +317,23 @@ export class AuthProvider {
       displayName: user.displayName,
       // photoURL: user.photo
     });
+  }
+  /**
+   *
+   * Link anonymous firebase account with newly registered one
+   *
+   * @param newUserCred
+   */
+  private async linkAnonymousAccount(newUserCred) {
+    try {
+      const linkedUser = await firebase
+        .auth()
+        .currentUser.linkAndRetrieveDataWithCredential(newUserCred);
+      console.log('Anonymous User Linked Success');
+    } catch (err) {
+      console.error('Anonymous User Linked Failed');
+      console.error(err);
+    }
   }
 
   // ** Realtime DB ** //
