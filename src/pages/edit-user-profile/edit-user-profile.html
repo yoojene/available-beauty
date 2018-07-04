@@ -50,6 +50,18 @@
           <ion-input formControlName="location" value="{{userDetails?.location}}"></ion-input>
         </ion-item>
 
+        <ion-item>
+            <ion-label color="primary">Stylist Skills</ion-label>
+          </ion-item>
+        <div *ngIf="availableSkills$ | async; let skills">
+          <div *ngFor="let skill of skills">
+            <ion-item>
+              <ion-checkbox></ion-checkbox>
+              <ion-label stacked colour="primary">{{skill.key}}</ion-label>
+            </ion-item>
+          </div>
+        </div>
+
         <div *ngIf="isStylist">  <!--  ngIf user.isStylist = true -->
         <div>
         <ion-item>

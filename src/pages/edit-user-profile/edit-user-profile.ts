@@ -10,6 +10,7 @@ import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import * as firebase from 'firebase';
 import { PhotoProvider } from '../../providers/photo/photo';
+import { SkillsProvider } from '../../providers/skills/skills';
 
 //import { UtilsProvider } from '../../providers/utils/utils';
 //import { Observable } from 'rxjs/Observable';
@@ -53,6 +54,8 @@ export class EditUserProfilePage implements AfterContentInit {
 
   public loadProgress: any = 0;
   public downloadUrls: Array<any> = [];
+  public availableSkills: any;
+  public availableSkills$: any;
 
   constructor(
     public navCtrl: NavController,
@@ -62,7 +65,8 @@ export class EditUserProfilePage implements AfterContentInit {
     private updatedStylist: StylistProvider,
     private user: UserProvider,
     public photo: PhotoProvider,
-    private formBuilder: FormBuilder //private utils: UtilsProvider
+    private formBuilder: FormBuilder, //private utils: UtilsProvider
+    private skills: SkillsProvider,
   ) {
     this.editUserForm = formBuilder.group({
       stylistName: [''],
@@ -126,6 +130,10 @@ export class EditUserProfilePage implements AfterContentInit {
         //   });
       }
     });
+
+      this.availableSkills$ = this.skills.getSkillGroups().snapshotChanges();
+
+    
   }
 
   public ionViewDidLoad() {
