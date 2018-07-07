@@ -5,31 +5,36 @@ page-login {
   // }
 
   .page-login {
-
-
     &--login-container {
+      background-color: color($colors, lightbg);
+      background-size: cover;
+      color: black;
+      position: absolute;
+      top: 0;
+      padding: 10vw;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      z-index: 2;
 
-    background-color: color($colors, lightbg);
-    background-size: cover;
-    color: black;
-    position: absolute;
-    top: 0;
-    padding: 10vw;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    z-index: 2;
-
-    .invalid-login {
-      padding-top: 10px;
-      color: red;
+      .invalid-login {
+        padding-top: 10px;
+        color: red;
       }
-
     }
+  }
 
+  // .back-button-icon-md {
+  //   color: darkblue;
+  // }
 
+  .back-button > .button-inner {
+    color: color($colors, aubergine);
+  }
 
+  .header-ios .toolbar-background-ios {
+    border-style: none;
   }
 
   .logo {
@@ -61,7 +66,7 @@ page-login {
     background-color: transparent !important;
     font-size: 0.9em;
   }
-   ::-webkit-input-placeholder {
+  ::-webkit-input-placeholder {
     color: black !important;
   }
   .login-container {
@@ -81,7 +86,7 @@ page-login {
     opacity: 0.8;
   }
 
-  ion-header.header.header-md::after{
+  ion-header.header.header-md::after {
     background-image: none;
   }
 
@@ -91,45 +96,40 @@ page-login {
 
   .ab-logo {
     background: url('../assets/img/AB_logo_main_no_text_black.png') no-repeat;
-     background-size: cover;
-     background-position: center;
-     height: 25rem;
-     width: auto;
+    background-size: cover;
+    background-position: center;
+    height: 25rem;
+    width: auto;
   }
 
-
   @media (min-width: 568px) {
-
     .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 15rem;
+      height: 26rem;
+      width: 26rem;
+      margin-left: 15rem;
     }
   }
 
   @media (min-width: 768px) {
     .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 31rem;
+      height: 26rem;
+      width: 26rem;
+      margin-left: 31rem;
+    }
   }
-}
 
   @media (min-width: 968px) {
     .ab-logo {
-     height: 26rem;
-     width: 26rem;
-     margin-left: 39rem;
+      height: 26rem;
+      width: 26rem;
+      margin-left: 39rem;
     }
   }
   @media (min-width: 1468px) {
-
     .ab-logo {
-     height: 40rem;
-     width: 40rem;
-     margin-left: 50rem;
+      height: 40rem;
+      width: 40rem;
+      margin-left: 50rem;
     }
   }
-
-
 }

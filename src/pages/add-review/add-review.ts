@@ -7,6 +7,7 @@ import {
   ViewController,
 } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
+import { Review } from '../../model/review/review.model';
 
 /**
  * Generated class for the AddReviewPage page.
@@ -34,7 +35,7 @@ export class AddReviewPage {
   private stylistId: any;
   private availId: any;
 
-  public review: any = {};
+  public review: Review;
 
   constructor(
     public navCtrl: NavController,
@@ -83,7 +84,7 @@ export class AddReviewPage {
    * Emitted from StarRating component
    */
   public onRatingSelect(ev) {
-    this.review.total = ev.total;
+    this.review.starRating = ev.total;
   }
   /**
    *
@@ -98,8 +99,8 @@ export class AddReviewPage {
     try {
       await this.user.addReview(
         this.stylistId,
-        this.review.text,
-        this.review.total
+        this.review.reviewText,
+        this.review.starRating
       );
     } catch (err) {
       console.error(err);

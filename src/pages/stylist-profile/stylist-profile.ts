@@ -1,5 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  Events,
+  ModalController,
+} from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -7,8 +13,11 @@ import { Stylist } from '../../model/stylist/stylist.model';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
+import * as firebase from 'firebase';
 import { UtilsProvider } from '../../providers/utils/utils';
 import { BookingProvider } from '../../providers/booking/booking';
+import { LoginPage } from '../login/login';
+import { BookAvailabilityPage } from '../book-availability/book-availability';
 /**
  * Generated class for the StylistProfilePage page.
  *
@@ -27,6 +36,8 @@ export class StylistProfilePage implements OnDestroy {
   public id: number;
   public user: any;
   public toggled = false;
+  private bookingId: string;
+  public uid = firebase.auth().currentUser.uid;
 
   public availability$: Observable<any>;
   public availabilities: any;
@@ -37,7 +48,14 @@ export class StylistProfilePage implements OnDestroy {
   public selectedAvailability: any;
   public destroy$: Subject<any> = new Subject();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  private anonymousUser = true;
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private booking: BookingProvider,
+    private modalCtrl: ModalController
+  ) {
     this.user = navParams.get('user');
   }
 
@@ -78,5 +96,33 @@ export class StylistProfilePage implements OnDestroy {
     console.log(ev);
 
     this.selectedAvailability = ev;
+  }
+
+  public async bookAvailability(avail) {
+    if (this.anonymousUser) {
+      return this.navCtrl.push(LoginPage, { isStylist: false });
+    }
+    // Make pending booking
+    const result = await this.booking.makePendingBooking(
+      avail.key,
+      avail.origdatetime,
+      avail.stylistId,
+      this.uid
+    );
+
+    this.bookingId = result;
+
+    const bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
+      availId: avail.key,
+      stylist: avail.stylistId,
+      userId: this.uid,
+      bookId: this.bookingId,
+    });
+
+    bookingModal.onDidDismiss(data => {
+      console.log('dismissed bookAvailabilityModal', data);
+    });
+
+    bookingModal.present();
   }
 }

@@ -7,7 +7,8 @@ export interface User {
   homeLocation: number[];
   averageStarRating: number;
   isStylist: boolean;
-  expanded: boolean;
+  skillsExpanded: boolean;
+  availsExpanded: boolean;
   addressCounty?: string;
   addressLine1?: string;
   addressLine2?: string;

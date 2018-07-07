@@ -24,6 +24,7 @@ import { AvailabilityProvider } from '../../providers/availability/availability'
 import { FcmProvider } from '../../providers/fcm/fcm';
 import { SkillsProvider } from '../../providers/skills/skills';
 import { LoginPage } from '../login/login';
+import { FindAvailabilityPage } from '../find-availability/find-availability';
 
 @IonicPage()
 @Component({
@@ -32,21 +33,22 @@ import { LoginPage } from '../login/login';
 })
 export class HomePage {
   public availabilityHeader = 'Availability';
+  public servicesText = 'Services';
   public noAvailabilitiesText = 'No Availability';
-  public reviewsText = 'Reviews >';
+  public reviewsText = 'reviews';
   public lat: number;
   public long: number;
   public toggled = false;
   public showMap = false;
   public mapButton = false;
 
-  public itemExpandHeight = 400; // TODO: this needs to be dynamic based on device size
+  public itemExpandHeight = 100; // TODO: this needs to be dynamic based on device size
 
   public stylistReviews: number;
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public availabilities: any;
 
-  private anonymousUser: boolean = true;
+  private anonymousUser = true;
 
   /**
    * /userProfile key for a give /stylistProfile
@@ -56,8 +58,6 @@ export class HomePage {
   public users: User[];
 
   public uid = firebase.auth().currentUser.uid;
-
-  private bookingId: string;
 
   public destroy$: Subject<any> = new Subject();
 
@@ -154,7 +154,7 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    /* Using Firebase Search function */
+    /* Using Firebase Search function*/
     this.getUsers(ev.target.value).subscribe(res => {
       console.log(res._body);
       console.log(JSON.parse(res._body));
@@ -167,16 +167,18 @@ export class HomePage {
 
   public openProfile(user) {
     console.log(user);
-    console.log('opent da modal');
-    const profileModal = this.modalCtrl.create(StylistProfilePage, {
-      user: user,
-    });
+    // console.log('opent da modal');
+    // const profileModal = this.modalCtrl.create(StylistProfilePage, {
+    //   user: user,
+    // });
 
-    profileModal.onDidDismiss(data => {
-      console.log('dismissed stylistProfileModal', data);
-    });
+    // profileModal.onDidDismiss(data => {
+    //   console.log('dismissed stylistProfileModal', data);
+    // });
 
-    profileModal.present();
+    // profileModal.present();
+
+    this.navCtrl.push(StylistProfilePage, { user: user });
   }
 
   public openReviews(stylistId: any) {
@@ -191,10 +193,19 @@ export class HomePage {
     reviewModal.present();
   }
 
-  public expandCard(user: any) {
+  public onSkillsTap(user: any) {
+    console.log(user);
     this.users.map(listItem => {
       if (user === listItem) {
-        listItem.expanded = !listItem.expanded;
+        listItem.skillsExpanded = !listItem.skillsExpanded;
+      }
+    });
+  }
+
+  public expandCard(user: any, index: any) {
+    this.users.map(listItem => {
+      if (user === listItem) {
+        listItem.availsExpanded = !listItem.availsExpanded;
         console.log(user);
         this.stylistUserId = user.key;
 
@@ -237,40 +248,12 @@ export class HomePage {
         });
         // });
       } else {
-        listItem.expanded = false;
+        listItem.availsExpanded = false;
         this.availabilities = null;
       }
 
       return listItem;
     });
-  }
-
-  public async bookAvailability(avail) {
-    if (this.anonymousUser) {
-      return this.navCtrl.push(LoginPage, { isStylist: false });
-    }
-    // Make pending booking
-    const result = await this.booking.makePendingBooking(
-      avail.key,
-      avail.origdatetime,
-      avail.stylistId,
-      this.uid
-    );
-
-    this.bookingId = result;
-
-    const bookingModal = this.modalCtrl.create(BookAvailabilityPage, {
-      availId: avail.key,
-      stylist: avail.stylistId,
-      userId: this.uid,
-      bookId: this.bookingId,
-    });
-
-    bookingModal.onDidDismiss(data => {
-      console.log('dismissed bookAvailabilityModal', data);
-    });
-
-    bookingModal.present();
   }
 
   public toggleFavourite() {
@@ -284,6 +267,10 @@ export class HomePage {
 
   public doTestFCM() {
     this.fcm.getToken();
+  }
+
+  public onAvailabilityTap(user: any) {
+    this.navCtrl.push(FindAvailabilityPage, { user: user });
   }
 
   // Private

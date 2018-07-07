@@ -1,5 +1,8 @@
 page-home {
   .page-home {
+    &--stylist-profile {
+      padding-top: 1rem;
+    }
     &--slide-background {
       background-size: cover;
       background-position: center;
@@ -7,8 +10,11 @@ page-home {
       border-color: transparent;
     }
 
-    &--stylist-profile {
-      padding-top: 1rem;
+    &--container {
+    }
+
+    &--reviewtext-centered {
+      flex: 1;
     }
   }
   .search-item {

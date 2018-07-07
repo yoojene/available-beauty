@@ -51,7 +51,8 @@
 </ion-grid>
 </ion-header>
 
-<ion-content padding>
+<ion-content no-padding>
+  <div class="page-home--container">
         <!-- <ion-label>Gaming</ion-label>
         <ion-select [(ngModel)]="gaming">
           <ion-option *ngFor="let option of beautyOptions"
@@ -81,61 +82,76 @@
   </ion-maps>
     <div>
       <!--STYLIST CARD LIST -->
-      <ion-list>
-          <ion-card *ngFor="let user of users" >
+      <ion-list no-padding>
+          <ion-card no-padding *ngFor="let user of users; let i = index" >
             <ion-card-content>
+              <div (click)="openProfile(user)">
               <ion-grid no-padding>
                 <ion-row>
                   <ion-col>
-                      <ion-item no-padding no-border (click)="expandCard(user)">
+                      <ion-item no-padding no-border>
                         <ion-avatar item-start>
                           <img src="{{user.avatarImage}}">
                         </ion-avatar>
                         {{user.name}}
                       </ion-item>
                   </ion-col>
-                  <ion-col>
+                  <!-- <ion-col>
                     <ion-item class="page-home--stylist-profile" >
-                        <button *ngIf="user.expanded" ion-button item-end color="aubergine" (click)="openProfile(user)"> Stylist</button>
+                        <button ion-button item-end color="aubergine" > Stylist</button>
                     </ion-item>
-                  </ion-col>
+                  </ion-col> -->
                 </ion-row>
               </ion-grid>
-
-              <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.expanded">
                 <br>
                 <div>
                     <div text-wrap>
-                      <ion-slides *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
+                      <ion-slides no-padding *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
                         <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
                         </ion-slide>
                       </ion-slides>
                       <div *ngIf="user.stylistRating; let starRating;">
-                        <ion-item>
-                          <star-rating [rating]="starRating"></star-rating>
-                         <div (click)="openReviews(user.key)">  {{stylistReviews}} {{reviewsText}} </div>
+                        <ion-item no-padding>
+                        <star-rating [rating]="starRating"></star-rating>
+                         <span item-content class="page-home--reviewtext-centered"> {{stylistReviews}} {{reviewsText}} </span>
                           <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                         </ion-item>
                       </div>
                     </div>
                 </div>
-                <ion-list-header no-padding>
-                  {{availabilityHeader}}
+                </div>
+                <ion-list-header no-padding (click)="onSkillsTap(user)">
+                  {{servicesText}}
                 </ion-list-header>
-                <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
-                <ng-template #no_avail>
-                  <h2>{{noAvailabilitiesText}}</h2>
-                </ng-template>
-                <ng-template #avail>
-                  <ion-scroll scrollX="true">
-                    <ion-col *ngFor="let avail of availabilities">
-                      <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
-                        {{avail.datetime}}
-                      </button>
-                    </ion-col>
-                  </ion-scroll>
-                </ng-template>
-              </expandable-item>
+                 <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.skillsExpanded">
+                   <ion-item *ngIf="user.skillsExpanded">
+                     Skills go here
+                   </ion-item>
+                 </expandable-item>
+
+      <ion-list no-padding>
+        <button no-padding ion-item (click)="onAvailabilityTap(user)">
+          {{availabilityHeader}}
+        </button>
+      </ion-list>
+      <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+      <ng-template #no_avail>
+        <h2>{{noAvailabilitiesText}}</h2>
+      </ng-template>
+      <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.availsExpanded">
+        <ng-template #avail>
+
+          <ion-scroll scrollX="true">
+            <ion-col *ngFor="let avail of availabilities">
+              <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
+                {{avail.datetime}}
+              </button>
+            </ion-col>
+          </ion-scroll>
+
+          <!-- </div> -->
+        </ng-template>
+      </expandable-item>
             </ion-card-content>
           </ion-card>
       </ion-list>
@@ -146,5 +162,5 @@
         <ion-icon name="pin"></ion-icon>
       </button>
     </ion-fab>
-
+</div>
 </ion-content>

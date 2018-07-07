@@ -55,6 +55,7 @@ import { PhotoProvider } from '../providers/photo/photo';
 import { MessagesProvider } from '../providers/messages/messages';
 import { FcmProvider } from '../providers/fcm/fcm';
 import { SkillsProvider } from '../providers/skills/skills';
+import { FindAvailabilityPageModule } from '../pages/find-availability/find-availability.module';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { SkillsProvider } from '../providers/skills/skills';
     LoginPageModule,
     TabsPageModule,
     RegisterPageModule,
+    FindAvailabilityPageModule,
     ComponentsModule,
     StoreModule.forRoot(APP_REDUCER),
     // Note that you must instrument after importing StoreModule
@@ -116,7 +118,7 @@ import { SkillsProvider } from '../providers/skills/skills';
     MessagesProvider,
     FCM,
     FcmProvider,
-    SkillsProvider
+    SkillsProvider,
   ],
 })
 export class AppModule {}

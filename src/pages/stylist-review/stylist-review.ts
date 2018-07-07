@@ -49,7 +49,7 @@ export class StylistReviewPage implements AfterContentInit {
 
     this.review$.subscribe(res => {
       res.forEach(el => {
-        this.getReviewer(el.userId).subscribe(res => {
+        this.getReviewer(el.senderUid).subscribe(res => {
           // TODO need to unsub
           // TODO need to test how this works with different review users
           let userObj = res.payload.val();
