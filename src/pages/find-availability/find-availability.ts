@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   IonicPage,
   NavController,
   NavParams,
   ModalController,
+  Scroll,
 } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { AvailabilityProvider } from '../../providers/availability/availability';
@@ -14,6 +15,7 @@ import * as firebase from 'firebase';
 import { LoginPage } from '../login/login';
 import { BookingProvider } from '../../providers/booking/booking';
 import { BookAvailabilityPage } from '../book-availability/book-availability';
+import { Moment } from 'moment';
 
 /**
  * Generated class for the FindAvailabilityPage page.
@@ -28,6 +30,8 @@ import { BookAvailabilityPage } from '../book-availability/book-availability';
   templateUrl: 'find-availability.html',
 })
 export class FindAvailabilityPage {
+  @ViewChild(Scroll) dateScroll: Scroll;
+
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public destroy$: Subject<any> = new Subject();
   public availabilities: any;
@@ -36,6 +40,10 @@ export class FindAvailabilityPage {
   private bookingId: string;
   public uid = firebase.auth().currentUser.uid;
   private anonymousUser = true;
+
+  public viewDate: Moment = moment();
+  public dates: any[] = [];
+  public today = moment().format('Do MM YYYY');
 
   constructor(
     public navCtrl: NavController,
@@ -46,13 +54,26 @@ export class FindAvailabilityPage {
     private modalCtrl: ModalController
   ) {}
 
-  ionViewDidLoad() {
+  // Lifecycle
+
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad FindAvailabilityPage');
+
     // this.getAvailability();
+
+    this.dateScroll.addScrollEventListener(this.onDateScroll);
     const user = this.navParams.get('user');
 
     console.log(user);
     this.getAvailability(user);
+    this.buildCalendar();
+  }
+
+  // ion-scroll handler
+  public onDateScroll(event) {
+    // console.log(event);
+    // this.dates
+    // console.log(this.dates);
   }
 
   public getAvailability(user: any) {
@@ -122,5 +143,23 @@ export class FindAvailabilityPage {
     });
 
     bookingModal.present();
+  }
+
+  public buildCalendar() {
+    let interval = 1;
+    let loopIdx = interval;
+    for (let x = 0; x < 365; x++) {
+      this.dates.push({
+        date: moment(this.viewDate).add(loopIdx, 'day'),
+        weekday: moment(this.viewDate)
+          .add(loopIdx, 'day')
+          .format('DD-MMM-YYYY'),
+      });
+      loopIdx += interval;
+    }
+  }
+
+  public onDateTap(date) {
+    console.log(date);
   }
 }

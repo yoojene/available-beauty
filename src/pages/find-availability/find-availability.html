@@ -15,20 +15,44 @@
 
 <ion-content padding>
 
-    <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+  <div>{{viewDate}}</div>
+<!--
+
+  <calendar-week-view>
+
+  </calendar-week-view> -->
+    <ion-scroll scrollX="true">
+      <ion-col *ngFor="let date of dates">
+      <span (click)="onDateTap(date)">
+        {{date.weekday}}
+      </span>
+      </ion-col>
+    </ion-scroll>
+
+    <!-- <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
     <ng-template #no_avail>
-      <!-- <h2>{{noAvailabilitiesText}}</h2> -->
+      <h2>{{noAvailabilitiesText}}</h2>
     </ng-template>
-      <!-- <ng-template #avail>
+      <ng-template #avail>
         <ion-scroll scrollX="true">
           <ion-col *ngFor="let avail of availabilities">
             <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
               {{avail.datetime}}
             </button>
           </ion-col>
-        </ion-scroll> -->
+        </ion-scroll>
+</ng-template> -->
+  <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+    <ng-template #avail>
+      <ion-list>
+        <ion-item *ngFor="let avail of availabilities">
+          {{avail.datetime}}
+        </ion-item>
+      </ion-list>
+    </ng-template>
+</ion-content>
 
-        <!-- </div> -->
+        <!-- </div>
 
       <ng-template #avail>
       <ion-list>
@@ -36,6 +60,4 @@
           {{avail.datetime}}
         </button>
       </ion-list>
-</ng-template>
-
-</ion-content>
+    !-->
