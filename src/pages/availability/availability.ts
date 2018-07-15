@@ -238,7 +238,11 @@ export class AvailabilityPage {
    */
   public setSlotTaken(option, optionobj) {
     optionobj.forEach(el => {
-      if (option.time === el.time && option.date === el.date) {
+      if (
+        option.time === el.time &&
+        option.date === el.date &&
+        !option.disabled
+      ) {
         el.disabled = !option.disabled;
 
         this.avail.setAvailabilityTaken(el.epoch, this.stylistId);
