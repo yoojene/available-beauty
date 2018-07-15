@@ -6,6 +6,7 @@ import {
   ModalController,
   LoadingController,
   Loading,
+  ViewController,
 } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -60,7 +61,8 @@ export class LoginPage {
     public auth: AuthProvider,
     private loadingCtrl: LoadingController,
     private storage: StorageProvider,
-    private user: UserProvider
+    private user: UserProvider,
+    private viewCtrl: ViewController
   ) {
     this.loginForm = formBuilder.group({
       email: [
@@ -112,9 +114,16 @@ export class LoginPage {
             .subscribe((userres: any) => {
               console.log(userres);
               this.loading.dismiss().catch();
-              this.navCtrl.push('TabsPage', {
-                isStylist: userres.isStylist,
-              });
+
+              if (userres.isStylist) {
+                console.log('push');
+                this.navCtrl.push('TabsPage', {
+                  isStylist: userres.isStylist,
+                });
+              } else {
+                console.log('dismiss');
+                this.viewCtrl.dismiss({ isStylist: userres.isStylist });
+              }
             });
         })
         .catch(err => {
