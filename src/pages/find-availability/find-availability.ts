@@ -32,6 +32,8 @@ import { Moment } from 'moment';
 export class FindAvailabilityPage {
   @ViewChild(Scroll) dateScroll: Scroll;
 
+  public noAvailabilitiesText = 'No Availability';
+
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
   public destroy$: Subject<any> = new Subject();
   public availabilities: any;
@@ -41,9 +43,12 @@ export class FindAvailabilityPage {
   public uid = firebase.auth().currentUser.uid;
   private anonymousUser = true;
 
+  // public dateScroll;
   public viewDate: Moment = moment();
   public dates: any[] = [];
   public today = moment().format('Do MM YYYY');
+
+  private user: any;
 
   constructor(
     public navCtrl: NavController,
@@ -59,13 +64,17 @@ export class FindAvailabilityPage {
   public ionViewDidLoad() {
     console.log('ionViewDidLoad FindAvailabilityPage');
 
-    // this.getAvailability();
-
+    firebase.auth().onAuthStateChanged(e => {
+      if (e.isAnonymous === true) {
+        this.anonymousUser = true;
+      } else {
+        this.anonymousUser = false;
+      }
+    });
     this.dateScroll.addScrollEventListener(this.onDateScroll);
-    const user = this.navParams.get('user');
+    this.user = this.navParams.get('user');
 
-    console.log(user);
-    this.getAvailability(user);
+    console.log(this.user);
     this.buildCalendar();
   }
 
@@ -76,8 +85,9 @@ export class FindAvailabilityPage {
     // console.log(this.dates);
   }
 
-  public getAvailability(user: any) {
+  public getAvailability(user: any, date: Moment) {
     console.log(user);
+    console.log(date);
     this.stylistUserId = user.key;
 
     this.stylistAvail$ = this.avail
@@ -102,7 +112,13 @@ export class FindAvailabilityPage {
         return el.datetime >= moment().unix();
       });
 
-      console.log('filtered availabilities rrrrr');
+      this.availabilities = this.availabilities.filter(el => {
+        return moment
+          .unix(el.datetime)
+          .isBetween(moment(date).startOf('day'), moment(date).endOf('day'));
+      });
+
+      console.log('filtered availabilities');
       console.log(this.availabilities);
 
       this.availabilities.forEach(el => {
@@ -117,7 +133,7 @@ export class FindAvailabilityPage {
     });
   }
 
-  public async bookAvailability(avail) {
+  private async bookAvailability(avail) {
     if (this.anonymousUser) {
       return this.navCtrl.push(LoginPage, { isStylist: false });
     }
@@ -149,6 +165,7 @@ export class FindAvailabilityPage {
     let interval = 1;
     let loopIdx = interval;
     for (let x = 0; x < 365; x++) {
+      // console.log(loopIdx);
       this.dates.push({
         date: moment(this.viewDate).add(loopIdx, 'day'),
         weekday: moment(this.viewDate)
@@ -160,6 +177,15 @@ export class FindAvailabilityPage {
   }
 
   public onDateTap(date) {
-    console.log(date);
+    this.getAvailability(this.user, date.date);
+  }
+
+  public onAvailSelected(avail) {
+    console.log(avail);
+
+    this.bookAvailability(avail);
+  }
+  public onRadioTapped(avail) {
+    console.log(avail);
   }
 }

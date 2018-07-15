@@ -23,41 +23,30 @@
   </calendar-week-view> -->
     <ion-scroll scrollX="true">
       <ion-col *ngFor="let date of dates">
-      <span (click)="onDateTap(date)">
+      <button ion-button outline small color="aubergine"(click)="onDateTap(date)">
         {{date.weekday}}
-      </span>
+      </button>
       </ion-col>
     </ion-scroll>
 
-    <!-- <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+  <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+    <ng-template #avail>
+      <!-- <ion-list radio-group [(ngModel)]="selectedAvail">
+        <ion-item *ngFor="let avail of availabilities">
+          <ion-label>
+            {{avail.datetime}}
+          </ion-label>
+          <ion-radio (ionSelect)="onRadioTapped(avail)"></ion-radio>
+        </ion-item>
+      </ion-list> -->
+      <ion-list >
+        <button ion-item *ngFor="let avail of availabilities" (click)="onAvailSelected(avail)">
+            {{avail.datetime}}
+        </button >
+      </ion-list>
+    </ng-template>
     <ng-template #no_avail>
       <h2>{{noAvailabilitiesText}}</h2>
     </ng-template>
-      <ng-template #avail>
-        <ion-scroll scrollX="true">
-          <ion-col *ngFor="let avail of availabilities">
-            <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
-              {{avail.datetime}}
-            </button>
-          </ion-col>
-        </ion-scroll>
-</ng-template> -->
-  <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
-    <ng-template #avail>
-      <ion-list>
-        <ion-item *ngFor="let avail of availabilities">
-          {{avail.datetime}}
-        </ion-item>
-      </ion-list>
-    </ng-template>
 </ion-content>
 
-        <!-- </div>
-
-      <ng-template #avail>
-      <ion-list>
-        <button *ngFor="let avail of availabilities" ion-item (click)="bookAvailability(avail)">
-          {{avail.datetime}}
-        </button>
-      </ion-list>
-    !-->
