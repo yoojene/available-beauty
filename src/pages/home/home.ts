@@ -49,6 +49,8 @@ export class HomePage {
   public availabilities: any;
 
   private anonymousUser = true;
+  private selectedTreatment = '';
+  private selectedDate = '';
 
   /**
    * /userProfile key for a give /stylistProfile
@@ -154,6 +156,39 @@ export class HomePage {
 
   public showSearch(ev: any) {
     console.log(ev);
+
+    /* Using Firebase Search function */
+    //  was using ev.target.value - removed because we are no longer searching terms
+    this.getUsers('').subscribe(res => {
+      console.log(res._body);
+      console.log(JSON.parse(res._body));
+      this.users = JSON.parse(res._body);
+    });
+
+    /*  Just query RTDB for users
+    this.getUsers();*/
+  }
+
+  public treatmentSearch(ev: any) {
+    console.log(ev);
+    this.selectedTreatment = this.beautyOptions[ev].key;
+
+    /* Using Firebase Search function */
+    //  was using ev.target.value - removed because we are no longer searching terms
+    this.getUsers('').subscribe(res => {
+      console.log(res._body);
+      console.log(JSON.parse(res._body));
+      this.users = JSON.parse(res._body);
+    });
+
+    /*  Just query RTDB for users
+    this.getUsers();*/
+  }
+
+  public dateSearch(ev: any) {
+    console.log(ev);
+
+    this.selectedDate = this.dateOptions[ev].name;
 
     /* Using Firebase Search function */
     //  was using ev.target.value - removed because we are no longer searching terms
@@ -292,9 +327,21 @@ export class HomePage {
 
   private getUsers(term?: any) {
     /* Uncomment to use search function*/
-    var skill = document.getElementById('treatment');
-    var date = document.getElementById('date');
-    return this.search.search(term, this.lat, this.long, 100, skill, date);
+    
+    console.log('treatment=' + this.selectedTreatment);
+    console.log('date=' + this.selectedDate);
+
+    /*let selectedTreatment = '';
+    let selectedDate = '';
+    if (this.beautyOptions[treatment].key) {
+      selectedTreatment = this.beautyOptions[treatment].key;
+      console.log('treatment=' + selectedTreatment);
+    }
+    if (this.dateOptions[date].name) {
+      selectedDate = this.dateOptions[date].name;
+      console.log('date=' + selectedDate);
+    }*/
+    return this.search.search(term, this.lat, this.long, 100, this.selectedTreatment, this.selectedDate);
 
     /* This is the direct call to the RTDB
     this.user

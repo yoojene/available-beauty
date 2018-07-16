@@ -27,14 +27,14 @@
   <ion-grid>
     <ion-row>
       <ion-col item-width="50%">
-        <ion-select width="100%" placeholder="Select treatment" [(ngModel)]="treatment" (ngModelChange)="showSearch($event)" interface="popover">
+        <ion-select width="100%" placeholder="Select treatment" id="treatment" [(ngModel)]="treatment" (ngModelChange)="treatmentSearch($event)" interface="popover">
           <ion-option *ngFor="let option of beautyOptions; let o = index" value="{{o}}">
               {{option.key}}
           </ion-option>
         </ion-select>
       </ion-col>
       <ion-col item-width="50%">
-        <ion-select width="100%" placeholder="Select date" [(ngModel)]="date" (ngModelChange)="showSearch($event)" interface="popover">
+        <ion-select width="100%" placeholder="Select date" id="date" [(ngModel)]="date" (ngModelChange)="dateSearch($event)" interface="popover">
           <ion-option *ngFor="let date of dateOptions; let d = index" value="{{d}}">
               {{date.name}}
           </ion-option>
