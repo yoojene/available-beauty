@@ -113,9 +113,12 @@
                     </div>
                 </div>
                 </div>
-                <ion-list-header no-padding (click)="onSkillsTap(user)">
-                  {{servicesText}}
-                </ion-list-header>
+                <ion-list no-padding >
+                  <ion-item class="page-home--services" (click)="onSkillsTap(user)">
+                      {{servicesText}}
+                    <ion-icon item-end name="arrow-down" color="aubergine"></ion-icon>
+                  </ion-item>
+                </ion-list>
                  <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.skillsExpanded">
                    <ion-item *ngIf="user.skillsExpanded">
                      Skills go here
@@ -123,11 +126,15 @@
                  </expandable-item>
 
       <ion-list no-padding>
-        <button no-padding ion-item (click)="onAvailabilityTap(user)">
+        <!-- <button no-padding ion-item (click)="onAvailabilityTap(user)">
           {{availabilityHeader}}
-        </button>
+        </button> -->
+        <ion-item class="page-home--services"(click)="onAvailabilityTap(user)">
+           {{availabilityHeader}}
+          <ion-icon item-end name="arrow-forward" color="aubergine"></ion-icon>
+        </ion-item>
       </ion-list>
-      <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
+      <!-- <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
       <ng-template #no_avail>
         <h2>{{noAvailabilitiesText}}</h2>
       </ng-template>
@@ -144,7 +151,7 @@
 
           <!-- </div> -->
         </ng-template>
-      </expandable-item>
+      </expandable-item> -->
             </ion-card-content>
           </ion-card>
       </ion-list>
