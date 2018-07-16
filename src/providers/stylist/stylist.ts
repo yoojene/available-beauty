@@ -28,6 +28,15 @@ export class StylistProvider {
     return this.afdb.list<Stylist>('stylistProfile');
   }
 
+  getStylistsBySkill(skillName) {
+    return this.afdb.list<Stylist>('stylistProfile').query.orderByChild('skill').isEqual(skillName);
+  }
+
+  setStylistSkills(uid, skills) {
+    this.afdb.database.ref().child('userProfile/' + uid + 'skills').set(skills);
+    
+  }
+
   getStylist(uid) {
     // TODO should this be .object returned?  Only ever should be 1-1 stylist / user?
     console.log(uid);

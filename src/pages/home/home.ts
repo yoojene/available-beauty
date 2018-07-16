@@ -98,6 +98,7 @@ export class HomePage {
   // Lifecycle
   public ionViewDidLoad() {
     this.getGeoLocation();
+    this.showSearch('');
 
     firebase.auth().onAuthStateChanged(e => {
       if (e.isAnonymous === true) {
@@ -154,15 +155,16 @@ export class HomePage {
   public showSearch(ev: any) {
     console.log(ev);
 
-    /* Using Firebase Search function
-    this.getUsers(ev.target.value).subscribe(res => {
+    /* Using Firebase Search function */
+    //  was using ev.target.value - removed because we are no longer searching terms
+    this.getUsers('').subscribe(res => {
       console.log(res._body);
       console.log(JSON.parse(res._body));
       this.users = JSON.parse(res._body);
-    });*/
+    });
 
-    /*  Just query RTDB for users*/
-    this.getUsers();
+    /*  Just query RTDB for users
+    this.getUsers();*/
   }
 
   public openProfile(user) {
@@ -289,12 +291,12 @@ export class HomePage {
   }
 
   private getUsers(term?: any) {
-    /* Uncomment to use search function
+    /* Uncomment to use search function*/
     var skill = document.getElementById('treatment');
     var date = document.getElementById('date');
     return this.search.search(term, this.lat, this.long, 100, skill, date);
-*/
-    /* This is the direct call to the RTDB*/
+
+    /* This is the direct call to the RTDB
     this.user
       .getStylistUsers()
       .snapshotChanges()
@@ -302,6 +304,6 @@ export class HomePage {
         const values = this.utils.generateFirebaseKeyedValues(actions);
         this.users = this.utils.addExpandedProperty(values);
         console.log(this.users);
-      });
+      });*/
   }
 }

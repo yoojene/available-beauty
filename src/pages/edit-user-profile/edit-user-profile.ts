@@ -207,6 +207,11 @@ export class EditUserProfilePage implements AfterContentInit {
         console.log('is a stylist');
         console.log(updatedUser);
       }
+
+      //  Update skills for user
+      console.log('available skills : ' + this.availableSkills$);
+      this.stylist.setStylistSkills(firebase.auth().currentUser.uid, this.availableSkills$);
+      
       this.user
         .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
         .then(() => this.navCtrl.pop());

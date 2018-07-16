@@ -50,7 +50,8 @@
           <ion-input formControlName="location" value="{{userDetails?.location}}"></ion-input>
         </ion-item>
 
-        <ion-item>
+
+        <!--<ion-item>
             <ion-label color="primary">Stylist Skills</ion-label>
           </ion-item>
         <div *ngIf="availableSkills$ | async; let skills">
@@ -60,7 +61,7 @@
               <ion-label stacked colour="primary">{{skill.key}}</ion-label>
             </ion-item>
           </div>
-        </div>
+        </div>-->
 
         <div *ngIf="isStylist">  <!--  ngIf user.isStylist = true -->
         <div>
@@ -91,6 +92,14 @@
           <ion-label stacked color="primary">{{addressPostcode}}</ion-label>
           <ion-input formControlName="addressPostcode" type="text" value="{{userDetails?.addressPostcode}}"></ion-input>
         </ion-item>
+        <div *ngIf="availableSkills$ | async; let skills">
+          <ion-item>
+            <ion-label color="primary">Stylist Skills</ion-label>
+            <ion-select multiple="true" interface="action-sheet">
+              <ion-option *ngFor="let skill of skills">{{skill.key}}</ion-option>
+            </ion-select>
+          </ion-item>
+        </div>
         <ion-row>
           <ion-item no-lines text-wrap>
             <ion-label stacked color="primary">{{bio}}</ion-label>

@@ -7,48 +7,41 @@
 
   </ion-navbar>
   <!--SEARCH BAR -->
-  <ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>
-
+  <!--<ion-searchbar (keyup.enter)="showSearch($event)"></ion-searchbar>-->
 
   <!--WHAT / WHEN / SELECT TREATMENT TYPE -->
+  <!-- <ion-grid>
+      <ion-row>
+        <ion-item>
+          <div *ngIf="availableSkills$ | async; let skills">
+              <ion-label color="primary">Stylist Skills</ion-label>
+              <ion-select interface="action-sheet">
+                <ion-option *ngFor="let skill of skills">{{skill.key}}</ion-option>
+              </ion-select>
+          </div>
+      </ion-item>
+    </ion-row>
+  </ion-grid> -->
+
+
   <ion-grid>
     <ion-row>
-      <ion-col col-auto>
-  <!--<ion-list>
-    <ion-item>-->
-      <button ion-button icon-start small round>
-        <ion-icon name="cut"></ion-icon>
-        What
-      </button>
-      </ion-col><ion-col>
-      <!--<ion-label>Treatment</ion-label>-->
-      <ion-select [(ngModel)]="treatment" interface="popover">
+      <ion-col item-width="50%">
+        <ion-select width="100%" placeholder="Select treatment" [(ngModel)]="treatment" (ngModelChange)="showSearch($event)" interface="popover">
           <ion-option *ngFor="let option of beautyOptions; let o = index" value="{{o}}">
               {{option.key}}
           </ion-option>
-      </ion-select>
-    </ion-col>
-  </ion-row>
-    <!--</ion-item>
-    <ion-item>-->
-  <ion-row>
-    <ion-col col-auto>
-      <button ion-button icon-start small round>
-        <ion-icon name="alarm"></ion-icon>
-        When
-      </button>
-    </ion-col><ion-col>
-      <!--<ion-label>Date</ion-label>-->
-      <ion-select [(ngModel)]="date" interface="popover">
+        </ion-select>
+      </ion-col>
+      <ion-col item-width="50%">
+        <ion-select width="100%" placeholder="Select date" [(ngModel)]="date" (ngModelChange)="showSearch($event)" interface="popover">
           <ion-option *ngFor="let date of dateOptions; let d = index" value="{{d}}">
               {{date.name}}
           </ion-option>
-      </ion-select>
-  <!--</ion-item>
-</ion-list>-->
-    </ion-col>
-  </ion-row>
-</ion-grid>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
 <ion-content no-padding>
