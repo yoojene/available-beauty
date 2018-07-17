@@ -21,36 +21,50 @@
   <div *ngIf="bookings$ | async; let pendbookings">
     <div *ngFor="let pendbook of pendbookings">
       <div *ngIf="pendbook.payload.val().status === 'PENDING'; then pending"></div>
-        <ng-template #pending>
-          <ion-item (click)="onBookingTap(pendbook.payload.val().availabilityId, pendbook.key)">
-
+        <ng-template no-padding #pending>
+          <ion-card no-padding (click)="onBookingTap(pendbook.payload.val().availabilityId, pendbook.key)">
+              <ion-card-content>
               Avail ID {{pendbook.payload.val().availabilityId}}
+              <ion-card-header>
 
-                <div *ngFor="let bua of bookedUserAvailability">
-                  <div *ngIf="bua.availId === pendbook.payload.val().availabilityId">
-                   <div *ngIf="isStylist">  {{usernameText}} {{bua.userName}}</div>
-                </div>
-              </div>
-
-                  <div *ngFor="let bsa of bookedStylistAvailability">
-                    <div *ngIf="bsa.availId === pendbook.payload.val().availabilityId">
-                      <div *ngIf="!isStylist"> {{stylistnameText}} {{bsa.userName}}</div>
+                <div *ngIf="bookedDateAvailability">
+                  <div *ngFor="let bda of bookedDateAvailability">
+                    <div *ngIf="bda.availId === pendbook.payload.val().availabilityId">
+                      {{bda.bookedDate}}
                     </div>
                   </div>
+                </div>
 
-
-              <div *ngIf="bookedDateAvailability">
-                <div *ngFor="let bda of bookedDateAvailability">
-
-                  <div *ngIf="bda.availId === pendbook.payload.val().availabilityId">
-                     {{ bookingDateText}} {{bda.bookedDate}}
+              </ion-card-header>
+              <div *ngIf="isStylist">
+                <div *ngFor="let bua of bookedUserAvailability">
+                  <div *ngIf="bua.availId === pendbook.payload.val().availabilityId">
+                    <ion-item no-padding no-border>
+                      <ion-avatar item-start>
+                        <img src="{{bua.avatarImage}}">
+                      </ion-avatar>
+                      <span> {{bua.userName}} </span>
+                    </ion-item>
                   </div>
                 </div>
               </div>
 
-          </ion-item>
-        </ng-template>
+              <div *ngIf="!isStylist">
+                <div *ngFor="let bsa of bookedStylistAvailability">
+                  <div *ngIf="bsa.availId === pendbook.payload.val().availabilityId">
+                    <ion-item no-padding no-border>
+                      <ion-avatar item-start>
+                        <img src="{{bsa.avatarImage}}">
+                      </ion-avatar>
+                      <span> {{bsa.userName}}</span>
+                    </ion-item>
+                  </div>
+                </div>
+              </div>
 
+              </ion-card-content>
+          </ion-card>
+        </ng-template>
       </div>
   </div>
 
@@ -130,42 +144,39 @@
     <div *ngFor="let pastbook of pastbookings">
 
       <div *ngIf="pastbook.payload.val().status === 'ACCEPTED' && checkBookingIsInPast(pastbook.payload.val().bookedAvailSlot); then accepted"></div>
-      <ng-template #accepted>
-        <ion-item>
-          Avail ID {{pastbook.payload.val().availabilityId}}
-        <div *ngFor="let bua of bookedUserAvailability">
-          <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
-            <div *ngIf="isStylist">
-              <ion-grid>
-                <ion-row>
-                  <ion-col>
-                    {{usernameText}}
-                  </ion-col>
-                  <ion-col>
-                     {{bua.userName}}
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
+      <ng-template no-padding #accepted>
+        <ion-card no-padding>
+          <ion-card-content>
+             Avail ID {{pastbook.payload.val().availabilityId}}
+            <div *ngFor="let bua of bookedUserAvailability">
+              <div *ngIf="bua.availId === pastbook.payload.val().availabilityId">
+                <div *ngIf="isStylist">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col>
+                        {{usernameText}}
+                      </ion-col>
+                      <ion-col>
+                        {{bua.userName}}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div *ngFor="let bsa of bookedStylistAvailability">
-          <div *ngIf="bsa.availId === pastbook.payload.val().availabilityId">
-            <div *ngIf="!isStylist">
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
-                      {{stylistnameText}}
-                    </ion-col>
-                    <ion-col>
-                     {{bsa.userName}}
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
+          <div *ngIf="!isStylist">
+            <div *ngFor="let bsa of bookedStylistAvailability">
+              <div *ngIf="bsa.availId === pastbook.payload.val().availabilityId">
+                <ion-item no-padding no-border>
+                  <ion-avatar item-start>
+                    <img src="{{bsa.avatarImage}}">
+                  </ion-avatar>
+                  <span> {{bsa.userName}}</span>
+                </ion-item>
+              </div>
             </div>
           </div>
-        </div>
 
           <div *ngIf="bookedDateAvailability">
             <div *ngFor="let bda of bookedDateAvailability">
@@ -183,15 +194,22 @@
               </div>
             </div>
           </div>
-          <div text-center>
-            <button ion-button (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
-              {{chatText}}
-            </button>
-            <button ion-button (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.payload.val().stylistId, pastbook.key)">
-              {{reviewText}}
-            </button>
-          </div>
-        </ion-item>
+            </ion-card-content>
+            <!-- <div text-center> -->
+              <ion-row>
+                <ion-col>
+                  <button ion-button small item-start (click)="onBookingTap(pastbook.payload.val().availabilityId, pastbook.key)">
+                    {{chatText}}
+                  </button>
+                </ion-col>
+                <ion-col>
+                  <button ion-button small item-end (click)="onPastBookingTap(pastbook.payload.val().availabilityId, pastbook.payload.val().stylistId, pastbook.key)">
+                    {{reviewText}}
+                  </button>
+                </ion-col>
+              </ion-row>
+            <!-- </div> -->
+        </ion-card>
       </ng-template>
 
     </div>

@@ -76,86 +76,61 @@
     <div>
       <!--STYLIST CARD LIST -->
       <ion-list no-padding>
-          <ion-card no-padding *ngFor="let user of users; let i = index" >
-            <ion-card-content>
-              <div (click)="openProfile(user)">
-              <ion-grid no-padding>
-                <ion-row>
-                  <ion-col>
-                      <ion-item no-padding no-border>
-                        <ion-avatar item-start>
-                          <img src="{{user.avatarImage}}">
-                        </ion-avatar>
-                        {{user.name}}
-                      </ion-item>
-                  </ion-col>
-                  <!-- <ion-col>
-                    <ion-item class="page-home--stylist-profile" >
-                        <button ion-button item-end color="aubergine" > Stylist</button>
+        <ion-card no-padding *ngFor="let user of users; let i = index" >
+          <ion-card-content>
+            <div (click)="openProfile(user)">
+            <ion-grid no-padding>
+              <ion-row>
+                <ion-col>
+                    <ion-item no-padding no-border>
+                      <ion-avatar item-start>
+                        <img src="{{user.avatarImage}}">
+                      </ion-avatar>
+                      {{user.name}}
                     </ion-item>
-                  </ion-col> -->
-                </ion-row>
-              </ion-grid>
-                <br>
-                <div>
-                    <div text-wrap>
-                      <ion-slides no-padding *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
-                        <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
-                        </ion-slide>
-                      </ion-slides>
-                      <div *ngIf="user.stylistRating; let starRating;">
-                        <ion-item no-padding>
-                        <star-rating [rating]="starRating"></star-rating>
-                         <span item-content class="page-home--reviewtext-centered"> {{stylistReviews}} {{reviewsText}} </span>
-                          <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
-                        </ion-item>
-                      </div>
-                    </div>
-                </div>
-                </div>
-                <ion-list no-padding >
-                  <ion-item class="page-home--services" (click)="onSkillsTap(user)">
-                      {{servicesText}}
-                    <ion-icon item-end name="arrow-down" color="aubergine"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <br>
+            <div>
+              <div text-wrap>
+                <ion-slides no-padding *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
+                  <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
+                  </ion-slide>
+                </ion-slides>
+                <div *ngIf="user.stylistRating; let starRating;">
+                  <ion-item no-padding>
+                  <star-rating [rating]="starRating"></star-rating>
+                    <span item-content class="page-home--reviewtext-centered"> {{stylistReviews}} {{reviewsText}} </span>
+                    <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                   </ion-item>
-                </ion-list>
-                 <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.skillsExpanded">
-                   <ion-item *ngIf="user.skillsExpanded">
-                     Skills go here
-                   </ion-item>
-                 </expandable-item>
-
-      <ion-list no-padding>
-        <!-- <button no-padding ion-item (click)="onAvailabilityTap(user)">
-          {{availabilityHeader}}
-        </button> -->
-        <ion-item class="page-home--services"(click)="onAvailabilityTap(user)">
-           {{availabilityHeader}}
-          <ion-icon item-end name="arrow-forward" color="aubergine"></ion-icon>
-        </ion-item>
-      </ion-list>
-      <!-- <div *ngIf="availabilities && availabilities.length === 0; then no_avail else avail"></div>
-      <ng-template #no_avail>
-        <h2>{{noAvailabilitiesText}}</h2>
-      </ng-template>
-      <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.availsExpanded">
-        <ng-template #avail>
-
-          <ion-scroll scrollX="true">
-            <ion-col *ngFor="let avail of availabilities">
-              <button ion-button outline small color="aubergine" (click)="bookAvailability(avail)">
-                {{avail.datetime}}
-              </button>
-            </ion-col>
-          </ion-scroll>
-
-          <!-- </div> -->
-        </ng-template>
-      </expandable-item> -->
-            </ion-card-content>
-          </ion-card>
-      </ion-list>
-    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--SEVICES EXPANDING SECTION -->
+          <ion-list no-padding>
+            <ion-item class="page-home--services" (click)="onSkillsTap(user)">
+                {{servicesText}}
+              <ion-icon item-end name="ios-arrow-down" color="aubergine"></ion-icon>
+            </ion-item>
+          </ion-list>
+          <expandable-item [expandHeight]="itemExpandHeight" [expanded]="user.skillsExpanded">
+            <ion-item *ngIf="user.skillsExpanded">
+              Skills go here
+            </ion-item>
+          </expandable-item>
+          <!--AVAILABILITY LINK -->
+          <ion-list no-padding>
+            <ion-item class="page-home--services"(click)="onAvailabilityTap(user)">
+              {{availabilityHeader}}
+              <ion-icon item-end name="ios-arrow-forward" color="aubergine"></ion-icon>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
 </div>
 <!-- SHOW MAP FAB BUTTON -->
  <ion-fab bottom right>

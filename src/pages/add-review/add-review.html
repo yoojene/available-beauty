@@ -34,7 +34,7 @@
     </p>
 
     <div class="page-add-review--stylist-review-text">
-      <ion-textarea [(ngModel)]="review.text" name="reviewtext"></ion-textarea>
+      <ion-textarea *ngIf="review && review.reviewText" [(ngModel)]="review.reviewText" name="reviewtext"></ion-textarea>
     </div>
     </ion-slide>
   </ion-slides>
