@@ -31,8 +31,8 @@ import { AddReviewPage } from '../add-review/add-review';
   templateUrl: 'book-availability.html',
 })
 export class BookAvailabilityPage {
-  public acceptBookingText = 'Accept';
-  public cancelBookingText = 'Cancel';
+  public acceptBookingText = 'Accept Booking';
+  public cancelBookingText = 'Cancel Booking';
   public acceptedText = 'Accepted Booking';
   public pastAcceptedText = 'Past Booking';
   public pendingText = 'Pending Booking';
@@ -159,32 +159,41 @@ export class BookAvailabilityPage {
         return a.messageDate - b.messageDate;
       });
 
-      console.log(firebase.auth().currentUser.photoURL);
+      console.log(firebase.auth());
       // This works out whether to to use position = left or position = right and add that to the object,
       // based on who was the chat sender
       res.forEach((el: any, idx) => {
         el.position = 'right';
+        console.log(el);
+        console.log(el.senderUid);
 
-        if (idx > 0) {
-          let prevUser = res[idx - 1].senderUid;
-          let prevPos = res[idx - 1].position;
+        this.user
+          .getUserById(el.senderUid)
+          .snapshotChanges()
+          .subscribe(res => {
+            el.img = res.payload.val().avatarImage;
 
-          console.log('prevUser', prevUser);
-          console.log('prevPos', prevPos);
-          console.log('currUser', el.senderUid);
-          console.log('currPos', el.position);
-          console.log('----------------------------------');
-          prevUser !== el.senderUid && prevPos !== el.position
-            ? (el.position = 'right')
-            : (el.position = 'left');
-        }
+            if (idx > 0) {
+              let prevUser = res[idx - 1].senderUid;
+              let prevPos = res[idx - 1].position;
 
-        return (
-          el.position,
-          (el.messageDate = moment
-            .unix(el.messageDate)
-            .format('ddd Do MMM HH:mm'))
-        );
+              console.log('prevUser', prevUser);
+              console.log('prevPos', prevPos);
+              console.log('currUser', el.senderUid);
+              console.log('currPos', el.position);
+              console.log('----------------------------------');
+              prevUser !== el.senderUid && prevPos !== el.position
+                ? (el.position = 'right')
+                : (el.position = 'left');
+            }
+
+            return (
+              el.position,
+              (el.messageDate = moment
+                .unix(el.messageDate)
+                .format('ddd Do MMM HH:mm'))
+            );
+          });
       });
       this.chatmsgs = res;
       console.log(this.chatmsgs);
