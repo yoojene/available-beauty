@@ -1,10 +1,10 @@
 // chat-bubble {
 .chatBubble {
-  //position: relative;
+  position: relative;
 
-  // :last-child {
-  //   margin-bottom: 10px;
-  // }
+  :last-child {
+    margin-bottom: 10px;
+  }
 
   img.profile-pic {
     width: 40px;
@@ -15,11 +15,13 @@
   }
 
   img.profile-pic.left {
-    left: 10px;
+    left: -41px;
+    top: 20px;
   }
 
   img.profile-pic.right {
-    right: 10px;
+    right: -35px;
+    top: 25px;
   }
 
   .message {
