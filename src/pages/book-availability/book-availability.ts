@@ -159,7 +159,6 @@ export class BookAvailabilityPage {
         return a.messageDate - b.messageDate;
       });
 
-      console.log(firebase.auth());
       // This works out whether to to use position = left or position = right and add that to the object,
       // based on who was the chat sender
       res.forEach((el: any, idx) => {
@@ -167,11 +166,12 @@ export class BookAvailabilityPage {
         console.log(el);
         console.log(el.senderUid);
 
+        // TODO Need loader or skeleton screen here
         this.user
           .getUserById(el.senderUid)
           .snapshotChanges()
-          .subscribe(res => {
-            el.img = res.payload.val().avatarImage;
+          .subscribe(userres => {
+            el.img = userres.payload.val().avatarImage;
 
             if (idx > 0) {
               let prevUser = res[idx - 1].senderUid;
