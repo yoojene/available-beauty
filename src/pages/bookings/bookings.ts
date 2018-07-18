@@ -64,6 +64,8 @@ export class BookingsPage {
   public bookedUsername: string;
   public bookedname: string;
   public bookedDate: string;
+  public bookedUserAvatar: string;
+  public bookedStylistAvatar: string;
 
   public bookedDateAvailability: any = [];
   public bookedUserAvailability: any = [];
@@ -222,11 +224,15 @@ export class BookingsPage {
             'name'
           );
 
-          console.log(this.bookedUsername);
+          this.bookedUserAvatar = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'avatarImage'
+          );
 
           this.bookedUserAvailability.push({
             availId: i.availabilityId,
             userName: this.bookedUsername,
+            avatarImage: this.bookedUserAvatar,
           });
         });
         this.bookingStylists$.takeUntil(this.destroy$).subscribe(res => {
@@ -237,11 +243,15 @@ export class BookingsPage {
             'name'
           );
 
-          console.log(this.bookedStylistname);
+          this.bookedStylistAvatar = this.utils.getFirebaseRealtimeDbKeyedValueById(
+            res,
+            'avatarImage'
+          );
 
           this.bookedStylistAvailability.push({
             availId: i.availabilityId,
             userName: this.bookedStylistname,
+            avatarImage: this.bookedStylistAvatar,
           });
         });
 
