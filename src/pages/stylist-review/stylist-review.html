@@ -14,25 +14,23 @@
 
 
 <ion-content padding>
-
-  <ion-list>
+  <ion-item-group>
     <div *ngFor="let review of review$ | async">
-      <div *ngIf="reviewUser && review.userId === reviewUser.uid">
+      <div *ngIf="reviewUser && review.senderUid === reviewUser.uid">
         <ion-item>
           <ion-avatar item-start>
             <img src="{{reviewUser.avatarImage}}">
           </ion-avatar>
           {{reviewUser.name}}
         </ion-item>
-        <ion-item>
-          <star-rating [rating]="review.starRating"></star-rating>
-        </ion-item>
       </div>
+      <ion-item>
+        <star-rating [rating]="review.starRating"></star-rating>
+      </ion-item>
       <ion-item text-wrap>
         {{review.reviewText}}
       </ion-item>
       <ion-item-divider></ion-item-divider>
     </div>
-  </ion-list>
-
+  </ion-item-group>
 </ion-content>

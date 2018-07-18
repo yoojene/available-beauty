@@ -78,8 +78,7 @@
       <ion-list no-padding>
         <ion-card no-padding *ngFor="let user of users; let i = index" >
           <ion-card-content>
-            <div (click)="openProfile(user)">
-            <ion-grid no-padding>
+            <ion-grid no-padding (click)="openProfile(user)">
               <ion-row>
                 <ion-col>
                     <ion-item no-padding no-border>
@@ -94,20 +93,19 @@
             <br>
             <div>
               <div text-wrap>
-                <ion-slides no-padding *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop>
+                <ion-slides no-padding *ngIf="user.galleryImages && user.galleryImages.length" pager autoplay="3000" speed="500" loop (click)="openProfile(user)">
                   <ion-slide *ngFor="let img of user.galleryImages" [ngStyle]="{'background-image': 'url(' + img +')'}" class="page-home--slide-background">
                   </ion-slide>
                 </ion-slides>
                 <div *ngIf="user.stylistRating; let starRating;">
                   <ion-item no-padding>
-                  <star-rating [rating]="starRating"></star-rating>
-                    <span item-content class="page-home--reviewtext-centered"> {{stylistReviews}} {{reviewsText}} </span>
+                  <star-rating [rating]="starRating" (click)="openReviews(user.key)"></star-rating>
+                    <span item-content class="page-home--reviewtext-centered" (click)="openReviews(user.key)"> {{stylistReviews}} {{reviewsText}} </span>
                     <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                   </ion-item>
                 </div>
               </div>
             </div>
-          </div>
           <!--SEVICES EXPANDING SECTION -->
           <ion-list no-padding>
             <ion-item class="page-home--services" (click)="onSkillsTap(user)">

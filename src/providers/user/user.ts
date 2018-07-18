@@ -9,6 +9,7 @@ import { User } from '../../model/users/user.model';
 import firebase from 'firebase';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { UtilsProvider } from '../utils/utils';
+import { Review } from '../../model/review/review.model';
 
 @Injectable()
 export class UserProvider {
@@ -183,5 +184,11 @@ export class UserProvider {
     console.log(result);
 
     return result;
+  }
+
+  public getReviewByReceiver(userId: any) {
+    return this.afdb.list<Review>(`reviews`, ref => {
+      return ref.orderByChild('receiverUid').equalTo(userId);
+    });
   }
 }

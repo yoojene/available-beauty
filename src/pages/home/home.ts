@@ -218,9 +218,9 @@ export class HomePage {
     this.navCtrl.push(StylistProfilePage, { user: user });
   }
 
-  public openReviews(stylistId: any) {
+  public openReviews(userId: any) {
     const reviewModal = this.modalCtrl.create(StylistReviewPage, {
-      stylistId: stylistId,
+      userId: userId,
     });
 
     reviewModal.onDidDismiss(data => {
@@ -327,7 +327,7 @@ export class HomePage {
 
   private getUsers(term?: any) {
     /* Uncomment to use search function*/
-    
+
     console.log('treatment=' + this.selectedTreatment);
     console.log('date=' + this.selectedDate);
 
@@ -341,7 +341,14 @@ export class HomePage {
       selectedDate = this.dateOptions[date].name;
       console.log('date=' + selectedDate);
     }*/
-    return this.search.search(term, this.lat, this.long, 100, this.selectedTreatment, this.selectedDate);
+    return this.search.search(
+      term,
+      this.lat,
+      this.long,
+      100,
+      this.selectedTreatment,
+      this.selectedDate
+    );
 
     /* This is the direct call to the RTDB
     this.user

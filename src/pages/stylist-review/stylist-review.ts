@@ -1,6 +1,5 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { Observable } from 'rxjs/Observable';
 import { Review } from '../../model/review/review.model';
 import { UserProvider } from '../../providers/user/user';
@@ -19,14 +18,13 @@ import { User } from '../../model/users/user.model';
   templateUrl: 'stylist-review.html',
 })
 export class StylistReviewPage implements AfterContentInit {
-  public stylistId: any;
+  public userId: any;
   public review$: Observable<Review[]>;
   public user$: Observable<User>;
   public reviewUser: any;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private stylist: StylistProvider,
     private user: UserProvider
   ) {}
 
@@ -37,17 +35,18 @@ export class StylistReviewPage implements AfterContentInit {
   ionViewDidEnter() {}
 
   ngAfterContentInit() {
-    this.stylistId = this.navParams.get('stylistId');
+    this.userId = this.navParams.get('userId');
 
-    console.log(this.stylistId);
-    this.getReviews(this.stylistId);
+    console.log(this.userId);
+    this.getReviews(this.userId);
   }
 
-  public getReviews(stylistId: any) {
-    console.log(stylistId);
-    this.review$ = this.stylist.getStylistReview(stylistId).valueChanges();
+  public getReviews(userId: any) {
+    console.log(userId);
+    this.review$ = this.user.getReviewByReceiver(userId).valueChanges();
 
     this.review$.subscribe(res => {
+      console.log(res);
       res.forEach(el => {
         this.getReviewer(el.senderUid).subscribe(res => {
           // TODO need to unsub
