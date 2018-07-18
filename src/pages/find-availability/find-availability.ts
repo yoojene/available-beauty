@@ -32,6 +32,7 @@ import { Moment } from 'moment';
 export class FindAvailabilityPage {
   @ViewChild(Scroll) dateScroll: Scroll;
 
+  public findAvailabilityTitle = 'Select Availability Slot';
   public noAvailabilitiesText = 'No Availability';
 
   public stylistAvail$: Observable<any>; // TODO define interface for Availbility
