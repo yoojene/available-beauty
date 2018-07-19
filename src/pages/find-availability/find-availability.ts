@@ -48,6 +48,7 @@ export class FindAvailabilityPage {
   public viewDate: Moment = moment();
   public dates: any[] = [];
   public today = moment().format('Do MM YYYY');
+  private date: any;
 
   private user: any;
 
@@ -172,12 +173,23 @@ export class FindAvailabilityPage {
         weekday: moment(this.viewDate)
           .add(loopIdx, 'day')
           .format('DD-MMM-YYYY'),
+        selected: false,
       });
       loopIdx += interval;
     }
   }
+  /**
+   * Control selected button outline and return slots
+   */
+  public onDateTap(date, dates) {
+    dates.forEach(el => {
+      if (moment(el.date).isSame(moment(date.date))) {
+        el.selected = !el.selected;
+      } else if (el.selected) {
+        el.selected = !el.selected;
+      }
+    });
 
-  public onDateTap(date) {
     this.getAvailability(this.user, date.date);
   }
 

@@ -15,7 +15,7 @@
 
 <ion-content padding>
 
-  <div>{{viewDate}}</div>
+  <!-- <div>{{viewDate}}</div> -->
 <!--
 
   <calendar-week-view>
@@ -23,9 +23,9 @@
   </calendar-week-view> -->
     <ion-scroll scrollX="true">
       <ion-col *ngFor="let date of dates">
-      <button ion-button outline small color="aubergine"(click)="onDateTap(date)">
-        {{date.weekday}}
-      </button>
+        <button ion-button [outline]="date.selected" small color="aubergine"(click)="onDateTap(date, dates)">
+          {{date.weekday}}
+        </button>
       </ion-col>
     </ion-scroll>
 
@@ -46,7 +46,7 @@
       </ion-list>
     </ng-template>
     <ng-template #no_avail>
-      <h2>{{noAvailabilitiesText}}</h2>
+      <h2 text-center>{{noAvailabilitiesText}}</h2>
     </ng-template>
 </ion-content>
 
