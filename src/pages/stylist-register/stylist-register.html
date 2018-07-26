@@ -120,8 +120,16 @@
       <button block round ion-button outline type="button" (click)="takePhoto()" color="aubergine">
         {{useCameraButtonText}}
       </button>
-      <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
-      </progress-bar>
+      <!-- <progress-bar *ngIf="stylistRegForm.get('loadImages').value === true && loadProgress < 100" [progress]="loadProgress">
+      </progress-bar> -->
+
+      <div *ngIf="showPhotoSpinner"><ion-spinner name="bubbles"></ion-spinner></div>
+      <div *ngIf="downloadUrls && downloadUrls.length > 0">
+        <div *ngFor="let url of downloadUrls">
+            <img src="{{url.url}}">
+        </div>
+      </div>
+
 
     </ion-slide>
   </ion-slides>

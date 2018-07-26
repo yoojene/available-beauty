@@ -37,7 +37,7 @@ export class PhotoProvider {
       quality: 100,
       sourceType: sourceType,
       saveToPhotoAlbum: false,
-      correctOrientation: true
+      correctOrientation: true,
     };
 
     return this.camera.getPicture(options).then(imagePath => {
@@ -57,8 +57,8 @@ export class PhotoProvider {
       maximumImagesCount: 1,
       width: 500,
       height: 500,
-      quality: 100
-    }
+      quality: 100,
+    };
     let photo;
 
     return this.imagePicker.getPictures(options).then(
@@ -73,7 +73,7 @@ export class PhotoProvider {
           }
           let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
 
-          photo = {photoFullPath: fullPath, path: path}
+          photo = { photoFullPath: fullPath, path: path };
           //photos.push({ photoFullPath: fullPath, path: path });
         }
         return Promise.resolve(photo);
@@ -92,7 +92,7 @@ export class PhotoProvider {
    * @returns
    * @memberof PhotoProvider
    */
-  public getLibraryPictures() {
+  public getLibraryPictures(): Promise<any> {
     let options = {};
     let photos = [];
     return this.imagePicker.getPictures(options).then(
@@ -128,19 +128,29 @@ export class PhotoProvider {
 
     let photoPromises = [];
 
-    photo.forEach(el => {
+    photo.forEach(async el => {
       console.log(el);
       let promise = storageRef
         .child(`stylistGalleryImages/${el.photoFileName}`)
         .putString(el.photoBase64Data, 'data_url');
-
+      // console.log(photoStorageRes);
       photoPromises.push(promise);
     });
 
     console.log(photoPromises);
 
-    return Promise.all([photoPromises]);
+    return Promise.resolve(photoPromises);
+    // return this.promiseSerial(photoPromises);
+
+    // console.log(photoPromises);
   }
+
+  private promiseSerial = funcs =>
+    funcs.reduce(
+      (promise, func) =>
+        func.then(result => func().then(Array.prototype.concat.bind(result))),
+      Promise.resolve([])
+    );
   /**
    * Util method to get base64 data for image
    *
@@ -168,7 +178,7 @@ export class PhotoProvider {
             this.photos.push({
               photoFullPath: fullPath,
               photoFileName: res.name,
-              photoBase64Data: data
+              photoBase64Data: data,
             });
             console.log(this.photos);
             return this.photos;

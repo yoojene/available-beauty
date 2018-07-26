@@ -81,6 +81,8 @@ export class StylistRegisterPage {
   public yes: boolean;
   public no: boolean;
 
+  public showPhotoSpinner = false;
+
   constructor(
     public navCtrl: NavController,
     private plt: Platform,
@@ -139,17 +141,24 @@ export class StylistRegisterPage {
       this.coords = res;
     });
 
-    this.stylistKey = this.afdb.list('stylistProfile');
+    this.stylistKey = 'NHa65TYwN6hQpXFKBBW6obygRdy2'; // Henry@gmail.com
 
-    this.stylistKey
-      // .last()
-      .snapshotChanges()
-      // .takeLast(10)
-      .subscribe(action => {
-        console.log(action.type);
-        console.log(action.key);
-        console.log(action.payload.val());
-      });
+    firebase.auth().signInWithEmailAndPassword('henry@gmail.com', 'password');
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user);
+        // User is signed in.
+        //   var displayName = user.displayName;
+        //   var email = user.email;
+        //   var emailVerified = user.emailVerified;
+        //   var photoURL = user.photoURL;
+        //   var isAnonymous = user.isAnonymous;
+        //   var uid = user.uid;
+        //   var providerData = user.providerData;
+        //   // ...
+      }
+    });
   }
 
   // Public
@@ -320,6 +329,7 @@ export class StylistRegisterPage {
   }
 
   public monitorUploadProgress(tasks) {
+    this.showPhotoSpinner = true;
     console.log('monitorUploadProgress');
 
     tasks.forEach(task => {
@@ -351,7 +361,9 @@ export class StylistRegisterPage {
         () => {
           console.log('success!');
           // Need the URLs for RTDB update
-          this.downloadUrls.push(task.snapshot.downloadURL);
+          this.downloadUrls.push({ url: task.snapshot.downloadURL });
+          this.showPhotoSpinner = false;
+          console.log(this.downloadUrls);
         }
       );
     });
@@ -402,20 +414,22 @@ export class StylistRegisterPage {
     });
   }
 
-  public selectPhoto() {
-    this.photo.getLibraryPictures().then(res => {
-      const photos: any = res;
-      photos.forEach(el => {
-        this.photo.getBase64Data(el.photoFullPath, el.path).then(baseress => {
-          console.log(baseress);
-          this.photo.pushPhotoToStorage(baseress).then(stores => {
-            console.log(stores[0]);
+  public async selectPhoto(): Promise<any> {
+    const photos = await this.photo.getLibraryPictures();
+    console.log(photos);
+    photos.forEach(async el => {
+      console.log(el);
+      const base64res = await this.photo.getBase64Data(
+        el.photoFullPath,
+        el.path
+      );
+      console.log(base64res);
 
-            // TODO: this looks to be the place to update RTDB
-            this.monitorUploadProgress(stores[0]);
-          });
-        });
-      });
+      const storageRes = await this.photo.pushPhotoToStorage(base64res);
+      console.log(storageRes);
+
+      // TODO: this looks to be the place to update RTDB
+      this.monitorUploadProgress(storageRes);
     });
   }
 
@@ -457,4 +471,8 @@ export class StylistRegisterPage {
 
     return required;
   }
+
+  // Private
+
+  private uploadToRTDB() {}
 }

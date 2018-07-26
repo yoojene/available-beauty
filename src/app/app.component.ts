@@ -64,7 +64,7 @@ export class AvailableBeautyApp {
         // Check if is Stylist or User
         this.user.checkIsStylist(uid).subscribe(res => {
           if (!res) {
-            this.rootPage = 'TabsPage';
+            this.rootPage = 'StylistRegisterPage';
           } else {
             this.user
               .getUserById(uid)
