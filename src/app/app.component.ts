@@ -57,7 +57,7 @@ export class AvailableBeautyApp {
     this.afAuth.authState.subscribe(res => {
       if (!res) {
         // Unauthenticated state
-        this.rootPage = 'LandingPage';
+        this.rootPage = 'StylistRegisterPage';
       } else {
         const uid = res.uid;
         this.fcm.getToken();
