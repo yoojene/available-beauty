@@ -466,7 +466,8 @@ export class StylistRegisterPage {
         () => {
           console.log('success!');
           // Need the URLs for RTDB update
-          this.downloadUrls.push({ url: task.snapshot.downloadURL });
+          // this.downloadUrls.push({ url: task.snapshot.downloadURL });
+          this.downloadUrls.push(task.snapshot.downloadURL);
           this.showPhotoSpinner = false;
           console.log(this.downloadUrls);
 
