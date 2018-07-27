@@ -328,47 +328,6 @@ export class StylistRegisterPage {
     actionSheet.present();
   }
 
-  public monitorUploadProgress(tasks) {
-    this.showPhotoSpinner = true;
-    console.log('monitorUploadProgress');
-
-    tasks.forEach(task => {
-      console.log(task);
-      task.on(
-        'state_changed',
-        (snapshot: any) => {
-          this.loadProgress = (
-            (snapshot.bytesTransferred / snapshot.totalBytes) *
-            100
-          ).toFixed(2);
-          // this.loadProgress.push(prog);
-          // console.log(this.loadProgress);
-          console.log('Upload is ' + this.loadProgress + '% done');
-          switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
-              console.log('Upload is paused');
-              break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
-              console.log('Upload is running');
-              break;
-            default:
-          }
-          // return progress;
-        },
-        err => {
-          console.error(err);
-        },
-        () => {
-          console.log('success!');
-          // Need the URLs for RTDB update
-          this.downloadUrls.push({ url: task.snapshot.downloadURL });
-          this.showPhotoSpinner = false;
-          console.log(this.downloadUrls);
-        }
-      );
-    });
-  }
-
   public goBack() {
     this.navCtrl.push('LoginPage');
   }
@@ -474,5 +433,46 @@ export class StylistRegisterPage {
 
   // Private
 
-  private uploadToRTDB() {}
+  private monitorUploadProgress(tasks) {
+    this.showPhotoSpinner = true;
+    console.log('monitorUploadProgress');
+
+    tasks.forEach(task => {
+      console.log(task);
+      task.on(
+        'state_changed',
+        (snapshot: any) => {
+          this.loadProgress = (
+            (snapshot.bytesTransferred / snapshot.totalBytes) *
+            100
+          ).toFixed(2);
+          // this.loadProgress.push(prog);
+          // console.log(this.loadProgress);
+          console.log('Upload is ' + this.loadProgress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+            default:
+          }
+          // return progress;
+        },
+        err => {
+          console.error(err);
+        },
+        () => {
+          console.log('success!');
+          // Need the URLs for RTDB update
+          this.downloadUrls.push({ url: task.snapshot.downloadURL });
+          this.showPhotoSpinner = false;
+          console.log(this.downloadUrls);
+
+          this.photo.addPhotosToUserGallery(this.downloadUrls);
+        }
+      );
+    });
+  }
 }

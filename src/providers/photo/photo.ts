@@ -5,6 +5,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
 import { File, FileReader } from '@ionic-native/file';
 import * as firebase from 'firebase';
 import { Platform } from 'ionic-angular';
+import { AngularFireDatabase } from '../../../node_modules/angularfire2/database';
 /*
   Generated class for the PhotoProvider provider.
 
@@ -21,7 +22,8 @@ export class PhotoProvider {
     public camera: Camera,
     public imagePicker: ImagePicker,
     public file: File,
-    public plt: Platform
+    public plt: Platform,
+    private afdb: AngularFireDatabase
   ) {
     console.log('Hello PhotoProvider Provider');
   }
@@ -140,9 +142,6 @@ export class PhotoProvider {
     console.log(photoPromises);
 
     return Promise.resolve(photoPromises);
-    // return this.promiseSerial(photoPromises);
-
-    // console.log(photoPromises);
   }
 
   private promiseSerial = funcs =>
@@ -159,7 +158,7 @@ export class PhotoProvider {
    * @returns
    * @memberof PhotoProvider
    */
-  public getBase64Data(fullPath: string, path?: string) {
+  public async getBase64Data(fullPath: string, path?: string): Promise<any> {
     console.log('getBase64Data');
     console.log(fullPath);
     console.log(path);
@@ -171,22 +170,88 @@ export class PhotoProvider {
       shortPath = path;
     }
 
-    return this.file.resolveLocalFilesystemUrl(fullPath).then(
-      res => {
-        return this.file.readAsDataURL(shortPath, res.name).then(
-          data => {
-            this.photos.push({
-              photoFullPath: fullPath,
-              photoFileName: res.name,
-              photoBase64Data: data,
-            });
-            console.log(this.photos);
-            return this.photos;
-          },
-          err => console.error(err)
-        );
-      },
-      err => console.error(err)
-    );
+    try {
+      const resolveFileSysRes = await this.file.resolveLocalFilesystemUrl(
+        fullPath
+      );
+      const readAsDataURLRes = await this.file.readAsDataURL(
+        shortPath,
+        resolveFileSysRes.name
+      );
+      this.photos.push({
+        photoFullPath: fullPath,
+        photoFileName: resolveFileSysRes.name,
+        photoBase64Data: readAsDataURLRes,
+      });
+
+      return Promise.resolve(this.photos);
+    } catch (error) {
+      console.error(error);
+    }
+
+    // this.photos.push({
+    //   photoFullPath: fullPath,
+    //   photoFileName: resolveFileSysRes.name,
+    //   photoBase64Data: readAsDataURLRes,
+    // });
+
+    // return this.file.resolveLocalFilesystemUrl(fullPath).then(
+    //   res => {
+    //     return this.file.readAsDataURL(shortPath, res.name).then(
+    //       data => {
+    //         this.photos.push({
+    //           photoFullPath: fullPath,
+    //           photoFileName: res.name,
+    //           photoBase64Data: data,
+    //         });
+    //         console.log(this.photos);
+    //         return this.photos;
+    //       },
+    //       err => console.error(err)
+    //     );
+    //   },
+    //   err => console.error(err)
+    // );
+  }
+
+  public addPhotosToUserGallery(urls: Array<any>) {
+    console.log('addPhotosToUser RTDB');
+
+    console.log(urls);
+    // let idx;
+    // let url;
+
+    // urls.forEach(url, index => {
+    //   url = url;
+    //   idx = index;
+    // });
+
+    const uid = firebase.auth().currentUser.uid;
+
+    // let galleryData = {
+    //   idx:
+    // }
+
+    // let urlObj = {} as any;
+
+    // urls.map((url, idx) => {
+
+    //   urlObj.idx = idx;
+    //   urlObj.
+
+    // })
+
+    let galleryPayload = {};
+    galleryPayload[`userProfile/${uid}/galleryImages/`] = urls;
+
+    console.log(galleryPayload);
+
+    return this.afdb.database
+      .ref()
+      .update(galleryPayload)
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+
+    // Update RTDB
   }
 }
