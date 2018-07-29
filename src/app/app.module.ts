@@ -25,6 +25,7 @@ import { ImagePicker } from '@ionic-native/image-picker';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -72,6 +73,7 @@ import { FindAvailabilityPageModule } from '../pages/find-availability/find-avai
     ReactiveFormsModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG_VALUES),
     AngularFireDatabaseModule,
+    AngularFireStorageModule,
     HomePageModule,
     LoginBackgroundSliderPageModule,
     LandingPageModule,

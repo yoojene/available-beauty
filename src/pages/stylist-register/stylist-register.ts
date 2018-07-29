@@ -9,7 +9,7 @@ import {
 } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { StorageProvider } from '../../providers/storage/storage';
-import { StylistProvider } from '../../providers/stylist/stylist';
+import { Storage } from '@ionic/storage';
 
 import { PhoneNumberValidator } from '../../validators/phone-number.validators';
 
@@ -25,6 +25,7 @@ import * as firebase from 'firebase';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/takeLast';
 import { UserProvider } from '../../providers/user/user';
+import { ImagePicker } from '../../../node_modules/@ionic-native/image-picker';
 
 /**
  * Generated class for the StylistRegisterPage page.
@@ -89,13 +90,14 @@ export class StylistRegisterPage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     public storage: StorageProvider,
-    public stylist: StylistProvider,
+    public ionicstorage: Storage,
     public location: LocationProvider,
     public camera: Camera,
     public actionSheetCtrl: ActionSheetController,
     public photo: PhotoProvider,
     public afdb: AngularFireDatabase,
-    public user: UserProvider
+    public user: UserProvider,
+    private imagePicker: ImagePicker
   ) {
     this.stylistRegForm = formBuilder.group({
       phoneNumber: [
@@ -137,10 +139,6 @@ export class StylistRegisterPage {
       }
     });
 
-    this.storage.getStorage('geolocation').subscribe(res => {
-      this.coords = res;
-    });
-
     this.stylistKey = 'NHa65TYwN6hQpXFKBBW6obygRdy2'; // Henry@gmail.com
 
     firebase.auth().signInWithEmailAndPassword('henry@gmail.com', 'password');
@@ -167,9 +165,10 @@ export class StylistRegisterPage {
    * Use current coordinates to lookup address and populate form
    *
    */
-  public useCurrentAddress() {
+  public async useCurrentAddress() {
     console.log('using current address!');
-    console.log(this.plt.platforms());
+    this.coords = await this.ionicstorage.get('geolocation');
+    console.log(this.coords);
     if (this.plt.is('cordova')) {
       if (this.showAddressForm) {
         this.showAddressForm = false;
@@ -288,18 +287,18 @@ export class StylistRegisterPage {
           text: 'Load from Library',
           handler: () => {
             this.photo.getLibraryPictures().then(res => {
-              const photos: any = res;
-              photos.forEach(el => {
-                this.photo
-                  .getBase64Data(el.photoFullPath, el.path)
-                  .then(baseress => {
-                    console.log(baseress);
-                    this.photo.pushPhotoToStorage(baseress).then(stores => {
-                      console.log(stores[0]);
-                      this.monitorUploadProgress(stores[0]);
-                    });
-                  });
-              });
+              // const photos: any = res;
+              // photos.forEach(el => {
+              //   this.photo
+              //     .getBase64Data(el.photoFullPath, el.path)
+              //     .then(baseress => {
+              //       console.log(baseress);
+              // this.photo.pushPhotoToStorage(baseress).then(stores => {
+              //   console.log(stores[0]);
+              //   this.monitorUploadProgress(stores[0]);
+              //       // });
+              //     });
+              // });
             });
           },
         },
@@ -310,12 +309,12 @@ export class StylistRegisterPage {
               .takePhoto(this.camera.PictureSourceType.CAMERA)
               .then(res => {
                 console.log(res);
-                this.photo.getBase64Data(res).then(baseres => {
-                  this.photo.pushPhotoToStorage(baseres).then(stores => {
-                    console.log(stores[0]);
-                    this.monitorUploadProgress(stores[0]);
-                  });
-                });
+                // this.photo.getBase64Data(res).then(baseres => {
+                // this.photo.pushPhotoToStorage(baseres).then(stores => {
+                //   console.log(stores[0]);
+                //   this.monitorUploadProgress(stores[0]);
+                // });
+                // });
               });
           },
         },
@@ -364,32 +363,115 @@ export class StylistRegisterPage {
   public takePhoto() {
     this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
       console.log(res);
-      this.photo.getBase64Data(res).then(baseres => {
-        this.photo.pushPhotoToStorage(baseres).then(stores => {
-          console.log(stores[0]);
-          this.monitorUploadProgress(stores[0]);
-        });
-      });
+      // this.photo.getBase64Data(res).then(baseres => {
+      // this.photo.pushPhotoToStorage(baseres).then(stores => {
+      //   console.log(stores[0]);
+      //   this.monitorUploadProgress(stores[0]);
+      // });
+      // });
     });
   }
 
   public async selectPhoto(): Promise<any> {
-    const photos = await this.photo.getLibraryPictures();
-    console.log(photos);
-    photos.forEach(async el => {
-      console.log(el);
-      const base64res = await this.photo.getBase64Data(
-        el.photoFullPath,
-        el.path
-      );
-      console.log(base64res);
+    await this.imagePicker.requestReadPermission();
+    // const photos = await this.photo.getLibraryPicturesAsBase64();
+    // console.log(photos);
+    let options = {
+      width: 500,
+      height: 500,
+      quality: 100,
+    };
+    const images = await this.imagePicker.getPictures(options);
 
-      const storageRes = await this.photo.pushPhotoToStorage(base64res);
-      console.log(storageRes);
+    const base64res = images.map(async (el, idx) => {
+      console.log(el, idx);
+      let fullPath;
 
-      // TODO: this looks to be the place to update RTDB
-      this.monitorUploadProgress(storageRes);
+      if (this.plt.is('ios')) {
+        fullPath = 'file://' + images[idx];
+      } else {
+        fullPath = images[idx];
+      }
+
+      let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+
+      console.log(fullPath);
+      console.log(path);
+
+      return await this.photo.getBase64Data(fullPath, path);
     });
+
+    console.log(base64res);
+    Promise.all(base64res).then(comp => {
+      console.log(comp);
+
+      const storageRes = comp.map(async (el: any) => {
+        console.log(el);
+        return await this.photo.pushPhotoToStorage(
+          el.photoFileName,
+          el.photoBase64Data
+        );
+      });
+
+      console.log(storageRes);
+      Promise.all(storageRes).then(storecomp => {
+        console.log(storecomp);
+
+        storecomp.map(async task => {
+          console.log(task);
+
+          return await this.addPhotosToGallery(task.downloadURL);
+        });
+        // storecomp.forEach(task => {
+        //   console.log(task);
+
+        //   this.downloadUrls.push(task.downloadURL);
+        //   console.log(this.downloadUrls);
+
+        //   console.log('about to addPhotosToGalley');
+
+        //   this.addPhotosToGallery(this.downloadUrls);
+        // });
+        // this.monitorUploadProgress(storecomp);
+        // storecomp.map(el => {
+        //   this.monitorUploadProgress(el);
+        // });
+      });
+    });
+
+    // photos.forEach(async el => {
+    //   console.log(el);
+    //   const base64res = await this.photo.getBase64Data(
+    //     el.photoFullPath,
+    //     el.path
+    //   );
+    //   console.log(base64res);
+
+    //   const storageRes = await this.photo.pushPhotoToStorage(base64res);
+    //   console.log(storageRes);
+
+    //   // TODO: this looks to be the place to update RTDB
+    //   this.monitorUploadProgress(storageRes);
+    // });
+
+    // let testarray = [1,2,3.4]
+
+    // const base64Res = photos.map(async el => {
+    //   console.log(el);
+    //   return await this.photo.getBase64Data(el.photoFullPath, el.path);
+    // });
+
+    // console.log(base64Res);
+
+    // const storageRes = photos.map(async el => {
+    //   console.log(el);
+    //   return await this.photo.pushPhotoToStorage(
+    //     el.photoFileName,
+    //     el.photoBase64Data
+    //   );
+    // });
+
+    // console.log(storageRes);
   }
 
   public checkDisabled() {
@@ -471,9 +553,31 @@ export class StylistRegisterPage {
           this.showPhotoSpinner = false;
           console.log(this.downloadUrls);
 
-          this.photo.addPhotosToUserGallery(this.downloadUrls);
+          this.addPhotosToGallery(this.downloadUrls);
         }
       );
     });
+  }
+
+  private addPhotosToGallery(url) {
+    console.log('addPhotosToGallery');
+
+    this.downloadUrls.push(url);
+
+    // return Promise.all(urls.map(url => this.photo.addPhotosToUserGallery(url)))
+
+    // .then(succ => {
+    //   console.log('succ');
+    //   console.log(succ);
+    // })
+    // .catch(err => {
+    //   console.log('err');
+    //   console.log(err);
+    // });
+    // return urls.map(url =>
+    return this.photo
+      .addPhotosToUserGallery(this.downloadUrls)
+      .then(res => console.log(res));
+    // );
   }
 }

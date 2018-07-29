@@ -66,7 +66,7 @@ export class EditUserProfilePage implements AfterContentInit {
     private user: UserProvider,
     public photo: PhotoProvider,
     private formBuilder: FormBuilder, //private utils: UtilsProvider
-    private skills: SkillsProvider,
+    private skills: SkillsProvider
   ) {
     this.editUserForm = formBuilder.group({
       stylistName: [''],
@@ -131,9 +131,7 @@ export class EditUserProfilePage implements AfterContentInit {
       }
     });
 
-      this.availableSkills$ = this.skills.getSkillGroups().snapshotChanges();
-
-    
+    this.availableSkills$ = this.skills.getSkillGroups().snapshotChanges();
   }
 
   public ionViewDidLoad() {
@@ -162,16 +160,16 @@ export class EditUserProfilePage implements AfterContentInit {
     console.log('Getting banner from picker');
     this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
-      this.photo
-        .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
-        .then(baseress => {
-          console.log(baseress);
-          this.photo.pushPhotoToStorage(baseress).then(stores => {
-            console.log(stores[0]);
-            this.monitorUploadProgress(stores[0]);
-            // Write stores to DB
-          });
-        });
+      // this.photo
+      //   .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
+      //   .then(baseress => {
+      //     console.log(baseress);
+      // this.photo.pushPhotoToStorage(baseress).then(stores => {
+      //   console.log(stores[0]);
+      //   this.monitorUploadProgress(stores[0]);
+      //   // Write stores to DB
+      // });
+      // });
     });
 
     //UPDATE IMAGE ON PAGE
@@ -181,16 +179,16 @@ export class EditUserProfilePage implements AfterContentInit {
     console.log('Getting avatar from picker');
     this.photo.getOneLibraryPicture().then(res => {
       let returnedPhoto: any = res;
-      this.photo
-        .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
-        .then(baseress => {
-          console.log(baseress);
-          this.photo.pushPhotoToStorage(baseress).then(stores => {
-            console.log(stores[0]);
-            this.monitorUploadProgress(stores[0]);
-            // Write stores to DB
-          });
-        });
+      // this.photo
+      //   .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
+      //   .then(baseress => {
+      //     console.log(baseress);
+      //     // this.photo.pushPhotoToStorage(baseress).then(stores => {
+      //     //   console.log(stores[0]);
+      //     //   this.monitorUploadProgress(stores[0]);
+      //     //   // Write stores to DB
+      //     // });
+      //   });
     });
   }
 
@@ -210,8 +208,11 @@ export class EditUserProfilePage implements AfterContentInit {
 
       //  Update skills for user
       console.log('available skills : ' + this.availableSkills$);
-      this.stylist.setStylistSkills(firebase.auth().currentUser.uid, this.availableSkills$);
-      
+      this.stylist.setStylistSkills(
+        firebase.auth().currentUser.uid,
+        this.availableSkills$
+      );
+
       this.user
         .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
         .then(() => this.navCtrl.pop());

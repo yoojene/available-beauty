@@ -5,7 +5,13 @@ import { ImagePicker } from '@ionic-native/image-picker';
 import { File, FileReader } from '@ionic-native/file';
 import * as firebase from 'firebase';
 import { Platform } from 'ionic-angular';
-import { AngularFireDatabase } from '../../../node_modules/angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
+import {
+  AngularFireStorage,
+  AngularFireStorageReference,
+  AngularFireUploadTask,
+} from 'angularfire2/storage';
+import { UploadTask } from '../../../node_modules/@firebase/storage-types';
 /*
   Generated class for the PhotoProvider provider.
 
@@ -13,7 +19,6 @@ import { AngularFireDatabase } from '../../../node_modules/angularfire2/database
   and Angular DI.
 */
 
-declare const resolveLocalFileSystemURL;
 @Injectable()
 export class PhotoProvider {
   photos: Array<any> = [];
@@ -23,7 +28,8 @@ export class PhotoProvider {
     public imagePicker: ImagePicker,
     public file: File,
     public plt: Platform,
-    private afdb: AngularFireDatabase
+    private afdb: AngularFireDatabase,
+    private afstorage: AngularFireStorage
   ) {
     console.log('Hello PhotoProvider Provider');
   }
@@ -111,7 +117,65 @@ export class PhotoProvider {
 
           photos.push({ photoFullPath: fullPath, path: path });
         }
-        return Promise.resolve(photos);
+        // return Promise.resolve(photos);
+        return photos;
+      },
+      err => {
+        console.error(err);
+      }
+    );
+  }
+  /**
+   * Cordova image picker, select image from library and get base64 string
+   *
+   * @returns
+   * @memberof PhotoProvider
+   */
+  public getLibraryPicturesAsBase64(): Promise<any> {
+    let options = {};
+    // let photos = [];
+    return this.imagePicker.getPictures(options).then(
+      res => {
+        console.log(res);
+        // for (let i = 0; i < res.length; i++) {
+        //   let fullPath;
+        //   if (this.plt.is('ios')) {
+        //     fullPath = 'file://' + res[i];
+        //   } else {
+        //     fullPath = res[i];
+        //   }
+        //   console.log(fullPath);
+        //   const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+        //   return this.file.resolveLocalFilesystemUrl(fullPath).then(
+        //     res => {
+        //       return this.file.readAsDataURL(path, res.name).then(
+        //         data => {
+        //           this.photos.push({
+        //             photoFullPath: fullPath,
+        //             photoFileName: res.name,
+        //             photoBase64Data: data,
+        //           });
+        //           console.log(this.photos);
+        //           return this.photos;
+        //         },
+        //         err => console.error(err)
+        //       );
+        //     },
+        //     err => console.error(err)
+        //   );
+        // }
+
+        res.map(async (el, idx) => {
+          let fullPath;
+          if (this.plt.is('ios')) {
+            fullPath = 'file://' + res[idx];
+          } else {
+            fullPath = res[idx];
+          }
+          const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+
+          return await this.getBase64Data(fullPath, path);
+        });
       },
       err => {
         console.error(err);
@@ -121,27 +185,37 @@ export class PhotoProvider {
   /**
    * Add photo to Firebase Storage as base64 string
    * TODO: create filename convention?  Using default
-   * @param {*} photo
+   * @param imgstr  // base64image encoded string
    * @returns
    * @memberof PhotoProvider
    */
-  public pushPhotoToStorage(photo: any) {
-    let storageRef = firebase.storage().ref();
+  public pushPhotoToStorage(filename: string, imgstr: string): UploadTask {
+    // let storageRef = firebase.storage().ref();
+    const storageRef = this.afstorage.storage.ref(
+      `stylistGalleryImages/${filename}`
+    );
 
-    let photoPromises = [];
+    try {
+      return storageRef.putString(imgstr, 'data_url');
+    } catch (err) {
+      console.error(err);
+    }
 
-    photo.forEach(async el => {
-      console.log(el);
-      let promise = storageRef
-        .child(`stylistGalleryImages/${el.photoFileName}`)
-        .putString(el.photoBase64Data, 'data_url');
-      // console.log(photoStorageRes);
-      photoPromises.push(promise);
-    });
+    // let photoPromises = [];
 
-    console.log(photoPromises);
+    // photo.forEach(async el => {
+    //   console.log(el);
+    //   let promise = storageRef
+    //     .child(`stylistGalleryImages/${el.photoFileName}`)
+    //     .putString(el.photoBase64Data, 'data_url');
+    //   // console.log(photoStorageRes);
+    //   photoPromises.push(promise);
 
-    return Promise.resolve(photoPromises);
+    // });
+
+    // console.log(photoPromises);
+
+    // return Promise.all(photoPromises);
   }
 
   private promiseSerial = funcs =>
@@ -158,36 +232,38 @@ export class PhotoProvider {
    * @returns
    * @memberof PhotoProvider
    */
-  public async getBase64Data(fullPath: string, path?: string): Promise<any> {
+  public getBase64Data(fullPath: string, path: string): Promise<any> {
     console.log('getBase64Data');
     console.log(fullPath);
     console.log(path);
 
-    let shortPath;
-    if (!path) {
-      shortPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
-    } else {
-      shortPath = path;
-    }
+    // let shortPath;
+    // if (!path) {
+    //   shortPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+    // } else {
+    //   shortPath = path;
+    // }
 
-    try {
-      const resolveFileSysRes = await this.file.resolveLocalFilesystemUrl(
-        fullPath
-      );
-      const readAsDataURLRes = await this.file.readAsDataURL(
-        shortPath,
-        resolveFileSysRes.name
-      );
-      this.photos.push({
-        photoFullPath: fullPath,
-        photoFileName: resolveFileSysRes.name,
-        photoBase64Data: readAsDataURLRes,
-      });
+    // try {
+    //   const resolveFileSysRes = await this.file.resolveLocalFilesystemUrl(
+    //     fullPath
+    //   );
+    //   const readAsDataURLRes = await this.file.readAsDataURL(
+    //     shortPath,
+    //     resolveFileSysRes.name
+    //   );
+    //   this.photos.push({
+    //     photoFullPath: fullPath,
+    //     photoFileName: resolveFileSysRes.name,
+    //     photoBase64Data: readAsDataURLRes,
+    //   });
 
-      return Promise.resolve(this.photos);
-    } catch (error) {
-      console.error(error);
-    }
+    //   return Promise.resolve(this.photos);
+
+    //   // return this.photos;
+    // } catch (error) {
+    //   console.error(error);
+    // }
 
     // this.photos.push({
     //   photoFullPath: fullPath,
@@ -195,62 +271,50 @@ export class PhotoProvider {
     //   photoBase64Data: readAsDataURLRes,
     // });
 
-    // return this.file.resolveLocalFilesystemUrl(fullPath).then(
-    //   res => {
-    //     return this.file.readAsDataURL(shortPath, res.name).then(
-    //       data => {
-    //         this.photos.push({
-    //           photoFullPath: fullPath,
-    //           photoFileName: res.name,
-    //           photoBase64Data: data,
-    //         });
-    //         console.log(this.photos);
-    //         return this.photos;
-    //       },
-    //       err => console.error(err)
-    //     );
-    //   },
-    //   err => console.error(err)
-    // );
+    let photos = {} as any;
+
+    return this.file.resolveLocalFilesystemUrl(fullPath).then(
+      res => {
+        return this.file.readAsDataURL(path, res.name).then(
+          data => {
+            photos.photoFullPath = fullPath;
+            photos.photoFileName = res.name;
+            photos.photoBase64Data = data;
+            // photos.push({
+            //   photoFullPath: fullPath,
+            //   photoFileName: res.name,
+            //   photoBase64Data: data,
+            // });
+            console.log(photos);
+            return photos;
+          },
+          err => console.error(err)
+        );
+      },
+      err => console.error(err)
+    );
   }
 
   public addPhotosToUserGallery(urls: Array<any>) {
     console.log('addPhotosToUser RTDB');
 
     console.log(urls);
-    // let idx;
-    // let url;
-
-    // urls.forEach(url, index => {
-    //   url = url;
-    //   idx = index;
-    // });
-
     const uid = firebase.auth().currentUser.uid;
-
-    // let galleryData = {
-    //   idx:
-    // }
-
-    // let urlObj = {} as any;
-
-    // urls.map((url, idx) => {
-
-    //   urlObj.idx = idx;
-    //   urlObj.
-
-    // })
 
     let galleryPayload = {};
     galleryPayload[`userProfile/${uid}/galleryImages/`] = urls;
-
     console.log(galleryPayload);
 
-    return this.afdb.database
-      .ref()
-      .update(galleryPayload)
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
+    return (
+      this.afdb.database
+        .ref()
+        .update(galleryPayload)
+        // .child(`userProfile/${uid}/galleryImages/`)
+        // .push(galleryPayload)
+
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
+    );
 
     // Update RTDB
   }
