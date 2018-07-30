@@ -21,13 +21,17 @@
 
         <div class="bannerContainer">
           <div no-lines>
-              <img src="{{userDetails?.bannerImage}}"/>
-              <ion-icon name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
+            <img class="profile-banner" src="{{userDetails?.bannerImage}}" (click)="doEditBanner()"/>
+            <ion-icon name="ios-open-outline" (click)="doEditBanner()"></ion-icon>
           </div>
-          <!--<div no-lines>
-            <img src="{{userDetails?.avatarImage}}"/>
-            <ion-icon name="ios-open-outline" (click)="doEditAvatar()"></ion-icon>
-          </div>-->
+          <div no-lines>
+            <ion-item>
+              <ion-avatar class="profile-avatar">
+                <img src="{{userDetails?.avatarImage}}"  (click)="showImageActionSheet()"/>
+              </ion-avatar>
+              <!-- <ion-icon name="ios-open-outline" (click)="showImageActionSheet()"></ion-icon> -->
+            </ion-item>
+          </div>
         </div>
 
         <ion-item>

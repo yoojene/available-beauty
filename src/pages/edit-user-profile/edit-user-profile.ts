@@ -5,12 +5,17 @@ import {
   NavController,
   NavParams,
   ViewController,
+  ActionSheetController,
+  Platform,
 } from 'ionic-angular';
 import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import * as firebase from 'firebase';
 import { PhotoProvider } from '../../providers/photo/photo';
 import { SkillsProvider } from '../../providers/skills/skills';
+import { Camera } from '@ionic-native/camera';
+
+import { FirebaseStoragePaths } from '../../config/firebase.config';
 
 //import { UtilsProvider } from '../../providers/utils/utils';
 //import { Observable } from 'rxjs/Observable';
@@ -61,12 +66,15 @@ export class EditUserProfilePage implements AfterContentInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
+    private plt: Platform,
     private stylist: StylistProvider,
     private updatedStylist: StylistProvider,
     private user: UserProvider,
     public photo: PhotoProvider,
-    private formBuilder: FormBuilder, //private utils: UtilsProvider
-    private skills: SkillsProvider
+    private formBuilder: FormBuilder,
+    private skills: SkillsProvider,
+    public camera: Camera,
+    private actionSheetCtrl: ActionSheetController
   ) {
     this.editUserForm = formBuilder.group({
       stylistName: [''],
@@ -156,20 +164,85 @@ export class EditUserProfilePage implements AfterContentInit {
 
   // Public
 
+  /**
+   * Camera / Library action sheet
+   *
+   */
+  public showImageActionSheet() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select Image Source',
+      buttons: [
+        {
+          text: 'Load from Library',
+          handler: async () => {
+            const res = await this.photo.getOneLibraryPicture();
+            console.log(res);
+            const base64 = await this.photo.getBase64Data(
+              res.photoFullPath,
+              res.path
+            );
+            console.log(base64);
+            const storage = await this.photo.pushPhotoToStorage(
+              base64.photoFileName,
+              base64.photoBase64Data,
+              FirebaseStoragePaths.userAvatar
+            );
+            await this.photo.addAvatarToUserProfile(storage.downloadURL);
+          },
+        },
+        {
+          text: 'Use Camera',
+          handler: () => {
+            this.photo
+              .takePhoto(this.camera.PictureSourceType.CAMERA)
+              .then(async res => {
+                console.log(res);
+                let fullPath;
+                if (this.plt.is('ios')) {
+                  fullPath = 'file://' + res;
+                } else {
+                  fullPath = res;
+                }
+
+                let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+                const base64 = await this.photo.getBase64Data(fullPath, path);
+
+                const storage = await this.photo.pushPhotoToStorage(
+                  base64.photoFileName,
+                  base64.photoBase64Data,
+                  FirebaseStoragePaths.userAvatar
+                );
+
+                await this.photo.addAvatarToUserProfile(storage.downloadURL);
+              });
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    actionSheet.present();
+  }
+
   public doEditBanner() {
     console.log('Getting banner from picker');
-    this.photo.getOneLibraryPicture().then(res => {
-      let returnedPhoto: any = res;
-      // this.photo
-      //   .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
-      //   .then(baseress => {
-      //     console.log(baseress);
-      // this.photo.pushPhotoToStorage(baseress).then(stores => {
-      //   console.log(stores[0]);
-      //   this.monitorUploadProgress(stores[0]);
-      //   // Write stores to DB
-      // });
-      // });
+    this.photo.getOneLibraryPicture().then(async res => {
+      const base64 = await this.photo.getBase64Data(
+        res.photoFullPath,
+        res.path
+      );
+
+      console.log(base64);
+
+      const storage = await this.photo.pushPhotoToStorage(
+        base64.photoFileName,
+        base64.photoBase64Data,
+        FirebaseStoragePaths.userAvatar
+      );
+
+      await this.photo.addBannerToUserProfile(storage.downloadURL);
     });
 
     //UPDATE IMAGE ON PAGE
@@ -177,18 +250,25 @@ export class EditUserProfilePage implements AfterContentInit {
 
   public doEditAvatar() {
     console.log('Getting avatar from picker');
-    this.photo.getOneLibraryPicture().then(res => {
-      let returnedPhoto: any = res;
-      // this.photo
-      //   .getBase64Data(returnedPhoto.photoFullPath, returnedPhoto.path)
-      //   .then(baseress => {
-      //     console.log(baseress);
-      //     // this.photo.pushPhotoToStorage(baseress).then(stores => {
-      //     //   console.log(stores[0]);
-      //     //   this.monitorUploadProgress(stores[0]);
-      //     //   // Write stores to DB
-      //     // });
-      //   });
+    this.photo.getOneLibraryPicture().then(async res => {
+      // let returnedPhoto: any = res;
+
+      console.log(res);
+
+      const base64 = await this.photo.getBase64Data(
+        res.photoFullPath,
+        res.path
+      );
+
+      console.log(base64);
+
+      const storage = await this.photo.pushPhotoToStorage(
+        base64.photoFileName,
+        base64.photoBase64Data,
+        FirebaseStoragePaths.userAvatar
+      );
+
+      await this.photo.addAvatarToUserProfile(storage.downloadURL);
     });
   }
 
