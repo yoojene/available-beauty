@@ -12,6 +12,7 @@ import {
   AngularFireUploadTask,
 } from 'angularfire2/storage';
 import { UploadTask } from '../../../node_modules/@firebase/storage-types';
+import { FirebaseStoragePaths } from '../../config/firebase.config';
 /*
   Generated class for the PhotoProvider provider.
 
@@ -67,7 +68,7 @@ export class PhotoProvider {
       height: 500,
       quality: 100,
     };
-    let photo;
+    let photo = {} as any;
 
     return this.imagePicker.getPictures(options).then(
       res => {
@@ -81,8 +82,8 @@ export class PhotoProvider {
           }
           let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
 
-          photo = { photoFullPath: fullPath, path: path };
-          //photos.push({ photoFullPath: fullPath, path: path });
+          photo.photoFullPath = fullPath;
+          photo.path = path;
         }
         return Promise.resolve(photo);
       },
@@ -129,14 +130,17 @@ export class PhotoProvider {
   /**
    * Add photo to Firebase Storage as base64 ('data_url') string
    * TODO: create filename convention?  Using default
-   * @param imgstr  // base64image encoded string
-   * @returns
-   * @memberof PhotoProvider
    */
-  public pushPhotoToStorage(filename: string, imgstr: string): UploadTask {
-    const storageRef = this.afstorage.storage.ref(
-      `stylistGalleryImages/${filename}`
-    );
+  public pushPhotoToStorage(
+    filename: string,
+    imgstr: string,
+    filestorepath?: string
+  ): UploadTask {
+    let path = filestorepath;
+    if (!filestorepath) {
+      path = FirebaseStoragePaths.stylistGallery;
+    }
+    const storageRef = this.afstorage.storage.ref(`${path}/${filename}`);
     try {
       return storageRef.putString(imgstr, 'data_url');
     } catch (err) {
@@ -170,7 +174,7 @@ export class PhotoProvider {
   }
 
   /**
-   * Add photo to RTDB userProfile/galleryImages
+   * Add photo(s) to RTDB userProfile/galleryImages as an array
    *
    */
   public addPhotosToUserGallery(urls: Array<any>) {
@@ -181,6 +185,36 @@ export class PhotoProvider {
     return this.afdb.database
       .ref()
       .update(galleryPayload)
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+  }
+  /**
+   *
+   * Add photo to RTDB userProfile/avatarImage
+   */
+  public addAvatarToUserProfile(url: string) {
+    const uid = firebase.auth().currentUser.uid;
+    let avatarPayload = {};
+    avatarPayload[`userProfile/${uid}/avatarImage`] = url;
+
+    return this.afdb.database
+      .ref()
+      .update(avatarPayload)
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+  }
+  /**
+   *
+   * Add photo to RTDB userProfile/bannerImage
+   */
+  public addBannerToUserProfile(url: string) {
+    const uid = firebase.auth().currentUser.uid;
+    let bannerPayload = {};
+    bannerPayload[`userProfile/${uid}/bannerImage`] = url;
+
+    return this.afdb.database
+      .ref()
+      .update(bannerPayload)
       .then(res => console.log(res))
       .catch(err => console.error(err));
   }

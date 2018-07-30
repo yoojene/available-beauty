@@ -4,6 +4,11 @@ export const FIREBASE_CONFIG_VALUES = {
   databaseURL: 'https://available-beauty-1511287868565.firebaseio.com',
   projectId: 'available-beauty-1511287868565',
   storageBucket: 'available-beauty-1511287868565.appspot.com',
-  messagingSenderId: '625369331469'
+  messagingSenderId: '625369331469',
+};
 
+export enum FirebaseStoragePaths {
+  stylistGallery = 'stylistGalleryImages',
+  userAvatar = 'userAvatarImages',
+  userBanners = 'userBannerImages',
 }
