@@ -359,24 +359,41 @@ export class StylistRegisterPage {
       this.next();
     }
   }
+  /**
+   * Use camera to take photo and store in Firebase Storage and on userProfile/galleryImages
+   * TODO Spinner or other UI to show something is going on
+   */
+  public async takePhoto() {
+    const res = await this.photo.takePhoto(
+      this.camera.PictureSourceType.CAMERA
+    );
+    console.log(res);
+    let fullPath;
+    if (this.plt.is('ios')) {
+      fullPath = 'file://' + res;
+    } else {
+      fullPath = res;
+    }
 
-  public takePhoto() {
-    this.photo.takePhoto(this.camera.PictureSourceType.CAMERA).then(res => {
-      console.log(res);
-      // this.photo.getBase64Data(res).then(baseres => {
-      // this.photo.pushPhotoToStorage(baseres).then(stores => {
-      //   console.log(stores[0]);
-      //   this.monitorUploadProgress(stores[0]);
-      // });
-      // });
-    });
+    let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
+    const base64 = await this.photo.getBase64Data(fullPath, path);
+
+    const storage = await this.photo.pushPhotoToStorage(
+      base64.photoFileName,
+      base64.photoBase64Data
+    );
+
+    const gallery = await this.addPhotosToGallery(storage.downloadURL);
   }
-
+  /**
+   * Select n pictures from gallery, store in Firebase Storage and on userProfile/galleryImages
+   * TODO Spinner or other UI to show something is going on
+   */
   public async selectPhoto(): Promise<any> {
+    // This doesn't prevent the permissions dialog first time on imagepicker
     await this.imagePicker.requestReadPermission();
-    // const photos = await this.photo.getLibraryPicturesAsBase64();
-    // console.log(photos);
-    let options = {
+
+    const options = {
       width: 500,
       height: 500,
       quality: 100,
@@ -384,7 +401,6 @@ export class StylistRegisterPage {
     const images = await this.imagePicker.getPictures(options);
 
     const base64res = images.map(async (el, idx) => {
-      console.log(el, idx);
       let fullPath;
 
       if (this.plt.is('ios')) {
@@ -393,18 +409,12 @@ export class StylistRegisterPage {
         fullPath = images[idx];
       }
 
-      let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
-
-      console.log(fullPath);
-      console.log(path);
-
+      const path = fullPath.substring(0, fullPath.lastIndexOf('/'));
       return await this.photo.getBase64Data(fullPath, path);
     });
 
     console.log(base64res);
     Promise.all(base64res).then(comp => {
-      console.log(comp);
-
       const storageRes = comp.map(async (el: any) => {
         console.log(el);
         return await this.photo.pushPhotoToStorage(
@@ -413,65 +423,12 @@ export class StylistRegisterPage {
         );
       });
 
-      console.log(storageRes);
       Promise.all(storageRes).then(storecomp => {
-        console.log(storecomp);
-
         storecomp.map(async task => {
-          console.log(task);
-
           return await this.addPhotosToGallery(task.downloadURL);
         });
-        // storecomp.forEach(task => {
-        //   console.log(task);
-
-        //   this.downloadUrls.push(task.downloadURL);
-        //   console.log(this.downloadUrls);
-
-        //   console.log('about to addPhotosToGalley');
-
-        //   this.addPhotosToGallery(this.downloadUrls);
-        // });
-        // this.monitorUploadProgress(storecomp);
-        // storecomp.map(el => {
-        //   this.monitorUploadProgress(el);
-        // });
       });
     });
-
-    // photos.forEach(async el => {
-    //   console.log(el);
-    //   const base64res = await this.photo.getBase64Data(
-    //     el.photoFullPath,
-    //     el.path
-    //   );
-    //   console.log(base64res);
-
-    //   const storageRes = await this.photo.pushPhotoToStorage(base64res);
-    //   console.log(storageRes);
-
-    //   // TODO: this looks to be the place to update RTDB
-    //   this.monitorUploadProgress(storageRes);
-    // });
-
-    // let testarray = [1,2,3.4]
-
-    // const base64Res = photos.map(async el => {
-    //   console.log(el);
-    //   return await this.photo.getBase64Data(el.photoFullPath, el.path);
-    // });
-
-    // console.log(base64Res);
-
-    // const storageRes = photos.map(async el => {
-    //   console.log(el);
-    //   return await this.photo.pushPhotoToStorage(
-    //     el.photoFileName,
-    //     el.photoBase64Data
-    //   );
-    // });
-
-    // console.log(storageRes);
   }
 
   public checkDisabled() {
@@ -564,20 +521,8 @@ export class StylistRegisterPage {
 
     this.downloadUrls.push(url);
 
-    // return Promise.all(urls.map(url => this.photo.addPhotosToUserGallery(url)))
-
-    // .then(succ => {
-    //   console.log('succ');
-    //   console.log(succ);
-    // })
-    // .catch(err => {
-    //   console.log('err');
-    //   console.log(err);
-    // });
-    // return urls.map(url =>
     return this.photo
       .addPhotosToUserGallery(this.downloadUrls)
       .then(res => console.log(res));
-    // );
   }
 }
