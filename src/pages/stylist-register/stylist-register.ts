@@ -346,8 +346,6 @@ export class StylistRegisterPage {
   }
 
   public onSlideChange(e) {
-    // console.log(e);
-
     console.log(this.slides.getActiveIndex());
 
     this.activeSlideIdx = this.slides.getActiveIndex();
@@ -383,10 +381,10 @@ export class StylistRegisterPage {
       base64.photoBase64Data
     );
 
-    const gallery = await this.addPhotosToGallery(storage.downloadURL);
+    await this.addPhotosToGallery(storage.downloadURL);
   }
   /**
-   * Select n pictures from gallery, store in Firebase Storage and on userProfile/galleryImages
+   * Select 1-n pictures from ImagePicker, store in Firebase Storage and on userProfile/galleryImages
    * TODO Spinner or other UI to show something is going on
    */
   public async selectPhoto(): Promise<any> {
@@ -413,7 +411,9 @@ export class StylistRegisterPage {
       return await this.photo.getBase64Data(fullPath, path);
     });
 
-    console.log(base64res);
+    // As more than one photo can be selected, using Promise.all to resolve
+    // when they have all completed base64 encoding
+    // https://stackoverflow.com/questions/41673499/how-to-upload-multiple-files-to-firebase
     Promise.all(base64res).then(comp => {
       const storageRes = comp.map(async (el: any) => {
         console.log(el);
@@ -423,6 +423,7 @@ export class StylistRegisterPage {
         );
       });
 
+      // Same here :-)
       Promise.all(storageRes).then(storecomp => {
         storecomp.map(async task => {
           return await this.addPhotosToGallery(task.downloadURL);
@@ -509,16 +510,16 @@ export class StylistRegisterPage {
           this.downloadUrls.push(task.snapshot.downloadURL);
           this.showPhotoSpinner = false;
           console.log(this.downloadUrls);
-
-          this.addPhotosToGallery(this.downloadUrls);
         }
       );
     });
   }
 
-  private addPhotosToGallery(url) {
-    console.log('addPhotosToGallery');
-
+  /**
+   * Add file urls to array and call provider to add to Firebase Storage
+   *
+   */
+  private addPhotosToGallery(url: string): Promise<void> {
     this.downloadUrls.push(url);
 
     return this.photo
