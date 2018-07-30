@@ -75,11 +75,9 @@ export class PhotoProvider {
         console.log(res);
         for (let i = 0; i < 1; i++) {
           let fullPath;
-          if (this.plt.is('ios')) {
-            fullPath = 'file://' + res[i];
-          } else {
-            fullPath = res[i];
-          }
+
+          fullPath = res[i];
+
           let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
 
           photo.photoFullPath = fullPath;
