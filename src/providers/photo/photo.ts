@@ -51,13 +51,13 @@ export class PhotoProvider {
 
     return this.camera.getPicture(options).then(imagePath => {
       console.log(imagePath);
-      let fullPath;
-      if (this.plt.is('ios')) {
-        fullPath = 'file://' + imagePath;
-      } else {
-        fullPath = imagePath;
-      }
-      return fullPath;
+      // let fullPath;
+      // if (this.plt.is('ios')) {
+      //   fullPath = 'file://' + imagePath;
+      // } else {
+      //   fullPath = imagePath;
+      // }
+      return imagePath;
     });
   }
 

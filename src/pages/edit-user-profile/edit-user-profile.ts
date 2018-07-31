@@ -197,12 +197,13 @@ export class EditUserProfilePage implements AfterContentInit {
               .takePhoto(this.camera.PictureSourceType.CAMERA)
               .then(async res => {
                 console.log(res);
-                let fullPath;
-                if (this.plt.is('ios')) {
-                  fullPath = 'file://' + res;
-                } else {
-                  fullPath = res;
-                }
+                const fullPath = res;
+                // let fullPath;
+                // if (this.plt.is('ios')) {
+                //   fullPath = 'file://' + res;
+                // } else {
+                //   fullPath = res;
+                // }
 
                 let path = fullPath.substring(0, fullPath.lastIndexOf('/'));
                 const base64 = await this.photo.getBase64Data(fullPath, path);
