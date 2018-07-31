@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { StorageProvider } from '../storage/storage';
 
 import { API_CONFIG_VALUES } from '../../config/api.config';
+import { User } from '../../model/users/user.model';
 
 @Injectable()
 export class AuthProvider {
@@ -346,7 +347,7 @@ export class AuthProvider {
    * @param user user details from RegisterPage component
    * @returns
    */
-  private addUserProfile(stylist: boolean, newUser: any, user?: any) {
+  private async addUserProfile(stylist: boolean, newUser: any, user?: any) {
     // Sometimes (on social web logins for eg) FirebaseUser comes within another object, this strips it out.
     let userParam;
     if (newUser.user) {
@@ -379,15 +380,16 @@ export class AuthProvider {
           .set(userProfile);
       });
     } else {
-      this.createNativeUserProfile(user).then(res => {
-        userProfile = res;
+      const res = await this.createNativeUserProfile(user);
+      const banner = await this.getDefaultBannerImage(res);
+      
+      userProfile = banner;
 
-        return firebase
-          .database()
-          .ref('/userProfile')
-          .child(userParam.uid)
-          .set(userProfile);
-      });
+      return firebase
+        .database()
+        .ref('/userProfile')
+        .child(userParam.uid)
+        .set(userProfile);
     }
   }
 
@@ -409,6 +411,22 @@ export class AuthProvider {
           phoneNumber: null, // dummy
           homeLocation: user.homeLocation,
         };
+
+        return userProfile;
+      });
+  }
+  /**
+   * Create the userProfile in Realtime DB with default avatar
+   * @param user
+   */
+  private getDefaultBannerImage(userProfile) {
+    return firebase
+      .storage()
+      .ref()
+      .child('default-images/default-banner.png')
+      .getDownloadURL()
+      .then(url => {
+        userProfile.bannerImage = url;
 
         return userProfile;
       });
