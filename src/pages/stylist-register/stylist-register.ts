@@ -138,25 +138,6 @@ export class StylistRegisterPage {
         this.showImageActionSheet();
       }
     });
-
-    this.stylistKey = 'NHa65TYwN6hQpXFKBBW6obygRdy2'; // Henry@gmail.com
-
-    firebase.auth().signInWithEmailAndPassword('henry@gmail.com', 'password');
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log(user);
-        // User is signed in.
-        //   var displayName = user.displayName;
-        //   var email = user.email;
-        //   var emailVerified = user.emailVerified;
-        //   var photoURL = user.photoURL;
-        //   var isAnonymous = user.isAnonymous;
-        //   var uid = user.uid;
-        //   var providerData = user.providerData;
-        //   // ...
-      }
-    });
   }
 
   // Public
