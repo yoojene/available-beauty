@@ -57,14 +57,14 @@ export class AvailableBeautyApp {
     this.afAuth.authState.subscribe(res => {
       if (!res) {
         // Unauthenticated state
-        this.rootPage = 'StylistRegisterPage';
+        this.rootPage = 'LandingPage';
       } else {
         const uid = res.uid;
         this.fcm.getToken();
         // Check if is Stylist or User
         this.user.checkIsStylist(uid).subscribe(res => {
           if (!res) {
-            this.rootPage = 'StylistRegisterPage';
+            this.rootPage = 'TabsPage';
           } else {
             this.user
               .getUserById(uid)
