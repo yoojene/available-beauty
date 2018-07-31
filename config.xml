@@ -122,8 +122,8 @@
         <variable name="LOCATION_WHEN_IN_USE_DESCRIPTION" value="Use geocoder service" />
     </plugin>
     <plugin name="cordova-plugin-camera" spec="~2.4.1">
-        <variable name="CAMERA_USAGE_DESCRIPTION" value=" " />
-        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" " />
+        <variable name="CAMERA_USAGE_DESCRIPTION" value="Allow access to Camera" />
+        <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="Allow access to Photo Library" />
     </plugin>
     <plugin name="com.synconset.imagepicker" spec="~2.1.8">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="To allow image picker to select photos from library" />
