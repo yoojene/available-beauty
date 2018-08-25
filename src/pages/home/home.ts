@@ -6,7 +6,6 @@ import {
   ToastController,
 } from 'ionic-angular';
 import { Http } from '@angular/http';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import { Observable } from 'rxjs/Observable';
 import { StorageProvider } from '../../providers/storage/storage';
@@ -84,7 +83,6 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private storage: StorageProvider,
-    private stylist: StylistProvider,
     private avail: AvailabilityProvider,
     private user: UserProvider,
     private modalCtrl: ModalController,
@@ -249,11 +247,6 @@ export class HomePage {
         this.stylistAvail$ = this.avail
           .getStylistAvailability(user.key)
           .snapshotChanges();
-
-        this.stylist
-          .getStylistReview(user.key)
-          .valueChanges()
-          .subscribe(res => (this.stylistReviews = res.length));
 
         this.stylistAvail$.takeUntil(this.destroy$).subscribe(actions => {
           const avails = this.utils.generateFirebaseKeyedValues(actions);

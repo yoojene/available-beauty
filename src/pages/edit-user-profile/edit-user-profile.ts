@@ -8,7 +8,6 @@ import {
   ActionSheetController,
   Platform,
 } from 'ionic-angular';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { UserProvider } from '../../providers/user/user';
 import * as firebase from 'firebase';
 import { PhotoProvider } from '../../providers/photo/photo';
@@ -67,8 +66,7 @@ export class EditUserProfilePage implements AfterContentInit {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private plt: Platform,
-    private stylist: StylistProvider,
-    private updatedStylist: StylistProvider,
+    private userProvider: UserProvider,
     private user: UserProvider,
     public photo: PhotoProvider,
     private formBuilder: FormBuilder,
@@ -289,7 +287,7 @@ export class EditUserProfilePage implements AfterContentInit {
 
       //  Update skills for user
       console.log('available skills : ' + this.availableSkills$);
-      this.stylist.setStylistSkills(
+      this.userProvider.setStylistSkills(
         firebase.auth().currentUser.uid,
         this.availableSkills$
       );

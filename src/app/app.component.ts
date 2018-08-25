@@ -12,7 +12,6 @@ import { LocationProvider } from '../providers/location/location';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireAction } from 'angularfire2/database/interfaces';
 import { StorageProvider } from '../providers/storage/storage';
-import { StylistProvider } from '../providers/stylist/stylist';
 import { UserProvider } from '../providers/user/user';
 import { FcmProvider } from '../providers/fcm/fcm';
 
@@ -20,7 +19,8 @@ import { FcmProvider } from '../providers/fcm/fcm';
   templateUrl: 'app.html',
 })
 export class AvailableBeautyApp {
-  @ViewChild('#myNav') nav: NavController;
+  @ViewChild('#myNav')
+  nav: NavController;
   public rootPage: string = 'LandingPage'; // This needs to be updated once logged in / registered to be TabsPage
   public stylistParam: any;
 
@@ -31,7 +31,6 @@ export class AvailableBeautyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    private stylist: StylistProvider,
     private location: LocationProvider,
     private afAuth: AngularFireAuth,
     private storage: StorageProvider,

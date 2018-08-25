@@ -10,7 +10,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import firebase from 'firebase';
 import { SettingsPage } from '../settings/settings';
 import { StorageProvider } from '../../providers/storage/storage';
-import { StylistProvider } from '../../providers/stylist/stylist';
+
 import { EditUserProfilePage } from '../edit-user-profile/edit-user-profile';
 
 /**
@@ -42,8 +42,7 @@ export class UserProfilePage {
     public navParams: NavParams,
     private afauth: AngularFireAuth,
     private modalCtrl: ModalController,
-    private storage: StorageProvider,
-    private stylist: StylistProvider
+    private storage: StorageProvider
   ) {}
 
   ionViewWillEnter() {
@@ -62,7 +61,6 @@ export class UserProfilePage {
     console.log('hideOnModal  ', this.hideOnModal);
 
     this.getUserProfile(user);
-    this.getStylistProfile();
     this.storage.getStorage('isStylist').subscribe(res => {
       if (res) {
         this.isStylist = true;
@@ -123,21 +121,5 @@ export class UserProfilePage {
 
         this.user = res.val();
       });
-  }
-
-  private getStylistProfile() {
-    console.log('getstylistprofile');
-    this.stylist
-      .getStylist(this.afauth.auth.currentUser.uid)
-      .valueChanges()
-      .subscribe(res => {
-        console.log(res);
-        let obj = { ...res[0] };
-        this.style = res;
-
-        console.log(obj);
-      });
-
-    console.log(this.style);
   }
 }

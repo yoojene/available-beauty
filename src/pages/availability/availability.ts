@@ -9,7 +9,6 @@ import * as moment from 'moment';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { Stylist } from '../../model/stylist/stylist.model';
 import * as firebase from 'firebase';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { UtilsProvider } from '../../providers/utils/utils';
 import { Moment } from 'moment';

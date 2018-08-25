@@ -6,7 +6,6 @@ import {
   Events,
   ModalController,
 } from 'ionic-angular';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { AvailabilityProvider } from '../../providers/availability/availability';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Stylist } from '../../model/stylist/stylist.model';

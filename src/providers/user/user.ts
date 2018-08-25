@@ -160,6 +160,17 @@ export class UserProvider {
       });
   }
 
+  // Skills
+
+  public setStylistSkills(uid, skills) {
+    this.afdb.database
+      .ref()
+      .child('userProfile/' + uid + 'skills')
+      .set(skills);
+  }
+
+  // Reviews
+
   public async addReview(receiverUid: any, review: any, starRating: any) {
     // TODO Do we want to associate the Review with the availability slot as well as the stylist?
     const reviewData = {

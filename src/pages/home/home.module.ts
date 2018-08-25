@@ -4,7 +4,6 @@ import { HomePage } from './home';
 import { ComponentsModule } from '../../components/components.module';
 import { Geolocation } from '@ionic-native/geolocation';
 import { UserProvider } from '../../providers/user/user';
-import { StylistProvider } from '../../providers/stylist/stylist';
 import { SearchPageModule } from '../search/search.module';
 import { SkillsProvider } from '../../providers/skills/skills';
 // import { SearchPage } from '../search/search';
@@ -20,8 +19,8 @@ import { HttpModule } from '@angular/http';
     StylistReviewPageModule,
     BookAvailabilityPageModule,
     IonicPageModule.forChild(HomePage),
-    HttpModule
+    HttpModule,
   ],
-  providers: [Geolocation, UserProvider, StylistProvider],
+  providers: [Geolocation, UserProvider],
 })
 export class HomePageModule {}

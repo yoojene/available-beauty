@@ -100,7 +100,7 @@
                 <div *ngIf="user.stylistRating; let starRating;">
                   <ion-item no-padding>
                   <star-rating [rating]="starRating" (click)="openReviews(user.key)"></star-rating>
-                    <span item-content class="page-home--reviewtext-centered" (click)="openReviews(user.key)"> {{stylistReviews}} {{reviewsText}} </span>
+                    <span item-content class="page-home--reviewtext-centered" (click)="openReviews(user.key)"> {{reviewsText}} </span>
                     <ion-icon item-end name="heart" [ngStyle]="{'color': toggled===true ? 'red' : 'black'}" (click)="toggleFavourite()"></ion-icon>
                   </ion-item>
                 </div>

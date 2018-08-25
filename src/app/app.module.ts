@@ -42,7 +42,6 @@ import { API_CONFIG_VALUES } from '../config/api.config';
 import { FIREBASE_CONFIG_VALUES } from '../config/firebase.config';
 import { API_CONFIG } from '../model/api.config';
 
-import { StylistProvider } from '../providers/stylist/stylist';
 import { LocationProvider } from '../providers/location/location';
 import { RegisterPageModule } from '../pages/register/register.module';
 import { StorageProvider } from '../providers/storage/storage';
@@ -108,7 +107,6 @@ import { FindAvailabilityPageModule } from '../pages/find-availability/find-avai
       provide: API_CONFIG,
       useValue: API_CONFIG_VALUES,
     },
-    StylistProvider,
     LocationProvider,
     StorageProvider,
     SearchProvider,

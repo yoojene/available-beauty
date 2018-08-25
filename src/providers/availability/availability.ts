@@ -6,16 +6,12 @@ import {
   Availability,
   AvailabilitySlot,
 } from '../../model/availability/availability.model';
-import { StylistProvider } from '../stylist/stylist';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 
 @Injectable()
 export class AvailabilityProvider {
-  constructor(
-    private afdb: AngularFireDatabase,
-    private stylist: StylistProvider
-  ) {
+  constructor(private afdb: AngularFireDatabase) {
     console.log('Hello AvailabilityProvider Provider');
   }
 
