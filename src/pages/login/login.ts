@@ -11,15 +11,6 @@ import {
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { Store } from '@ngrx/store';
-import { AppState } from '../../model/app.state';
-
-import {
-  LoginAction,
-  UserNotValidatedAction,
-  LoginSuccessAction,
-} from '../../model/auth/auth.actions';
-
 import { APP_TEST_CONFIG } from '../../config/app.test.config';
 
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -52,7 +43,6 @@ export class LoginPage {
   public stylistLoginHeaderText = 'Login to advertise beauty...';
 
   constructor(
-    public store: Store<AppState>,
     public formBuilder: FormBuilder,
     public navCtrl: NavController,
     public navParams: NavParams,

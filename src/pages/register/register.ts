@@ -3,16 +3,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PasswordValidation } from '../../forms/password-validation';
 
-import { Store } from '@ngrx/store';
-import { AppState } from '../../model/app.state';
-
 import { UserProvider } from '../../providers/user/user';
 import { LocationProvider } from '../../providers/location/location';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  RegisterAction,
-  RegisterErrorAction,
-} from '../../model/auth/auth.actions';
+
 import { AuthProvider } from '../../providers/auth/auth';
 import { StorageProvider } from '../../providers/storage/storage';
 
@@ -50,8 +44,7 @@ export class RegisterPage {
     public user: UserProvider,
     public location: LocationProvider,
     private auth: AuthProvider,
-    private storage: StorageProvider,
-    private store: Store<AppState>
+    private storage: StorageProvider
   ) {
     this.registerForm = formBuilder.group(
       {
@@ -109,7 +102,6 @@ export class RegisterPage {
         });
     } else {
       // Error!
-      this.store.dispatch(new RegisterErrorAction(this.registerForm.value));
       this.navCtrl.pop();
       // TODO: Show visual error message
     }

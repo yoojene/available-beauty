@@ -27,10 +27,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { EffectsModule } from '@ngrx/effects';
-import { AuthEffects } from '../model/auth/auth.effects';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { ComponentsModule } from '../components/components.module';
 import { GoogleMaps } from '@ionic-native/google-maps';
@@ -81,13 +77,6 @@ import { FindAvailabilityPageModule } from '../pages/find-availability/find-avai
     RegisterPageModule,
     FindAvailabilityPageModule,
     ComponentsModule,
-    StoreModule.forRoot(APP_REDUCER),
-    // Note that you must instrument after importing StoreModule
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-    }),
-
-    EffectsModule.forRoot([AuthEffects]),
   ],
   bootstrap: [IonicApp],
   entryComponents: [AvailableBeautyApp],

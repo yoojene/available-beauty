@@ -3,12 +3,9 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { TwitterConnect } from '@ionic-native/twitter-connect';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { App, Platform } from 'ionic-angular';
-import { Store } from '@ngrx/store';
 
 import firebase from 'firebase';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { UserNotValidatedAction } from '../../model/auth/auth.actions';
-import { AppState } from '../../model/app.state';
 import { Observable } from 'rxjs/Observable';
 import { StorageProvider } from '../storage/storage';
 
@@ -23,7 +20,6 @@ export class AuthProvider {
   constructor(
     private app: App,
     private plt: Platform,
-    private store: Store<AppState>,
     private storage: StorageProvider,
     private afauth: AngularFireAuth,
     private fb: Facebook,
@@ -382,7 +378,7 @@ export class AuthProvider {
     } else {
       const res = await this.createNativeUserProfile(user);
       const banner = await this.getDefaultBannerImage(res);
-      
+
       userProfile = banner;
 
       return firebase
