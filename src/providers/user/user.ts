@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
 import { API_CONFIG, ApiConfig } from '../../model/api.config';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap} from 'rxjs/operators';
 import { User } from '../../model/users/user.model';
 import firebase from 'firebase';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
@@ -40,7 +41,7 @@ export class UserProvider {
         return ref.orderByChild('isStylist').equalTo(true);
       })
       .snapshotChanges()
-      .mergeMap(res => {
+      .pipe(mergeMap(res => {
         const keyed = this.utils.generateFirebaseKeyedValues(res);
         const user = keyed.filter(el => {
           return el.key === uid;
@@ -50,7 +51,7 @@ export class UserProvider {
         } else {
           return Observable.of(false) as any;
         }
-      });
+      }));
   }
 
   public getUserById(id) {

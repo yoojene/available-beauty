@@ -6,6 +6,7 @@ import {
   ViewController,
 } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap} from 'rxjs/operators';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
@@ -17,6 +18,7 @@ import { BookingProvider } from '../../providers/booking/booking';
 import { BookingStatus } from '../../model/booking/booking.model';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { AddReviewPage } from '../add-review/add-review';
+
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -143,14 +145,14 @@ export class BookAvailabilityPage {
   private checkIsChatThread() {
     return this.msg
       .getChatsForAvailability(this.availability) // TODO Need to account for when there is no /chat existing for user
-      .mergeMap(res => {
+      .pipe(mergeMap(res => {
         console.log(res);
         if (res.length === 0) {
           return Observable.of(false);
         }
         this.chatId = res[0].key; // only taking the first /chat
         return Observable.of(this.chatId);
-      });
+      }));
   }
 
   private getChatThread(chatId) {

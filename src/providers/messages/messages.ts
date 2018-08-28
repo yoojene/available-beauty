@@ -4,6 +4,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as moment from 'moment';
 import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
+import { mergeMap} from 'rxjs/operators';
 
 /*
   Generated class for the MessagesProvider provider.
@@ -23,14 +24,14 @@ export class MessagesProvider {
 
   public checkIsChatThread(availId) {
     return this.getChatsForAvailability(availId) // TODO Need to account for when there is no /chat existing for user
-      .mergeMap(res => {
+      .pipe(mergeMap(res => {
         console.log(res);
         if (res.length === 0) {
           return Observable.of(false);
         }
         this.chatId = res[0].key; // only taking the first /chat
         return Observable.of(this.chatId);
-      });
+      }));
   }
 
   public getChatsForUser(uid) {
@@ -47,13 +48,13 @@ export class MessagesProvider {
         return ref.orderByChild('userId').equalTo(uid);
       })
       .snapshotChanges()
-      .mergeMap(() => {
+      .pipe(mergeMap(() => {
         return this.afdb
           .list('chats', ref => {
             return ref.orderByChild('stylistId').equalTo(stylistUid);
           })
           .snapshotChanges();
-      });
+      }));
   }
 
   public getChatsForAvailability(availId) {
