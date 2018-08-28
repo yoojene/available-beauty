@@ -13,8 +13,6 @@ import { LoginBackgroundSliderPageModule } from '../pages/login-background-slide
 import { LoginPageModule } from '../pages/login/login.module';
 import { LandingPageModule } from '../pages/landing/landing.module';
 
-import { APP_REDUCER } from '../model/app.reducer';
-
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonicStorageModule } from '@ionic/storage';
