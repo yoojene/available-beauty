@@ -39,6 +39,8 @@ export class AvailabilityPage {
     .hour(8)
     .minutes(0)
     .seconds(0);
+  public morningEndTime : string = '12:00';
+  public afternoonEndTime : string = '16:00';
 
   public availableAMDates: any;
   public availablePMDates: any;
@@ -49,6 +51,8 @@ export class AvailabilityPage {
   public schedule: any;
 
   public entryLoader: any;
+
+  public currentTimestampInEpoch : number;
 
   constructor(
     public navCtrl: NavController,
@@ -86,6 +90,7 @@ export class AvailabilityPage {
   /**
    * Set up length of schedule on availability page and slot length/duration
    * Default is 1 day for 7 days ahead and 18 slots of 30m per day
+   * Will not show slot that is in the past of current time
    */
 
   private generateAvailabilitySchedule() {
@@ -97,7 +102,11 @@ export class AvailabilityPage {
       'day',
       7
     );
+    
 
+
+
+    console.log(this.schedule);
     // Generate the slots per schedule
     for (let y = 0; y < this.schedule.length; y++) {
       const morningSlots = [];
@@ -114,6 +123,7 @@ export class AvailabilityPage {
           'morning'
         )
       );
+
       const afternoonSlots = [];
       afternoonSlots.push(
         this.avail.generateAvailabilitySlots(
@@ -187,6 +197,43 @@ export class AvailabilityPage {
     this.entryLoader.dismiss();
   }
 
+  //hide slot that is already in the past
+  public hideSlot(date){
+    if(!this.currentTimestampInEpoch){
+      this.currentTimestampInEpoch = moment().valueOf()/1000;
+    }
+
+    if(date.epoch < this.currentTimestampInEpoch){
+      return true;
+    }
+  }
+
+  //hide the select all timeslot button
+  public hideTimeSlot(timeslot , index){
+
+    //this filter only applies on first index
+    if(index != 0){
+      return false;
+    }
+
+    let currentTime = moment();
+    if(timeslot == 'morning'){
+
+    let morningEnd = moment(this.morningEndTime , this.availTimeFmt);
+    console.log(morningEnd.isBefore(currentTime));
+    console.log(currentTime);
+    console.log('1st');
+      return morningEnd.isBefore(currentTime);
+    }
+
+    if(timeslot = 'afternoon'){
+      let afternoonEnd = moment(this.afternoonEndTime , this.availTimeFmt);
+      return afternoonEnd.isBefore(currentTime);
+    }
+
+    
+  }
+
   public goToHome() {
     console.log('go to home');
     console.log(this.navCtrl.length());
@@ -224,7 +271,8 @@ export class AvailabilityPage {
       });
       loopInt = loopInt + interval;
     }
-
+    console.log('schedule');
+    console.log(schedule);
     return schedule;
   }
 
