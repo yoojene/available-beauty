@@ -17,6 +17,7 @@
 
 <ion-content padding>
 <h3 text-center>{{availabilitySubHeader}}</h3>
+<ion-row text-end>{{availabilitySlotLabel}} {{numberOfAvailableSlots}} </ion-row>
 <div *ngFor="let slot of schedule let y = index" >
   <br>
   <ion-grid>

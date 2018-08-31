@@ -98,6 +98,8 @@ export class LoginPage {
           console.log(res);
           const uid = res.uid;
           console.log(uid);
+          //temporary setting of availability slots
+          this.user.setStylistAvailableSlots(uid , 20);
           this.user
             .getUserById(uid)
             .valueChanges()

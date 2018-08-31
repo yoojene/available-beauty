@@ -20,4 +20,5 @@ export interface User {
   stylistName?: string;
   mobile?: boolean;
   stylistRating?: string;
+  availabilitySlots : number;
 }

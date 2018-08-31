@@ -61,8 +61,7 @@ export class AvailabilityProvider {
 
     return this.afdb.database
       .ref()
-      .update(availPayload)
-      .then(res => console.log(res));
+      .update(availPayload);
   }
 
   /**
@@ -110,4 +109,18 @@ export class AvailabilityProvider {
 
     return slots;
   }
+
+  public getNumberOfAvailabilitySlots(stylistId : any){
+    return this.afdb.object<number>(`userProfile/${stylistId}/availabilitySlots`);
+  }
+
+  public decreaseNumberOfSlot(stylistId  , numberOfSlots : number){
+    this.afdb.object<number>(`userProfile/${stylistId}/availabilitySlots`).query
+    .ref
+    .transaction((slots => {
+        return slots - numberOfSlots;
+    }))
+  }
+
+
 }

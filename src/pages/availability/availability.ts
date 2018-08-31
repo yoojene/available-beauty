@@ -14,6 +14,7 @@ import { UtilsProvider } from '../../providers/utils/utils';
 import { Moment } from 'moment';
 import { UserProvider } from '../../providers/user/user';
 
+
 /**
  * Generated class for the AvailabilityPage page.
  *
@@ -28,6 +29,8 @@ import { UserProvider } from '../../providers/user/user';
 })
 export class AvailabilityPage {
   public availabilitySubHeader = 'Mark the times you are available';
+  public availabilitySlotLabel = 'Remaining Available Slots : ';
+  private oneSlot = 1;
   public morningText = 'morning';
   public afternoonText = 'afternoon';
   public eveningText = 'evening';
@@ -54,6 +57,8 @@ export class AvailabilityPage {
 
   public currentTimestampInEpoch : number;
 
+  public numberOfAvailableSlots : number;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -79,6 +84,7 @@ export class AvailabilityPage {
       //     this.stylistId = res[0].key;
       //     console.log(this.stylistId);
       this.generateAvailabilitySchedule();
+      this.getAvailabilitySlots();
       // });
     });
 
@@ -220,9 +226,6 @@ export class AvailabilityPage {
     if(timeslot == 'morning'){
 
     let morningEnd = moment(this.morningEndTime , this.availTimeFmt);
-    console.log(morningEnd.isBefore(currentTime));
-    console.log(currentTime);
-    console.log('1st');
       return morningEnd.isBefore(currentTime);
     }
 
@@ -230,8 +233,7 @@ export class AvailabilityPage {
       let afternoonEnd = moment(this.afternoonEndTime , this.availTimeFmt);
       return afternoonEnd.isBefore(currentTime);
     }
-
-    
+   
   }
 
   public goToHome() {
@@ -284,6 +286,11 @@ export class AvailabilityPage {
    * @param optionobj
    */
   public setSlotTaken(option, optionobj) {
+    //Don't create slot if available slot is 0
+    if(this.numberOfAvailableSlots <= 0){
+      return;
+    }
+
     optionobj.forEach(el => {
       if (
         option.time === el.time &&
@@ -291,8 +298,9 @@ export class AvailabilityPage {
         !option.disabled
       ) {
         el.disabled = !option.disabled;
-
-        this.avail.setAvailabilityTaken(el.epoch, this.stylistId);
+        this.avail.setAvailabilityTaken(el.epoch, this.stylistId).then(
+          _ => this.avail.decreaseNumberOfSlot(this.stylistId , 1)
+         );
       }
     });
   }
@@ -362,5 +370,15 @@ export class AvailabilityPage {
 
     console.log(filtered);
     // this.availableAMDates = filtered;
+  }
+
+  //Subscribe to availability slots
+  private getAvailabilitySlots(){
+   this.avail.getNumberOfAvailabilitySlots(this.stylistId)
+     .snapshotChanges()
+     .subscribe(action => {
+          this.numberOfAvailableSlots =  action.payload.val();
+          
+      });;
   }
 }

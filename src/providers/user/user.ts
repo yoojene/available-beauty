@@ -170,6 +170,14 @@ export class UserProvider {
       .set(skills);
   }
 
+  public setStylistAvailableSlots(uid , slots){
+    this.afdb.database
+      .ref()
+      .child('userProfile/' + uid + '/availabilitySlots')
+      .set(slots);
+
+  }
+
   // Reviews
 
   public async addReview(receiverUid: any, review: any, starRating: any) {
