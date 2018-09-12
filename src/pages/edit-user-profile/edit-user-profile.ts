@@ -16,48 +16,38 @@ import { Camera } from '@ionic-native/camera';
 
 import { FirebaseStoragePaths } from '../../config/firebase.config';
 
-//import { UtilsProvider } from '../../providers/utils/utils';
-//import { Observable } from 'rxjs/Observable';
-
-/**
- * Generated class for the EditUserProfilePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-edit-user-profile',
   templateUrl: 'edit-user-profile.html',
 })
 export class EditUserProfilePage implements AfterContentInit {
-  isStylist: boolean = false;
+  public isStylist = false;
 
-  stylistId: any;
-  userId: any;
-  stylistDetails: any;
-  userDetails: any;
+  public stylistId: any;
+  public userId: any;
+  public stylistDetails: any;
+  public userDetails: any;
   public editUserForm: FormGroup;
   // @ViewChild('navBar') navbar: Navbar;
 
-  editProfileTitle = 'Edit Profile';
-  stylistName = 'Salon Name';
-  address1Line = 'Address Line 1';
-  address2Line = 'Address Line 1';
-  addressTown = 'Town';
-  addressCounty = 'County';
-  addressPostcode = 'Postcode';
-  bio = 'Bio';
-  mobileStylist = 'Mobile Stylist?';
-  mobileRange = 'Mobile Range';
-  location = 'Base Location';
-  userName = 'User Name';
-  phoneNumber = 'Phone Number';
-  emailAddress = 'Email';
+  public editProfileTitle = 'Edit Profile';
+  public stylistName = 'Salon Name';
+  public address1Line = 'Address Line 1';
+  public address2Line = 'Address Line 1';
+  public addressTown = 'Town';
+  public addressCounty = 'County';
+  public addressPostcode = 'Postcode';
+  public bio = 'Bio';
+  public mobileStylist = 'Mobile Stylist?';
+  public mobileRange = 'Mobile Range';
+  public location = 'Base Location';
+  public userName = 'User Name';
+  public phoneNumber = 'Phone Number';
+  public emailAddress = 'Email';
 
   public loadProgress: any = 0;
-  public downloadUrls: Array<any> = [];
+  public downloadUrls = [];
   public availableSkills: any;
   public availableSkills$: any;
 
@@ -93,7 +83,7 @@ export class EditUserProfilePage implements AfterContentInit {
       avatarImage: [''],
     });
   }
-  logForm() {
+  public logForm() {
     console.log('something');
   }
 
@@ -138,6 +128,8 @@ export class EditUserProfilePage implements AfterContentInit {
     });
 
     this.availableSkills$ = this.skills.getSkillGroups().snapshotChanges();
+
+    this.availableSkills$.subscribe(res => console.log(res));
   }
 
   public ionViewDidLoad() {
@@ -272,6 +264,7 @@ export class EditUserProfilePage implements AfterContentInit {
   }
 
   public doSave() {
+    console.log('saving');
     if (this.editUserForm.valid) {
       const updatedUser = this.editUserForm.value;
 
@@ -286,11 +279,15 @@ export class EditUserProfilePage implements AfterContentInit {
       }
 
       //  Update skills for user
-      console.log('available skills : ' + this.availableSkills$);
-      this.userProvider.setStylistSkills(
-        firebase.auth().currentUser.uid,
-        this.availableSkills$
-      );
+      console.log('available skills : ', this.availableSkills$);
+
+      // EC 12/9 commented this out below as causing error.  This is the function
+      // to update skills in the db (Stylist Skills ticket)
+
+      /* this.userProvider.setStylistSkills(
+         firebase.auth().currentUser.uid,
+         this.availableSkills$
+       );*/
 
       this.user
         .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
