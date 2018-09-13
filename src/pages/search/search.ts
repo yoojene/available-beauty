@@ -14,14 +14,14 @@ import { Observable } from 'rxjs/Observable';
 @IonicPage()
 @Component({
   selector: 'page-search',
-  templateUrl: 'search.html'
+  templateUrl: 'search.html',
 })
 export class SearchPage {
-  searchForm: any;
-  searchTerm: any;
-  counter: number = this.getRandomInt();
+  public searchForm: any;
+  public searchTerm: any;
+  public counter: number = this.getRandomInt();
 
-  previousTerms: Observable<any>;
+  public previousTerms: Observable<any>;
 
   constructor(
     public navCtrl: NavController,
@@ -30,30 +30,31 @@ export class SearchPage {
     private search: SearchProvider
   ) {
     this.searchForm = formBuilder.group({
-      search: ['', Validators.required]
+      search: ['', Validators.required],
     });
   }
 
-  getRandomInt() {
-    let min = Math.ceil(1);
-    let max = Math.floor(100000);
+  public getRandomInt() {
+    const min = Math.ceil(1);
+    const max = Math.floor(100000);
+
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad SearchPage');
     this.previousTerms = this.search.searches$;
   }
 
-  onEnterTap(event) {
+  public onEnterTap(event) {
     console.log(event);
     this.navCtrl.pop();
   }
 
-  onSubmit() {
+  public onSubmit() {
     this.searchTerm = {
       id: this.counter,
-      term: this.searchForm.get('search').value
+      term: this.searchForm.get('search').value,
     };
 
     console.log('this.searchTerm');

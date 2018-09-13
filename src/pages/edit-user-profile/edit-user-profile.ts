@@ -90,7 +90,7 @@ export class EditUserProfilePage implements AfterContentInit {
     console.log('something');
   }
 
-  //Lifecycle
+  // Lifecycle
 
   public ngAfterContentInit() {}
 
@@ -292,7 +292,7 @@ export class EditUserProfilePage implements AfterContentInit {
     }
   }
 
-  doCancel() {
+  public doCancel() {
     console.log('Cancel');
     this.navCtrl.pop();
   }

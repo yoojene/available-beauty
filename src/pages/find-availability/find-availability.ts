@@ -30,7 +30,8 @@ import { Moment } from 'moment';
   templateUrl: 'find-availability.html',
 })
 export class FindAvailabilityPage {
-  @ViewChild(Scroll) dateScroll: Scroll;
+  @ViewChild(Scroll)
+  public dateScroll: Scroll;
 
   public findAvailabilityTitle = 'Select Availability Slot';
   public noAvailabilitiesText = 'No Availability';
@@ -163,8 +164,8 @@ export class FindAvailabilityPage {
     bookingModal.present();
   }
 
-  public buildCalendar() {
-    let interval = 1;
+  private buildCalendar() {
+    const interval = 1;
     let loopIdx = interval;
     for (let x = 0; x < 365; x++) {
       // console.log(loopIdx);

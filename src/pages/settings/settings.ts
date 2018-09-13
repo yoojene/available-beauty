@@ -20,10 +20,10 @@ import { AngularFireAuth } from 'angularfire2/auth';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-  settingsTitle = 'Settings';
-  notificationsLabel = 'Notifications';
-  termsLabel = 'Terms of Service';
-  logOutLabel = 'Log Out';
+  public settingsTitle = 'Settings';
+  public notificationsLabel = 'Notifications';
+  public termsLabel = 'Terms of Service';
+  public logOutLabel = 'Log Out';
 
   constructor(
     public navCtrl: NavController,
@@ -32,11 +32,11 @@ export class SettingsPage {
     private viewCtrl: ViewController
   ) {}
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
   }
 
-  doLogOut() {
+  public doLogOut() {
     this.viewCtrl.dismiss();
     this.afauth.auth.signOut();
   }

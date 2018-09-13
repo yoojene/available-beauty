@@ -81,7 +81,7 @@ export class LoginPage {
 
   // Public
   public openResetPassword() {
-    let passModal = this.modal.create('PasswordPage');
+    const passModal = this.modal.create('PasswordPage');
     passModal.present();
   }
 
@@ -99,7 +99,7 @@ export class LoginPage {
           const uid = res.uid;
           console.log(uid);
           //temporary setting of availability slots
-          this.user.setStylistAvailableSlots(uid , 20);
+          this.user.setStylistAvailableSlots(uid, 20);
           this.user
             .getUserById(uid)
             .valueChanges()
@@ -129,7 +129,7 @@ export class LoginPage {
   }
 
   public onFacebookTap() {
-    let loading = this.loadingCtrl.create();
+    const loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth
@@ -150,7 +150,7 @@ export class LoginPage {
   }
 
   public onGoogleTap() {
-    let loading = this.loadingCtrl.create();
+    const loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth
@@ -170,7 +170,7 @@ export class LoginPage {
   }
 
   public onTwitterTap() {
-    let loading = this.loadingCtrl.create();
+    const loading = this.loadingCtrl.create();
 
     loading.present().then(() => {
       this.auth.doTwitterLogin(this.isStylist).then(
@@ -190,7 +190,7 @@ export class LoginPage {
   }
 
   public openRegisterPage() {
-    let regModal = this.modal.create('RegisterPage', {
+    const regModal = this.modal.create('RegisterPage', {
       isStylist: this.isStylist,
     });
     regModal.present();

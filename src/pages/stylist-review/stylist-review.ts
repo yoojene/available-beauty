@@ -28,13 +28,13 @@ export class StylistReviewPage implements AfterContentInit {
     private user: UserProvider
   ) {}
 
-  ionViewDidLoad() {
+  public onViewDidLoad() {
     console.log('ionViewDidLoad StylistReviewPage');
   }
 
-  ionViewDidEnter() {}
+  public ionViewDidEnter() {}
 
-  ngAfterContentInit() {
+  public ngAfterContentInit() {
     this.userId = this.navParams.get('userId');
 
     console.log(this.userId);
@@ -51,7 +51,7 @@ export class StylistReviewPage implements AfterContentInit {
         this.getReviewer(el.senderUid).subscribe(res => {
           // TODO need to unsub
           // TODO need to test how this works with different review users
-          let userObj = res.payload.val();
+          const userObj = res.payload.val();
           userObj.uid = res.key;
           this.reviewUser = userObj;
         });

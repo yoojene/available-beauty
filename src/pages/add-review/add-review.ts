@@ -22,7 +22,8 @@ import { Review } from '../../model/review/review.model';
   templateUrl: 'add-review.html',
 })
 export class AddReviewPage {
-  @ViewChild(Slides) public slides: Slides;
+  @ViewChild(Slides)
+  public slides: Slides;
   // tslint:disable-next-line:quotemark
   public pageSubheader = "Let's find out how the booking went..";
   public ratingTextHeader = 'Select a star rating';

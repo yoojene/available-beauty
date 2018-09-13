@@ -25,7 +25,8 @@ import { AvailabilityPage } from '../availability/availability';
   templateUrl: 'tabs.html',
 })
 export class TabsPage {
-  @ViewChild(Tabs) tabs: Tabs;
+  @ViewChild(Tabs)
+  public tabs: Tabs;
 
   public showTabs: boolean;
   public showkeyboard: boolean;
@@ -48,7 +49,6 @@ export class TabsPage {
   constructor(
     private _platform: Platform,
     private navParams: NavParams,
-    // private keyboard: Keyboard,
     private navCtrl: NavController,
     private events: Events,
     private storage: StorageProvider
@@ -82,7 +82,7 @@ export class TabsPage {
     // });
   }
 
-  ionViewWillEnter() {
+  public ionViewWillEnter() {
     // this.keyboard.onKeyboardShow().subscribe(() => {
     //   this.showkeyboard = true;
     // });

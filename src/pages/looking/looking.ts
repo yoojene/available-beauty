@@ -3,85 +3,85 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  LoadingController
+  LoadingController,
 } from 'ionic-angular';
 import * as moment from 'moment';
 
 @IonicPage()
 @Component({
   selector: 'page-looking',
-  templateUrl: 'looking.html'
+  templateUrl: 'looking.html',
 })
 export class LookingPage {
-  lookingForTitle: string = 'What are you looking for?';
-  lookingWhenTitle: string = 'When do you need it?';
-  searchTitle: string = 'Search';
+  public lookingForTitle: string = 'What are you looking for?';
+  public lookingWhenTitle: string = 'When do you need it?';
+  public searchTitle: string = 'Search';
 
-  hairText: string = 'Hair';
-  nailsText: string = 'Nails';
-  treatmentsText: string = 'Treatments';
+  public hairText: string = 'Hair';
+  public nailsText: string = 'Nails';
+  public treatmentsText: string = 'Treatments';
 
-  dayOfWeekFmt: string = 'ddd Do';
+  public dayOfWeekFmt: string = 'ddd Do';
 
-  entryLoader: any;
+  public entryLoader: any;
 
-  beautyOptions: any = [
+  public beautyOptions: any = [
     {
       name: this.hairText,
-      disabled: false
+      disabled: false,
     },
     {
       name: this.nailsText,
-      disabled: false
+      disabled: false,
     },
     {
       name: this.treatmentsText,
-      disabled: false
-    }
+      disabled: false,
+    },
   ];
 
-  availableDates: any = [
+  public availableDates: any = [
     {
       // 'day': moment().format(this.dayOfWeekFmt),
       day: 'Today',
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(1, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(2, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(3, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(4, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(5, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
+      disabled: false,
     },
     {
       day: moment()
         .add(6, 'days')
         .format(this.dayOfWeekFmt),
-      disabled: false
-    }
+      disabled: false,
+    },
   ];
 
   constructor(
@@ -90,17 +90,17 @@ export class LookingPage {
     private loading: LoadingController
   ) {}
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad LookingPage');
     console.log(this.availableDates);
     this.entryLoader;
   }
 
-  goToHome() {
+  public goToHome() {
     this.navCtrl.push('TabsPage', { isStylist: false });
   }
 
-  setDisabled(option, optionobj) {
+  public setDisabled(option, optionobj) {
     console.log(option);
     console.log(optionobj);
 
@@ -114,7 +114,7 @@ export class LookingPage {
     });
   }
 
-  resetDisabled() {
+  public resetDisabled() {
     this.availableDates.forEach(el => {
       el.disabled = false;
     });

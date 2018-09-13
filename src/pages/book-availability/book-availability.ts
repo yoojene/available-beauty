@@ -6,7 +6,7 @@ import {
   ViewController,
 } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
-import { mergeMap} from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { MessagesProvider } from '../../providers/messages/messages';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
@@ -18,7 +18,6 @@ import { BookingProvider } from '../../providers/booking/booking';
 import { BookingStatus } from '../../model/booking/booking.model';
 import { StylistReviewPage } from '../stylist-review/stylist-review';
 import { AddReviewPage } from '../add-review/add-review';
-
 
 /**
  * Generated class for the BookAvailabilityPage page.
@@ -41,22 +40,22 @@ export class BookAvailabilityPage {
   public cancelledText = 'Cancelled Booking';
   public reviewText = 'Leave a Review';
 
-  isStylist: boolean;
-  availableDate: any;
-  booking: any = {};
+  public isStylist: boolean;
+  public availableDate: any;
+  public booking: any = {};
 
-  messages$: Observable<any>;
-  chats: any;
-  chatmsgs: any = [];
-  chatId: any;
+  public messages$: Observable<any>;
+  public chats: any;
+  public chatmsgs: any = [];
+  public chatId: any;
 
-  userId: string;
-  stylistId: number;
-  availability: any;
-  bookingId: any;
+  public userId: string;
+  public stylistId: number;
+  public availability: any;
+  public bookingId: any;
 
-  bookingStatus: any;
-  bookedDate: any;
+  public bookingStatus: any;
+  public bookedDate: any;
 
   constructor(
     public navCtrl: NavController,
@@ -71,7 +70,7 @@ export class BookAvailabilityPage {
 
   // Lifecycle
 
-  ionViewWillEnter() {
+  public ionViewWillEnter() {
     console.log('ionViewWillEnter ionViewWillEnter');
 
     this.user.checkIsStylist(firebase.auth().currentUser.uid).subscribe(res => {
@@ -83,7 +82,7 @@ export class BookAvailabilityPage {
     });
   }
 
-  ionViewDidEnter() {
+  public ionViewDidEnter() {
     console.log('ionViewDidEnter BookAvailabilityPage');
     this.availability = this.navParams.get('availId');
     this.stylistId = this.navParams.get('stylist');
@@ -116,7 +115,7 @@ export class BookAvailabilityPage {
       .getAvailabilityById(this.availability)
       .snapshotChanges()
       .subscribe(res => {
-        let date = this.utils.getFirebaseRealtimeDbKeyedValueById(
+        const date = this.utils.getFirebaseRealtimeDbKeyedValueById(
           res,
           'datetime'
         );
@@ -145,14 +144,17 @@ export class BookAvailabilityPage {
   private checkIsChatThread() {
     return this.msg
       .getChatsForAvailability(this.availability) // TODO Need to account for when there is no /chat existing for user
-      .pipe(mergeMap(res => {
-        console.log(res);
-        if (res.length === 0) {
-          return Observable.of(false);
-        }
-        this.chatId = res[0].key; // only taking the first /chat
-        return Observable.of(this.chatId);
-      }));
+      .pipe(
+        mergeMap(res => {
+          console.log(res);
+          if (res.length === 0) {
+            return Observable.of(false);
+          }
+          this.chatId = res[0].key; // only taking the first /chat
+
+          return Observable.of(this.chatId);
+        })
+      );
   }
 
   private getChatThread(chatId) {
@@ -176,8 +178,8 @@ export class BookAvailabilityPage {
             el.img = userres.payload.val().avatarImage;
 
             if (idx > 0) {
-              let prevUser = res[idx - 1].senderUid;
-              let prevPos = res[idx - 1].position;
+              const prevUser = res[idx - 1].senderUid;
+              const prevPos = res[idx - 1].position;
 
               console.log('prevUser', prevUser);
               console.log('prevPos', prevPos);

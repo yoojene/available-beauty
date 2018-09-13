@@ -13,11 +13,11 @@ import { AuthProvider } from '../../providers/auth/auth';
 @IonicPage()
 @Component({
   selector: 'page-password',
-  templateUrl: 'password.html'
+  templateUrl: 'password.html',
 })
 export class PasswordPage {
-  resetSent: boolean = false;
-  passwordForm: any;
+  public resetSent: boolean = false;
+  public passwordForm: any;
 
   constructor(
     public navCtrl: NavController,
@@ -28,12 +28,12 @@ export class PasswordPage {
     this.passwordForm = formBuilder.group({
       emailAddress: [
         '',
-        Validators.compose([Validators.required, Validators.email])
-      ]
+        Validators.compose([Validators.required, Validators.email]),
+      ],
     });
   }
 
-  ionViewDidLoad() {
+  public ionViewDidLoad() {
     console.log('ionViewDidLoad PasswordPage');
   }
 
@@ -41,7 +41,7 @@ export class PasswordPage {
     console.log(this.passwordForm);
 
     console.log('resetting pw');
-    let email = this.passwordForm.value.emailAddress;
+    const email = this.passwordForm.value.emailAddress;
     this.auth
       .doResetPassword(email)
       .then(() => {
