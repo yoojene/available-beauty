@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-navbar [hideBackButton]="hideOnModal">
     <ion-title>Profile</ion-title>
@@ -12,24 +11,30 @@
 
 
 <ion-content>
-<div *ngIf="hideOnModal">
-  <div no-padding>
+  <div *ngIf="hideOnModal">
     <div no-padding>
-      <img src="{{user?.bannerImage}}">
+      <div no-padding>
+        <img src="{{user?.bannerImage}}">
+      </div>
     </div>
   </div>
-</div>
-<ion-list no-lines padding>
-  <ion-item>
-    <ion-avatar item-start>
-      <img src="{{user?.avatarImage}}">
-    </ion-avatar>
-        {{user?.name}}
-    <ion-icon *ngIf="hideOnModal" item-end name="ios-open-outline" (click)="doEditProfile()"></ion-icon>
-  </ion-item>
-  <ion-item>{{user?.emailAddress}}</ion-item>
+  <ion-list no-lines padding>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="{{user?.avatarImage}}">
+      </ion-avatar>
+      {{user?.name}}
+      <ion-icon *ngIf="hideOnModal" item-end name="ios-open-outline" (click)="doEditProfile()"></ion-icon>
+    </ion-item>
+    <ion-item>{{user?.emailAddress}}</ion-item>
     <ion-item text-wrap *ngIf="hideOnModal">
       {{user?.bio}}
     </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      Stylist Skills
+    </ion-list-header>
+    <ion-item *ngFor="let skill of stylistSkills">{{skill}}</ion-item>
   </ion-list>
 </ion-content>

@@ -35,6 +35,8 @@ export class UserProfilePage {
   stylist$: any;
   style: any;
 
+  public stylistSkills: Array<string>;
+
   hideOnModal = false;
 
   constructor(
@@ -120,6 +122,8 @@ export class UserProfilePage {
         console.log(res.val());
 
         this.user = res.val();
+        this.stylistSkills = this.user.skills;
+        console.log('skills', this.stylistSkills);
       });
   }
 }
