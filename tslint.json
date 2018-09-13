@@ -54,7 +54,7 @@
         "ignore-pattern": "/rxjs.*/"
       }
     ],
-    "no-inferrable-types": true,
+    "no-inferrable-types": false,
     "no-invalid-template-strings": true,
     "no-invalid-this": true,
     "no-irregular-whitespace": true,
