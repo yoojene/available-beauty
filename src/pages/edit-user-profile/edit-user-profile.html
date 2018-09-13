@@ -98,8 +98,8 @@
         </ion-item>
         <div *ngIf="availableSkills$ | async; let skills">
           <ion-item>
-            <ion-label color="primary">Stylist Skills</ion-label>
-            <ion-select multiple="true" interface="action-sheet">
+            <ion-label color="primary">{{setStylistSkills}}</ion-label>
+            <ion-select  formControlName="stylistSkills" multiple="true" interface="action-sheet" [(ngModel)]="userDetails.skills">
               <ion-option *ngFor="let skill of skills">{{skill.key}}</ion-option>
             </ion-select>
           </ion-item>

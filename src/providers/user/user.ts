@@ -166,7 +166,7 @@ export class UserProvider {
   public setStylistSkills(uid, skills) {
     this.afdb.database
       .ref()
-      .child('userProfile/' + uid + 'skills')
+      .child('userProfile/' + uid + '/skills')
       .set(skills);
   }
 

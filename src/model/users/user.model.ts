@@ -21,4 +21,5 @@ export interface User {
   mobile?: boolean;
   stylistRating?: string;
   availabilitySlots : number;
+  skills: Array<string>;
 }

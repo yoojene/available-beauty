@@ -45,6 +45,8 @@ export class EditUserProfilePage implements AfterContentInit {
   public userName = 'User Name';
   public phoneNumber = 'Phone Number';
   public emailAddress = 'Email';
+  public setStylistSkills = 'Stylist Skills';
+  public stylistSkills = 'Stylist Skills';
 
   public loadProgress: any = 0;
   public downloadUrls = [];
@@ -81,6 +83,7 @@ export class EditUserProfilePage implements AfterContentInit {
       location: [''],
       bannerImage: [''],
       avatarImage: [''],
+      stylistSkills: [''],
     });
   }
   public logForm() {
@@ -272,22 +275,16 @@ export class EditUserProfilePage implements AfterContentInit {
 
       if (this.isStylist) {
         // isStylist == true.  Is a Stylist
-        updatedUser.baseLocation = this.userDetails.baseLocation; // Not sure we need this now?
+        // updatedUser.baseLocation = this.userDetails.baseLocation; // Not sure we need this now?
         // updatedUser.bannerImage = this.userDetails.bannerImage // This needs not to be undefined
         console.log('is a stylist');
         console.log(updatedUser);
+
+        this.userProvider.setStylistSkills(
+          firebase.auth().currentUser.uid,
+          updatedUser.stylistSkills
+        );
       }
-
-      //  Update skills for user
-      console.log('available skills : ', this.availableSkills$);
-
-      // EC 12/9 commented this out below as causing error.  This is the function
-      // to update skills in the db (Stylist Skills ticket)
-
-      /* this.userProvider.setStylistSkills(
-         firebase.auth().currentUser.uid,
-         this.availableSkills$
-       );*/
 
       this.user
         .updateUserProfile(firebase.auth().currentUser.uid, updatedUser, true)
