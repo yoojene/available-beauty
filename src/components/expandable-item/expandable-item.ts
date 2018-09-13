@@ -3,7 +3,7 @@ import {
   ViewChild,
   Input,
   ElementRef,
-  Renderer
+  Renderer,
 } from '@angular/core';
 // import { Renderer } from '@angular/core/src/render/api';
 
@@ -15,13 +15,15 @@ import {
  */
 @Component({
   selector: 'expandable-item',
-  templateUrl: 'expandable-item.html'
+  templateUrl: 'expandable-item.html',
 })
 export class ExpandableItemComponent {
   @ViewChild('expandWrapper', { read: ElementRef })
-  expandWrapper;
-  @Input('expanded') expanded;
-  @Input('expandHeight') expandHeight;
+  public expandWrapper;
+  @Input('expanded')
+  public expanded;
+  @Input('expandHeight')
+  public expandHeight;
 
   // text: string;
 
@@ -30,11 +32,11 @@ export class ExpandableItemComponent {
     // this.text = 'Hello World';
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.renderer.setElementStyle(
       this.expandWrapper.nativeElement,
       'height',
-      this.expandHeight + 'px'
+      `${this.expandHeight}px`
     );
   }
 }

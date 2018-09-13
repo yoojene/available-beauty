@@ -11,8 +11,9 @@ import * as firebase from 'firebase';
   templateUrl: 'chat-bubble.html',
 })
 export class ChatBubbleComponent {
-  @Input() msg: any;
-  user: any;
+  @Input()
+  msg: any;
+  public user: any;
   constructor() {
     console.log('Hello ChatBubbleComponent Component');
 
@@ -34,7 +35,7 @@ export class ChatBubbleComponent {
     //   });
   }
 
-  ngOnInit() {}
+  public ngOnInit() {}
 
   // createMsg() {
 

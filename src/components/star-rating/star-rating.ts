@@ -5,21 +5,16 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-/**
- * Generated class for the StarRatingComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
+
 @Component({
   selector: 'star-rating',
   templateUrl: 'star-rating.html',
 })
 export class StarRatingComponent implements AfterContentInit {
-  @Input() public rating: any;
-  @Output() public chosenRating = new EventEmitter();
-
-  text: string;
+  @Input()
+  public rating: any;
+  @Output()
+  public chosenRating = new EventEmitter();
 
   // Show Star Rating
   public starRating = [];
@@ -53,13 +48,13 @@ export class StarRatingComponent implements AfterContentInit {
     console.log('startRating Component loaded');
   }
 
-  ngAfterContentInit() {
+  public ngAfterContentInit() {
     this.generateStarList(this.rating);
   }
 
-  generateStarList(rating) {
-    let remainder = rating - Math.floor(rating);
-    let whole = Math.floor(rating);
+  public generateStarList(rating) {
+    const remainder = rating - Math.floor(rating);
+    const whole = Math.floor(rating);
     this.remainder = remainder;
     for (let i = 0; i < whole; i++) {
       this.starRating.push(i);
@@ -73,7 +68,7 @@ export class StarRatingComponent implements AfterContentInit {
       }
     });
 
-    let total = { total: 0 };
+    const total = { total: 0 };
     let calcRating;
 
     this.initialRating.filter(el => {
@@ -81,6 +76,7 @@ export class StarRatingComponent implements AfterContentInit {
         total.total += 1;
         calcRating = { ...total, ...el };
       }
+
       return calcRating;
     });
 
