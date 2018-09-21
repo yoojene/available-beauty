@@ -55,6 +55,8 @@ export class AvailabilityPage {
 
   public entryLoader: any;
 
+  private defaultAvailableSlots: any;
+
   public currentTimestampInEpoch : number;
 
   public numberOfAvailableSlots : number;
@@ -67,7 +69,16 @@ export class AvailabilityPage {
     private _afdb: AngularFireDatabase,
     private _utils: UtilsProvider,
     private _loading: LoadingController
-  ) {}
+  ) {
+    // get the default available slots from remote configuration
+    let _this = this
+    this.avail.getDefaultAvailableSlots(
+      // callback
+      (data) => {
+        _this.defaultAvailableSlots = data
+      }
+    )
+  }
 
   // Lifecycle
   public ionViewWillEnter() {
@@ -374,11 +385,21 @@ export class AvailabilityPage {
 
   //Subscribe to availability slots
   private getAvailabilitySlots(){
-   this.avail.getNumberOfAvailabilitySlots(this.stylistId)
-     .snapshotChanges()
-     .subscribe(action => {
-          this.numberOfAvailableSlots =  action.payload.val();
-          
-      });;
+    let _this = this
+    this.avail.getNumberOfAvailabilitySlots(this.stylistId)
+      .snapshotChanges()
+      .subscribe(action => {
+        if (action.payload.val() == null) {
+          _this.user.setStylistAvailableSlots(
+            firebase.auth().currentUser.uid,
+            _this.defaultAvailableSlots
+          )
+          _this.numberOfAvailableSlots = _this.defaultAvailableSlots;
+        } else {
+          _this.numberOfAvailableSlots = action.payload.val();
+        }
+      }, error => {
+        console.log('Error: ', error.message);
+      });
   }
 }
