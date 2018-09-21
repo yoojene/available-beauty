@@ -168,9 +168,18 @@ export class LoginPage {
     loading.present().then(() => {
       this.auth
         .doGoogleLogin(this.isStylist)
-        .then(res => {
+        .then(userInfo => {
           loading.dismiss();
-          console.log(res);
+          const uid = userInfo.uid;
+          console.log('User id: ', uid)
+          if (this.isStylist) {
+            return this.user
+              .setStylistAvailableSlots(uid, this.defaultAvailableSlots); // set default available slots
+          } else {
+            return
+          }
+        })
+        .then(() => {
           this.setNavigationPage(this.isStylist);
         })
         .catch(err => {

@@ -112,13 +112,18 @@ export class AuthProvider {
         break;
     }
 
+    let userInfo
     return this.afauth.auth
       .signInWithPopup(socialProvider)
       .then(res => {
+        userInfo = res.user
         return res;
       })
       .then(newUser => {
-        this.addUserProfile(stylist, newUser);
+        return this.addUserProfile(stylist, newUser);
+      })
+      .then(() => {
+        return userInfo
       })
       .catch(err => {
         return Promise.reject(err);
