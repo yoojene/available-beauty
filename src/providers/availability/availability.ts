@@ -8,10 +8,11 @@ import {
 } from '../../model/availability/availability.model';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { Platform } from 'ionic-angular';
 
 @Injectable()
 export class AvailabilityProvider {
-  constructor(private afdb: AngularFireDatabase) {
+  constructor(private afdb: AngularFireDatabase, private plt: Platform) {
     console.log('Hello AvailabilityProvider Provider');
   }
 
@@ -122,5 +123,37 @@ export class AvailabilityProvider {
     }))
   }
 
+  public getDefaultAvailableSlots(callback) {
+    // native ionic-firebase plugin doesn't have a method to fetch values
+    // from the firebase remote configuration, therefore we are resorting to
+    // using the cordova plugin firebase which is only accessible if platform
+    // is in Cordova. If platform is not cordopva, default slots will automatically be
+    // set to 5, and if there are any errors default slot will be 5 as well.
+    this.plt
+      .ready()
+      .then(src => {
+        if (src === 'cordova') {
+          (<any>window).FirebasePlugin
+            .getValue(
+              'default_available_slots',
+              value => {
+                // call the call back and set the value to value
+                callback(value);
+              },
+              error => {
+                console.log('Error: ', error.message);
+                // if there is no remote configuration for
+                // default_available_slots, the default is 5
+                callback(5);
+              }
+            )
+        }
+      })
+      .catch(error => {
+        console.log('Error: ', error.message);
+        // in case something happens
+        callback(5);
+      })
+  }
 
 }

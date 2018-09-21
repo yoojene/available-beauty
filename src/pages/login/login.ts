@@ -7,6 +7,7 @@ import {
   LoadingController,
   Loading,
   ViewController,
+  Platform,
 } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -24,6 +25,7 @@ import {
 } from '@ionic-native/twitter-connect';
 import { StorageProvider } from '../../providers/storage/storage';
 import { UserProvider } from '../../providers/user/user';
+import { AvailabilityProvider } from '../../providers/availability/availability';
 
 @IonicPage({ defaultHistory: ['LandingPage'] })
 @Component({
@@ -36,6 +38,8 @@ export class LoginPage {
   public error: string;
   public isStylist = false;
   private stylistRegistered = false;
+
+  private defaultAvailableSlots: any;
 
   public loading: Loading;
 
@@ -52,7 +56,8 @@ export class LoginPage {
     private loadingCtrl: LoadingController,
     private storage: StorageProvider,
     private user: UserProvider,
-    private viewCtrl: ViewController
+    private viewCtrl: ViewController,
+    private available: AvailabilityProvider,
   ) {
     this.loginForm = formBuilder.group({
       email: [
@@ -64,6 +69,14 @@ export class LoginPage {
         Validators.compose([Validators.minLength(6), Validators.required]),
       ],
     });
+
+    // get the default available slots from remote configuration
+    this.available.getDefaultAvailableSlots(
+      // callback
+      (data) => {
+        this.defaultAvailableSlots = data
+      }
+    )
   }
 
   // Lifecycle
