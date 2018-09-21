@@ -170,12 +170,11 @@ export class UserProvider {
       .set(skills);
   }
 
-  public setStylistAvailableSlots(uid , slots){
+  public setStylistAvailableSlots(uid, slots) {
     this.afdb.database
-      .ref()
-      .child('userProfile/' + uid + '/availabilitySlots')
-      .set(slots);
-
+      .ref('userProfile')
+      .child(uid + '/availabilitySlots')
+      .set(slots)
   }
 
   // Reviews

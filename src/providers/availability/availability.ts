@@ -132,6 +132,7 @@ export class AvailabilityProvider {
     this.plt
       .ready()
       .then(src => {
+        console.log('Source is ', src)
         if (src === 'cordova') {
           (<any>window).FirebasePlugin
             .getValue(
@@ -147,6 +148,9 @@ export class AvailabilityProvider {
                 callback(5);
               }
             )
+        } else {
+          // If not in cordova
+          callback(5);
         }
       })
       .catch(error => {

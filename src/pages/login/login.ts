@@ -39,8 +39,6 @@ export class LoginPage {
   public isStylist = false;
   private stylistRegistered = false;
 
-  private defaultAvailableSlots: any;
-
   public loading: Loading;
 
   public userLoginHeaderText = 'Login to book beauty...';
@@ -69,14 +67,6 @@ export class LoginPage {
         Validators.compose([Validators.minLength(6), Validators.required]),
       ],
     });
-
-    // get the default available slots from remote configuration
-    this.available.getDefaultAvailableSlots(
-      // callback
-      (data) => {
-        this.defaultAvailableSlots = data
-      }
-    )
   }
 
   // Lifecycle
@@ -164,22 +154,13 @@ export class LoginPage {
 
   public onGoogleTap() {
     const loading = this.loadingCtrl.create();
-
+    let _this = this
     loading.present().then(() => {
       this.auth
         .doGoogleLogin(this.isStylist)
-        .then(userInfo => {
+        .then(res => {
           loading.dismiss();
-          const uid = userInfo.uid;
-          console.log('User id: ', uid)
-          if (this.isStylist) {
-            return this.user
-              .setStylistAvailableSlots(uid, this.defaultAvailableSlots); // set default available slots
-          } else {
-            return
-          }
-        })
-        .then(() => {
+          console.log(res)
           this.setNavigationPage(this.isStylist);
         })
         .catch(err => {
