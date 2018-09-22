@@ -65,6 +65,27 @@ export class AvailabilityProvider {
       .update(availPayload);
   }
 
+  public removeSelectedSlot(key) {
+    return this.afdb
+      .database
+      .ref('/availability')
+      .child(key)
+      .once('value')
+      .then(snapshot => {
+        var data = snapshot.val()
+        if (data.booked == false) {
+          return this.afdb
+            .database
+            .ref('/availability')
+            .child(key)
+            .remove()
+        }
+      })
+      .catch((err) => {
+        console.log('Error: ', err.message)
+      })
+  }
+
   /**
    * Create stylist availability slots
    *
@@ -90,6 +111,7 @@ export class AvailabilityProvider {
         epoch: startTime.unix(),
         disabled: false,
         period: period,
+        key: null,
       },
     ];
     let loopInt = interval;
@@ -104,6 +126,7 @@ export class AvailabilityProvider {
           .unix(),
         disabled: false,
         period: period,
+        key: null,
       });
       loopInt = loopInt + interval;
     }
@@ -115,12 +138,22 @@ export class AvailabilityProvider {
     return this.afdb.object<number>(`userProfile/${stylistId}/availabilitySlots`);
   }
 
-  public decreaseNumberOfSlot(stylistId  , numberOfSlots : number){
+  public decreaseNumberOfSlot(stylistId, numberOfSlots : number){
     this.afdb.object<number>(`userProfile/${stylistId}/availabilitySlots`).query
     .ref
     .transaction((slots => {
         return slots - numberOfSlots;
     }))
+  }
+  
+  public increaseNumberOfSlot(stylistId, numberOfSlots : number){
+    this.afdb
+      .object<number>(`userProfile/${stylistId}/availabilitySlots`)
+      .query
+      .ref
+      .transaction((slots => {
+          return slots + numberOfSlots;
+      }))
   }
 
   public getDefaultAvailableSlots(callback) {

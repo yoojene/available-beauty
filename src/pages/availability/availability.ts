@@ -119,9 +119,6 @@ export class AvailabilityPage {
       'day',
       7
     );
-    
-
-
 
     console.log(this.schedule);
     // Generate the slots per schedule
@@ -189,22 +186,25 @@ export class AvailabilityPage {
       .snapshotChanges()
       .subscribe(res => {
         const results = this._utils.generateFirebaseKeyedValues(res);
-        console.log(results);
+        console.log('Results: ', results);
         results.forEach(resres => {
           this.schedule.forEach(sched => {
             sched.morningSlots.forEach(el => {
               if (el.epoch === resres.datetime) {
                 el.disabled = true;
+                el.key = resres.key;
               }
             });
             sched.afternoonSlots.forEach(el => {
               if (el.epoch === resres.datetime) {
                 el.disabled = true;
+                el.key = resres.key;
               }
             });
             sched.eveningSlots.forEach(el => {
               if (el.epoch === resres.datetime) {
                 el.disabled = true;
+                el.key = resres.key;
               }
             });
           });
@@ -296,22 +296,34 @@ export class AvailabilityPage {
    * @param option
    * @param optionobj
    */
-  public setSlotTaken(option, optionobj) {
-    //Don't create slot if available slot is 0
-    if(this.numberOfAvailableSlots <= 0){
-      return;
-    }
+  public toggleSlot(option, optionobj) {
 
     optionobj.forEach(el => {
-      if (
-        option.time === el.time &&
-        option.date === el.date &&
-        !option.disabled
-      ) {
-        el.disabled = !option.disabled;
-        this.avail.setAvailabilityTaken(el.epoch, this.stylistId).then(
-          _ => this.avail.decreaseNumberOfSlot(this.stylistId , 1)
-         );
+      if (option.time === el.time && option.date === el.date) {
+        //Don't create slot if available slot is 0
+        if (!option.disabled) {
+          if(this.numberOfAvailableSlots <= 0){
+            return;
+          }
+          el.disabled = !option.disabled;
+          this.avail
+            .setAvailabilityTaken(el.epoch, this.stylistId)
+            .then(
+              _ => this.avail.decreaseNumberOfSlot(this.stylistId, 1)
+            );
+        } else {
+          option.disabled = !option.disabled;
+          el.disabled = option.disabled;
+          console.log('eLement key: ', el.key)
+          this.avail
+            .removeSelectedSlot(el.key)
+            .then(() => {
+              this.avail.increaseNumberOfSlot(this.stylistId, 1);
+            })
+            .catch((err) => {
+              console.log('Error: ', err.message)
+            })
+        }
       }
     });
   }
@@ -386,9 +398,11 @@ export class AvailabilityPage {
   //Subscribe to availability slots
   private getAvailabilitySlots(){
     let _this = this
-    this.avail.getNumberOfAvailabilitySlots(this.stylistId)
+    this.avail
+      .getNumberOfAvailabilitySlots(this.stylistId)
       .snapshotChanges()
       .subscribe(action => {
+        console.log('Action: ', action.payload.val());
         if (action.payload.val() == null) {
           _this.user.setStylistAvailableSlots(
             firebase.auth().currentUser.uid,

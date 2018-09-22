@@ -11,4 +11,5 @@ export interface AvailabilitySlot {
   epoch: number;
   disabled: boolean;
   period?: string;
+  key: any
 }
