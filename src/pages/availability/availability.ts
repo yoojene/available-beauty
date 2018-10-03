@@ -244,7 +244,7 @@ export class AvailabilityPage {
       let afternoonEnd = moment(this.afternoonEndTime , this.availTimeFmt);
       return afternoonEnd.isBefore(currentTime);
     }
-   
+
   }
 
   public goToHome() {
@@ -395,22 +395,22 @@ export class AvailabilityPage {
     // this.availableAMDates = filtered;
   }
 
-  //Subscribe to availability slots
+  // Subscribe to availability slots
+
   private getAvailabilitySlots(){
-    let _this = this
     this.avail
       .getNumberOfAvailabilitySlots(this.stylistId)
       .snapshotChanges()
       .subscribe(action => {
         console.log('Action: ', action.payload.val());
         if (action.payload.val() == null) {
-          _this.user.setStylistAvailableSlots(
+          this.user.setStylistAvailableSlots(
             firebase.auth().currentUser.uid,
-            _this.defaultAvailableSlots
+            this.defaultAvailableSlots
           )
-          _this.numberOfAvailableSlots = _this.defaultAvailableSlots;
+          this.numberOfAvailableSlots = this.defaultAvailableSlots;
         } else {
-          _this.numberOfAvailableSlots = action.payload.val();
+          this.numberOfAvailableSlots = action.payload.val();
         }
       }, error => {
         console.log('Error: ', error.message);
